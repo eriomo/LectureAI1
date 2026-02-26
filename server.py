@@ -2,9 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from groq import Groq
 import json, os, re
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -45,7 +42,7 @@ def safe_lesson(topic):
         "analogies": [
             f"Beginner analogy: Think of {topic} like sorting items into labelled boxes.",
             f"Visual analogy: {topic} is like a flowchart where each branch depends on your data.",
-            f"Real-world analogy: {topic} is used every day in recommendation systems and fraud detection."
+            f"Real-world analogy: {topic} appears in recommendation systems and fraud detection every day."
         ],
         "activities": [
             {"title": "Think-Pair-Share", "icap": "Interactive",  "prompt": f"Apply {topic} to a sample dataset and compare results with a partner."},
@@ -209,5 +206,13 @@ def health():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    print(f"🎓 LectureAI running on port {port}")
+    print(f"LectureAI running on port {port}")
     app.run(host="0.0.0.0", port=port, debug=False)
+```
+
+Also update your `requirements.txt` to this:
+```
+flask
+flask-cors
+groq
+gunicorn
