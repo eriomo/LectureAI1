@@ -3,15 +3,25 @@ from flask_cors import CORS
 from groq import Groq
 import json
 import os
+import re
 
 app = Flask(__name__)
 CORS(app)
 
-# Use environment variable ONLY
+# ================================
+# API KEY (Render Environment Var)
+# ================================
 API_KEY = os.getenv("GROQ_API_KEY")
+
+if not API_KEY:
+    raise ValueError("GROQ_API_KEY environment variable not set")
+
 client = Groq(api_key=API_KEY)
 
 
+# ================================
+# AI CALL
+# ================================
 def ask_groq(prompt, max_tokens=4000):
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
@@ -22,25 +32,46 @@ def ask_groq(prompt, max_tokens=4000):
     return response.choices[0].message.content
 
 
-# -------------------------------
+# ================================
 # FRONTEND ROUTE
-# -------------------------------
+# ================================
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# -------------------------------
+# ================================
 # HEALTH CHECK
-# -------------------------------
+# ================================
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "running"})
 
 
-# -------------------------------
+# ================================
+# SAFE JSON CLEANER
+# ================================
+def clean_json_string(raw_text):
+    raw_text = raw_text.strip()
+
+    # Remove markdown blocks if present
+    if "```" in raw_text:
+        raw_text = raw_text.split("```")[1]
+
+    # Extract only JSON object
+    start = raw_text.find("{")
+    end = raw_text.rfind("}") + 1
+    raw_text = raw_text[start:end]
+
+    # Remove invalid escape sequences
+    raw_text = re.sub(r'\\(?!["\\/bfnrt])', r'\\\\', raw_text)
+
+    return raw_text
+
+
+# ================================
 # GENERATE LESSON
-# -------------------------------
+# ================================
 @app.route("/generate", methods=["POST"])
 def generate():
     data = request.json
@@ -85,22 +116,20 @@ Return ONLY valid JSON with this structure:
     "srl_prompts": ["string"]
   }}
 }}
+
 IMPORTANT:
-- Return ONLY JSON.
-- No markdown.
-- No explanations.
-- No text before or after JSON.
+- Return ONLY JSON
+- No markdown
+- No explanation
+- No text before or after JSON
 """
 
     try:
         raw = ask_groq(prompt)
 
-        # Clean possible markdown formatting
-        raw = raw.strip()
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
+        cleaned = clean_json_string(raw)
 
-        parsed = json.loads(raw)
+        parsed = json.loads(cleaned)
 
         return jsonify({
             "success": True,
@@ -114,9 +143,9 @@ IMPORTANT:
         }), 500
 
 
-# -------------------------------
+# ================================
 # RUN SERVER
-# -------------------------------
+# ================================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
