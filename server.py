@@ -8,127 +8,93 @@ import re
 app = Flask(__name__)
 CORS(app)
 
-# ================================
-# API KEY (Render Environment Var)
-# ================================
 API_KEY = os.getenv("GROQ_API_KEY")
-
 if not API_KEY:
-    raise ValueError("GROQ_API_KEY environment variable not set")
+    raise ValueError("GROQ_API_KEY not set")
 
 client = Groq(api_key=API_KEY)
 
 
-# ================================
-# AI CALL
-# ================================
-def ask_groq(prompt, max_tokens=4000):
+def ask_groq(prompt):
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
-        max_tokens=max_tokens,
+        max_tokens=4000,
     )
     return response.choices[0].message.content
 
 
-# ================================
-# FRONTEND ROUTE
-# ================================
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# ================================
-# HEALTH CHECK
-# ================================
-@app.route("/health", methods=["GET"])
+@app.route("/health")
 def health():
     return jsonify({"status": "running"})
 
 
-# ================================
-# SAFE JSON CLEANER
-# ================================
-def clean_json_string(raw_text):
-    raw_text = raw_text.strip()
+def clean_json(raw):
+    raw = raw.strip()
 
-    # Remove markdown blocks if present
-    if "```" in raw_text:
-        raw_text = raw_text.split("```")[1]
+    # remove markdown
+    if "```" in raw:
+        raw = raw.split("```")[1]
 
-    # Extract only JSON object
-    start = raw_text.find("{")
-    end = raw_text.rfind("}") + 1
-    raw_text = raw_text[start:end]
+    # extract json object
+    start = raw.find("{")
+    end = raw.rfind("}") + 1
+    raw = raw[start:end]
 
-    # Remove invalid escape sequences
-    raw_text = re.sub(r'\\(?!["\\/bfnrt])', r'\\\\', raw_text)
+    # fix invalid escapes
+    raw = re.sub(r'\\(?!["\\/bfnrt])', r'\\\\', raw)
 
-    return raw_text
+    return raw
 
 
-# ================================
-# GENERATE LESSON
-# ================================
 @app.route("/generate", methods=["POST"])
 def generate():
-    data = request.json
+    try:
+        data = request.json
 
-    topic = data.get("topic", "")
-    level = data.get("level", "Beginner")
-    duration = data.get("duration", 60)
-    style = data.get("style", "Standard")
+        topic = data.get("topic", "")
+        level = data.get("level", "Beginner")
+        duration = data.get("duration", 60)
 
-    prompt = f"""
-You are an expert educator.
-
-Create a structured lesson plan in STRICT JSON format.
+        prompt = f"""
+Return STRICT JSON only.
 
 Topic: {topic}
 Level: {level}
-Duration: {duration} minutes
-Style: {style}
+Duration: {duration}
 
-Return ONLY valid JSON with this structure:
+Format:
 
 {{
   "outline": [
     {{
       "title": "string",
-      "content": "string",
-      "icaps_level": "Passive | Active | Constructive | Interactive"
+      "content": "string"
     }}
   ],
   "activities": [
     {{
       "title": "string",
-      "description": "string",
-      "icaps_level": "Passive | Active | Constructive | Interactive"
+      "description": "string"
     }}
   ],
-  "analogies": ["string"],
-  "reflections": ["string"],
   "student": {{
     "micro_explanation": "string",
-    "practice_questions": ["string"],
-    "srl_prompts": ["string"]
+    "practice_questions": ["string"]
   }}
 }}
 
-IMPORTANT:
-- Return ONLY JSON
-- No markdown
-- No explanation
-- No text before or after JSON
+No text outside JSON.
 """
 
-    try:
         raw = ask_groq(prompt)
-
-        cleaned = clean_json_string(raw)
-
+        cleaned = clean_json(raw)
         parsed = json.loads(cleaned)
 
         return jsonify({
@@ -140,12 +106,9 @@ IMPORTANT:
         return jsonify({
             "success": False,
             "error": str(e)
-        }), 500
+        })
 
 
-# ================================
-# RUN SERVER
-# ================================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
