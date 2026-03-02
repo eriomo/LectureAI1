@@ -2,6 +2,7 @@ import os
 import re
 import json
 import io
+import sqlite3
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from groq import Groq
@@ -15,17 +16,29 @@ CORS(app)
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-CLASSES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "classes.json")
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lectureai.db")
 
-def load_classes():
-    if os.path.exists(CLASSES_FILE):
-        with open(CLASSES_FILE, "r") as f:
-            return json.load(f)
-    return {}
+def get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
 
-def save_classes(data):
-    with open(CLASSES_FILE, "w") as f:
-        json.dump(data, f)
+def init_db():
+    conn = get_db()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS classes (
+            code TEXT PRIMARY KEY,
+            teacher_email TEXT,
+            teacher_name TEXT,
+            topic TEXT,
+            level TEXT,
+            data TEXT
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+init_db()
 
 def ask_groq(prompt, max_tokens=1500):
     response = client.chat.completions.create(
@@ -63,19 +76,34 @@ def index():
 def save_class():
     d = request.json
     code = d.get("code", "").upper()
-    classes = load_classes()
-    classes[code] = d
-    save_classes(classes)
+    teacher_email = d.get("teacherEmail", "")
+    teacher_name = d.get("teacherName", "")
+    topic = d.get("topic", "")
+    level = d.get("level", "")
+    conn = get_db()
+    conn.execute("""
+        INSERT INTO classes (code, teacher_email, teacher_name, topic, level, data)
+        VALUES (?, ?, ?, ?, ?, ?)
+        ON CONFLICT(code) DO UPDATE SET
+            teacher_email=excluded.teacher_email,
+            teacher_name=excluded.teacher_name,
+            topic=excluded.topic,
+            level=excluded.level,
+            data=excluded.data
+    """, (code, teacher_email, teacher_name, topic, level, json.dumps(d)))
+    conn.commit()
+    conn.close()
     return jsonify({"success": True})
 
 @app.route("/get_class", methods=["POST"])
 def get_class():
     d = request.json
     code = d.get("code", "").upper()
-    classes = load_classes()
-    cls = classes.get(code)
-    if cls:
-        return jsonify({"success": True, "class": cls})
+    conn = get_db()
+    row = conn.execute("SELECT data FROM classes WHERE code = ?", (code,)).fetchone()
+    conn.close()
+    if row:
+        return jsonify({"success": True, "class": json.loads(row["data"])})
     return jsonify({"success": False})
 
 @app.route("/generate", methods=["POST"])
