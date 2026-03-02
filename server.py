@@ -472,16 +472,3 @@ def generate_slides():
 
 if __name__ == "__main__":
     app.run(debug=True)
-```
-
----
-
-## One extra thing — update your requirements.txt
-
-Add `python-pptx` to it so Render installs it:
-```
-flask
-flask-cors
-groq
-gunicorn
-python-pptx
