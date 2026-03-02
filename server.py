@@ -381,7 +381,6 @@ def generate_slides():
     duration = d.get("duration", 75)
     objectives = d.get("objectives", "")
     style = d.get("style", "Lecture-based")
-
     GREEN = RGBColor(0x2d, 0x6a, 0x4f)
     WHITE = RGBColor(0xFF, 0xFF, 0xFF)
     DARK = RGBColor(0x1a, 0x1a, 0x1a)
@@ -389,19 +388,16 @@ def generate_slides():
     ACCENT = RGBColor(0x74, 0xC6, 0x9D)
     DARKGREEN = RGBColor(0x1B, 0x43, 0x32)
     GRAYTEXT = RGBColor(0xAA, 0xAA, 0xAA)
-
     prs = Presentation()
     prs.slide_width = Inches(13.33)
     prs.slide_height = Inches(7.5)
     blank = prs.slide_layouts[6]
-
     def add_rect(slide, left, top, width, height, color):
         shape = slide.shapes.add_shape(1, Inches(left), Inches(top), Inches(width), Inches(height))
         shape.fill.solid()
         shape.fill.fore_color.rgb = color
         shape.line.fill.background()
         return shape
-
     def add_text(slide, text, left, top, width, height, size=18, bold=False, color=None, align=PP_ALIGN.LEFT):
         tb = slide.shapes.add_textbox(Inches(left), Inches(top), Inches(width), Inches(height))
         tf = tb.text_frame
@@ -413,14 +409,12 @@ def generate_slides():
         run.font.size = Pt(size)
         run.font.bold = bold
         run.font.color.rgb = color if color else DARK
-
     s1 = prs.slides.add_slide(blank)
     add_rect(s1, 0, 0, 13.33, 7.5, GREEN)
     add_rect(s1, 0, 5.8, 13.33, 1.7, DARKGREEN)
     add_text(s1, "LectureAI", 0.5, 0.5, 12, 0.8, size=14, color=ACCENT, align=PP_ALIGN.CENTER)
     add_text(s1, topic, 0.5, 1.4, 12, 2.0, size=44, bold=True, color=WHITE, align=PP_ALIGN.CENTER)
     add_text(s1, level + " Level  |  " + str(duration) + " Minutes  |  " + style, 0.5, 3.6, 12, 0.7, size=18, color=ACCENT, align=PP_ALIGN.CENTER)
-
     s2 = prs.slides.add_slide(blank)
     s2.background.fill.solid()
     s2.background.fill.fore_color.rgb = LGRAY
@@ -432,21 +426,19 @@ def generate_slides():
         add_rect(s2, 0.5, y, 0.45, 0.6, GREEN)
         add_text(s2, str(i + 1), 0.5, y + 0.05, 0.45, 0.5, size=16, bold=True, color=WHITE, align=PP_ALIGN.CENTER)
         add_text(s2, obj.lstrip("0123456789. "), 1.2, y + 0.08, 11.5, 0.55, size=16, color=DARK)
-
     segments = [
-        {"name": "Introduction and Hook",      "icap": "Active",       "pct": 0.12},
-        {"name": "Core Concept Explanation",   "icap": "Passive",      "pct": 0.35},
-        {"name": "Guided In-Class Activity",   "icap": "Constructive", "pct": 0.28},
-        {"name": "Peer Discussion and Debate", "icap": "Interactive",  "pct": 0.13},
-        {"name": "Wrap-Up and Reflection",     "icap": "Constructive", "pct": 0.12},
+        {"name": "Introduction and Hook", "icap": "Active", "pct": 0.12},
+        {"name": "Core Concept Explanation", "icap": "Passive", "pct": 0.35},
+        {"name": "Guided In-Class Activity", "icap": "Constructive", "pct": 0.28},
+        {"name": "Peer Discussion and Debate", "icap": "Interactive", "pct": 0.13},
+        {"name": "Wrap-Up and Reflection", "icap": "Constructive", "pct": 0.12},
     ]
     icap_colors = {
-        "Passive":      RGBColor(0xC0, 0x44, 0x0A),
-        "Active":       RGBColor(0x1A, 0x66, 0x40),
+        "Passive": RGBColor(0xC0, 0x44, 0x0A),
+        "Active": RGBColor(0x1A, 0x66, 0x40),
         "Constructive": RGBColor(0x1A, 0x3F, 0x80),
-        "Interactive":  RGBColor(0x6A, 0x1A, 0x80),
+        "Interactive": RGBColor(0x6A, 0x1A, 0x80),
     }
-
     for i, seg in enumerate(segments):
         s = prs.slides.add_slide(blank)
         s.background.fill.solid()
@@ -463,13 +455,11 @@ def generate_slides():
         add_text(s, "Use " + style.lower() + " approach for " + level.lower() + "-level students.", 0.5, 3.1, 12, 0.6, size=15, color=DARK)
         add_rect(s, 0.5, 5.0, 12.3, 1.8, WHITE)
         add_text(s, "Instructor notes...", 0.7, 5.1, 12, 1.5, size=13, color=GRAYTEXT)
-
     s8 = prs.slides.add_slide(blank)
     add_rect(s8, 0, 0, 13.33, 7.5, GREEN)
     add_rect(s8, 0, 5.5, 13.33, 2.0, DARKGREEN)
     add_text(s8, "Thank You", 0.5, 2.0, 12, 1.5, size=52, bold=True, color=WHITE, align=PP_ALIGN.CENTER)
     add_text(s8, "Any questions about " + topic + "?", 0.5, 3.6, 12, 0.8, size=22, color=ACCENT, align=PP_ALIGN.CENTER)
-
     buf = io.BytesIO()
     prs.save(buf)
     buf.seek(0)
