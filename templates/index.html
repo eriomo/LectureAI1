@@ -8,8 +8,6 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:#f7f5f2;color:#1a1a1a;min-height:100vh}
-
-/* ── AUTH ── */
 .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1b4332 0%,#2d6a4f 100%);padding:1rem}
 .auth-box{background:white;border-radius:16px;padding:2rem;width:100%;max-width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.18)}
 .auth-logo{text-align:center;margin-bottom:1.5rem}
@@ -25,8 +23,6 @@ body{font-family:'DM Sans',sans-serif;background:#f7f5f2;color:#1a1a1a;min-heigh
 .auth-tabs{display:flex;gap:0;margin-bottom:1.2rem;border:1.5px solid #ddd;border-radius:8px;overflow:hidden}
 .auth-tab{flex:1;padding:0.6rem;text-align:center;cursor:pointer;font-size:0.9rem;font-weight:600;color:#666;background:white;transition:all .2s}
 .auth-tab.active{background:#2d6a4f;color:white}
-
-/* ── GENERAL ── */
 header{background:#2d6a4f;color:white;padding:0.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
 header h1{font-family:'DM Serif Display',serif;font-size:1.3rem}
 .header-right{display:flex;align-items:center;gap:1rem}
@@ -108,32 +104,18 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
 .voice-btn.listening{background:#ffe8e8;border-color:#e74c3c;color:#e74c3c}
 .speak-btn{background:#2d6a4f;color:white;border:none;border-radius:6px;padding:0.3rem 0.7rem;cursor:pointer;font-size:0.78rem;font-family:'DM Sans',sans-serif;margin-top:0.4rem}
 .speak-btn:hover{background:#1e4d38}
-
-/* ── AUTOCOMPLETE ── */
 .autocomplete-list{position:absolute;top:100%;left:0;right:0;background:white;border:1.5px solid #2d6a4f;border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;z-index:999;display:none}
 .autocomplete-list.show{display:block}
 .autocomplete-item{padding:0.5rem 0.8rem;cursor:pointer;font-size:0.9rem;color:#333;border-bottom:1px solid #f0f0f0}
 .autocomplete-item:hover{background:#f0faf4;color:#2d6a4f}
 .autocomplete-cat{font-size:0.72rem;color:#888;margin-left:6px}
-
-/* ── CLASS CODE ── */
 .code-display{background:#1b4332;color:#74c69d;font-family:monospace;font-size:2rem;font-weight:700;text-align:center;letter-spacing:0.3rem;padding:1rem;border-radius:10px;margin:0.7rem 0}
-.class-status{display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:#555;margin-bottom:0.5rem}
-.dot{width:8px;height:8px;border-radius:50%;background:#2d6a4f;display:inline-block}
-.dot.red{background:#e74c3c}
-
-/* ── REPORTS ── */
 .report-card{background:white;border-radius:10px;padding:1rem 1.2rem;margin-bottom:0.7rem;box-shadow:0 1px 5px rgba(0,0,0,0.07);border-left:4px solid #e67e22}
 .report-card .who{font-size:0.8rem;color:#888;margin-bottom:0.3rem}
 .report-card .what{font-size:0.9rem;color:#1a1a1a;font-weight:600;margin-bottom:0.2rem}
-.report-card .type-badge{display:inline-block;padding:1px 8px;border-radius:10px;font-size:0.72rem;font-weight:600}
+.type-badge{display:inline-block;padding:1px 8px;border-radius:10px;font-size:0.72rem;font-weight:600}
 .type-question{background:#d8f0e8;color:#1a6640}
-.type-confusion{background:#fde8d8;color:#c0440a}
-
-/* ── VIDEO SCRIPT ── */
 .script-box{background:white;border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);white-space:pre-wrap;font-size:0.85rem;line-height:1.7;max-height:400px;overflow-y:auto;color:#333;margin-top:0.8rem}
-
-/* ── STUDENT PORTAL ── */
 .student-hero{background:linear-gradient(135deg,#1b4332,#2d6a4f);border-radius:12px;padding:1.5rem;color:white;margin-bottom:1rem;text-align:center}
 .student-hero h2{font-family:'DM Serif Display',serif;font-size:1.4rem;margin-bottom:0.3rem}
 .student-hero p{font-size:0.88rem;opacity:0.8}
@@ -147,15 +129,12 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
 </head>
 <body>
 
-<!-- ═══════════════ AUTH SCREEN ═══════════════ -->
 <div id="authScreen" class="auth-wrap">
   <div class="auth-box">
     <div class="auth-logo">
       <h1>🎓 LectureAI</h1>
-      <p>Human–AI Co-Orchestration in Education</p>
+      <p>Human-AI Co-Orchestration in Education</p>
     </div>
-
-    <!-- ROLE PICK -->
     <div id="rolePick">
       <p style="font-size:0.88rem;color:#555;text-align:center;margin-bottom:1rem">Who are you?</p>
       <div class="role-pick">
@@ -175,21 +154,16 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
           <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Log In</div>
           <div class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Sign Up</div>
         </div>
-
-        <!-- LOGIN -->
         <div id="loginForm">
           <div class="form-group"><label>Email</label><input id="loginEmail" type="email" placeholder="your@email.com"/></div>
           <div class="form-group"><label>Password</label><input id="loginPassword" type="password" placeholder="Password"/></div>
-          <button class="btn" onclick="doLogin()">Log In →</button>
+          <button class="btn" onclick="doLogin()">Log In</button>
           <p id="loginError" style="color:#e74c3c;font-size:0.82rem;margin-top:0.5rem;display:none"></p>
         </div>
-
-        <!-- SIGNUP -->
         <div id="signupForm" class="hidden">
           <div class="form-group"><label>Full Name</label><input id="suName" placeholder="Your full name"/></div>
           <div class="form-group"><label>Email</label><input id="suEmail" type="email" placeholder="your@email.com"/></div>
           <div class="form-group"><label>Password</label><input id="suPassword" type="password" placeholder="Create a password"/></div>
-          <!-- Student-only fields -->
           <div id="studentFields">
             <div class="form-group"><label>Age</label><input id="suAge" type="number" placeholder="e.g. 20" min="10" max="70"/></div>
             <div class="form-group"><label>Year of Study</label>
@@ -203,7 +177,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
                 <option>Working Professional</option>
               </select>
             </div>
-            <div class="form-group"><label>Your Background / Field</label>
+            <div class="form-group"><label>Your Background</label>
               <select id="suBackground">
                 <option value="">Select background</option>
                 <option>Mathematics / Statistics</option>
@@ -217,7 +191,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
               </select>
             </div>
           </div>
-          <button class="btn" onclick="doSignup()">Create Account →</button>
+          <button class="btn" onclick="doSignup()">Create Account</button>
           <p id="signupError" style="color:#e74c3c;font-size:0.82rem;margin-top:0.5rem;display:none"></p>
         </div>
       </div>
@@ -225,44 +199,38 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
   </div>
 </div>
 
-<!-- ═══════════════ MAIN APP ═══════════════ -->
 <div id="mainApp" class="hidden">
   <header>
     <h1>🎓 LectureAI</h1>
     <div class="header-right">
-      <div class="user-badge" id="userBadge">—</div>
+      <div class="user-badge" id="userBadge">-</div>
       <button class="logout-btn" onclick="doLogout()">Log Out</button>
     </div>
   </header>
 
-  <!-- TEACHER TABS -->
   <div class="tabs" id="teacherTabs">
     <div class="tab active" onclick="switchTab('builder')">📋 Lesson Builder</div>
     <div class="tab" onclick="switchTab('liveclass')">🔴 Live Class</div>
     <div class="tab" onclick="switchTab('student')">📚 Student Support</div>
-    <div class="tab" onclick="switchTab('reports')">📨 Student Reports</div>
+    <div class="tab" onclick="switchTab('reports')">📨 Reports</div>
     <div class="tab" onclick="switchTab('video')">🎬 Video Script</div>
     <div class="tab" onclick="switchTab('rubric')">📊 Evaluation</div>
     <div class="tab" onclick="switchTab('export')">📁 Export</div>
   </div>
 
-  <!-- STUDENT TABS -->
   <div class="tabs hidden" id="studentTabs">
     <div class="tab active" onclick="switchTab('studenthome')">🏠 My Class</div>
   </div>
 
   <div class="content">
 
-    <!-- ═══ LESSON BUILDER ═══ -->
     <div id="builder" class="section active">
-      <!-- CLASS CODE BOX -->
-      <div class="card" id="classCodeBox">
+      <div class="card">
         <h3>🔑 Your Class Code</h3>
-        <p style="font-size:0.85rem;color:#555;margin-bottom:0.5rem">Share this code with your students so they can connect to your class.</p>
-        <div class="code-display" id="classCodeDisplay">——</div>
-        <button class="btn btn-sm btn-outline" onclick="generateClassCode()" style="width:auto">Generate New Code</button>
+        <p style="font-size:0.85rem;color:#555;margin-bottom:0.5rem">Share this code with your students so they can connect to your class from any device.</p>
+        <div class="code-display" id="classCodeDisplay">------</div>
+        <button class="btn-outline btn-sm" onclick="generateClassCode()" style="width:auto">Generate New Code</button>
       </div>
-
       <div class="form-group">
         <label>Topic *</label>
         <input id="topic" placeholder="Start typing a topic..." autocomplete="off" oninput="handleTopicInput(this.value)" onblur="setTimeout(()=>closeAC(),200)"/>
@@ -283,13 +251,12 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
         <select id="style"><option>Lecture-based</option><option>Discussion-based</option><option>Project-based</option><option>Flipped</option></select>
       </div>
       <button class="btn" onclick="generateLesson()">✨ Generate Lesson Plan</button>
-
       <div id="planOutput" class="hidden">
         <div class="section-title">📊 Overview</div>
         <div class="metrics">
-          <div class="metric"><div class="val" id="mTopic">—</div><div class="lbl">Topic</div></div>
-          <div class="metric"><div class="val" id="mLevel">—</div><div class="lbl">Level</div></div>
-          <div class="metric"><div class="val" id="mDur">—</div><div class="lbl">Duration</div></div>
+          <div class="metric"><div class="val" id="mTopic">-</div><div class="lbl">Topic</div></div>
+          <div class="metric"><div class="val" id="mLevel">-</div><div class="lbl">Level</div></div>
+          <div class="metric"><div class="val" id="mDur">-</div><div class="lbl">Duration</div></div>
         </div>
         <div class="section-title">🏷️ ICAP Coverage</div>
         <div class="icap-row">
@@ -300,7 +267,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
         </div>
         <div class="section-title">📐 Lecture Outline</div>
         <div id="outlineCards"></div>
-        <div class="section-title">💡 Examples & Analogies</div>
+        <div class="section-title">💡 Examples and Analogies</div>
         <div id="analogyCards"></div>
         <div class="section-title">🎯 In-Class Activity Prompts</div>
         <div id="activityCards"></div>
@@ -315,7 +282,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- ═══ LIVE CLASS ═══ -->
     <div id="liveclass" class="section">
       <div id="noplanLive" class="info-box">⚠️ Generate a lesson plan first — the live tools need your topic.</div>
       <div id="liveclassContent" class="hidden">
@@ -330,7 +296,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
               <p style="font-size:0.82rem;color:#666;margin-bottom:0.6rem">A student just asked something unexpected.</p>
               <textarea id="teacherQ" rows="2" placeholder="e.g. Why do we square the error?"></textarea>
               <button class="voice-btn" onclick="startVoice('teacherQ')">🎤 Speak</button>
-              <button class="btn" onclick="handleTeacherQuestion()">Get Response →</button>
+              <button class="btn" onclick="handleTeacherQuestion()">Get Response</button>
               <div class="result-box" id="teacherQResult"></div>
               <button class="speak-btn hidden" id="speakTeacherQ" onclick="speakText('teacherQResult')">🔊 Read aloud</button>
             </div>
@@ -339,7 +305,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
               <p style="font-size:0.82rem;color:#666;margin-bottom:0.6rem">Students look lost — describe the confusion.</p>
               <textarea id="confusionInput" rows="2" placeholder="e.g. Students don't understand coefficients vs predictions"></textarea>
               <button class="voice-btn" onclick="startVoice('confusionInput')">🎤 Speak</button>
-              <button class="btn-orange" onclick="handleConfusion()">Get Rescue Strategy →</button>
+              <button class="btn-orange" onclick="handleConfusion()">Get Rescue Strategy</button>
               <div class="result-box orange" id="confusionResult"></div>
               <button class="speak-btn hidden" id="speakConfusion" onclick="speakText('confusionResult')">🔊 Read aloud</button>
             </div>
@@ -349,7 +315,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
               <input id="conceptQ" placeholder="Question you asked the class"/>
               <label style="margin-top:0.6rem">% correct: <span id="pctLabel">50</span>%</label>
               <input type="range" min="0" max="100" value="50" id="correctPct" oninput="document.getElementById('pctLabel').textContent=this.value"/>
-              <button class="btn-blue" onclick="handleConceptCheck()">Interpret Results →</button>
+              <button class="btn-blue" onclick="handleConceptCheck()">Interpret Results</button>
               <div class="result-box blue" id="conceptResult"></div>
               <button class="speak-btn hidden" id="speakConcept" onclick="speakText('conceptResult')">🔊 Read aloud</button>
             </div>
@@ -358,19 +324,18 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
               <p style="font-size:0.82rem;color:#666;margin-bottom:0.6rem">Running behind? Get instant pacing advice.</p>
               <input type="number" id="minsElapsed" placeholder="Minutes elapsed e.g. 45"/>
               <input id="currentSeg" placeholder="Current segment e.g. Core Concept" style="margin-top:0.5rem"/>
-              <button class="btn-purple" onclick="handlePacing()">Get Pacing Advice →</button>
+              <button class="btn-purple" onclick="handlePacing()">Get Pacing Advice</button>
               <div class="result-box purple" id="pacingResult"></div>
               <button class="speak-btn hidden" id="speakPacing" onclick="speakText('pacingResult')">🔊 Read aloud</button>
             </div>
           </div>
         </div>
         <div id="teacherStudentPreview" class="hidden">
-          <div class="info-box">This is a preview of what your students see when they join with the class code. Their questions are sent to you as reports.</div>
+          <div class="info-box">This is a preview of what your students see when they join with the class code.</div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ STUDENT SUPPORT ═══ -->
     <div id="student" class="section">
       <div id="noplan1" class="info-box">⚠️ Generate a lesson plan first.</div>
       <div id="studentContent" class="hidden">
@@ -383,22 +348,20 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- ═══ STUDENT REPORTS ═══ -->
     <div id="reports" class="section">
       <div class="section-title">📨 Student Reports</div>
-      <p style="font-size:0.88rem;color:#555;margin-bottom:1rem">Everything your students asked or were confused about during class.</p>
+      <p style="font-size:0.88rem;color:#555;margin-bottom:1rem">Everything your students asked during class.</p>
       <div id="reportsEmpty" class="info-box">No student reports yet. Students need to join your class with the class code and ask questions.</div>
       <div id="reportsList"></div>
       <button class="btn-outline" onclick="clearReports()" style="margin-top:0.5rem">🗑️ Clear All Reports</button>
     </div>
 
-    <!-- ═══ VIDEO SCRIPT ═══ -->
     <div id="video" class="section">
       <div id="noplanVideo" class="info-box">⚠️ Generate a lesson plan first.</div>
       <div id="videoContent" class="hidden">
         <div class="section-title">🎬 Video Lecture Script</div>
         <div class="card">
-          <p style="font-size:0.88rem;color:#555;margin-bottom:0.7rem">Generate a full narration script for a video lecture on this topic. Use it with tools like HeyGen, Synthesia, or record it yourself.</p>
+          <p style="font-size:0.88rem;color:#555;margin-bottom:0.7rem">Generate a full narration script for a video lecture. Use it with HeyGen, Synthesia, or record it yourself.</p>
           <button class="btn" id="videoBtn" onclick="generateVideoScript()">🎬 Generate Video Script</button>
           <div id="videoStatus" style="margin-top:0.5rem;font-size:0.85rem;color:#888"></div>
         </div>
@@ -407,21 +370,19 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- ═══ EVALUATION ═══ -->
     <div id="rubric" class="section">
       <div id="noplan2" class="info-box">⚠️ Generate a lesson plan first.</div>
       <div id="rubricContent" class="hidden">
         <p style="font-size:0.88rem;color:#555;margin-bottom:1rem">Score each criterion from 1 (poor) to 5 (excellent).</p>
         <div id="rubricRows"></div>
         <div class="score-display">
-          <div class="big" id="totalScore">—</div>
-          <div style="font-size:0.85rem;color:#555">Total · <span id="totalPct">—</span> · <span id="rating">—</span></div>
+          <div class="big" id="totalScore">-</div>
+          <div style="font-size:0.85rem;color:#555">Total · <span id="totalPct">-</span> · <span id="rating">-</span></div>
         </div>
         <button class="btn" style="margin-top:1rem" onclick="saveRubric()">💾 Save Scores</button>
       </div>
     </div>
 
-    <!-- ═══ EXPORT ═══ -->
     <div id="export" class="section">
       <div id="noplan3" class="info-box">⚠️ Generate a lesson plan first.</div>
       <div id="exportContent" class="hidden">
@@ -431,224 +392,77 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- ═══ STUDENT HOME ═══ -->
     <div id="studenthome" class="section">
       <div class="student-hero">
         <h2 id="stuWelcome">Welcome back 👋</h2>
-        <p id="stuSubtitle">Ask your teacher anything — get a personalised answer</p>
+        <p>Ask your teacher anything — get a personalised answer</p>
       </div>
-
-      <!-- Connect to class -->
       <div class="connect-box" id="connectBox">
         <h3>🔗 Connect to Your Teacher's Class</h3>
         <p style="font-size:0.85rem;color:#555;margin-bottom:0.8rem">Enter the 6-character code your teacher shared with you.</p>
         <div style="display:flex;gap:0.5rem">
           <input id="classCodeInput" placeholder="e.g. ABC123" style="text-transform:uppercase;letter-spacing:0.1rem;flex:1" maxlength="6"/>
-          <button class="btn" style="width:auto;margin-top:0" onclick="joinClass()">Join →</button>
+          <button class="btn" style="width:auto;margin-top:0" onclick="joinClass()">Join</button>
         </div>
         <p id="joinError" style="color:#e74c3c;font-size:0.82rem;margin-top:0.4rem;display:none"></p>
       </div>
-
-      <!-- Connected class info -->
       <div class="hidden" id="connectedClassBox">
         <div class="connected-class">
           <div>
-            <div class="topic" id="connectedTopic">—</div>
-            <div class="teacher" id="connectedTeacher">—</div>
+            <div class="topic" id="connectedTopic">-</div>
+            <div class="teacher" id="connectedTeacher">-</div>
           </div>
           <button class="disconnect-btn" onclick="disconnectClass()">Leave</button>
         </div>
       </div>
-
-      <!-- Student question area -->
       <div id="stuAskArea" class="hidden">
         <div class="card card-blue">
           <h3>🙋 Ask Your Question</h3>
-          <p style="font-size:0.82rem;color:#666;margin-bottom:0.6rem">Your profile is saved — just type your question.</p>
-          <textarea id="stuQuestion" rows="3" placeholder="Type anything you didn't understand from today's class..."></textarea>
+          <p style="font-size:0.82rem;color:#666;margin-bottom:0.6rem">Your profile is saved. Just type your question and get a personalised answer.</p>
+          <textarea id="stuQuestion" rows="3" placeholder="Type anything you did not understand from today's class..."></textarea>
           <button class="voice-btn" onclick="startVoice('stuQuestion')">🎤 Speak your question</button>
-          <button class="btn-blue" onclick="handleStudentQuestion()">Get My Answer →</button>
+          <button class="btn-blue" onclick="handleStudentQuestion()">Get My Answer</button>
           <div class="result-box blue" id="stuQuestionResult"></div>
           <button class="speak-btn hidden" id="speakStuQ" onclick="speakText('stuQuestionResult')">🔊 Read answer aloud</button>
         </div>
       </div>
-
       <div id="stuNoClass" class="info-box" style="margin-top:1rem">Enter your teacher's class code above to start asking questions.</div>
     </div>
 
-  </div><!-- end .content -->
-</div><!-- end #mainApp -->
+  </div>
+</div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// TOPICS + OBJECTIVES AUTOCOMPLETE DATA
-// ═══════════════════════════════════════════════════════
-
 const TOPICS = [
-  // Statistics
-  {t:"Linear Regression",          c:"Statistics"},
-  {t:"Logistic Regression",        c:"Statistics"},
-  {t:"Hypothesis Testing",         c:"Statistics"},
-  {t:"Probability Theory",         c:"Statistics"},
-  {t:"Bayesian Statistics",        c:"Statistics"},
-  {t:"Descriptive Statistics",     c:"Statistics"},
-  {t:"Inferential Statistics",     c:"Statistics"},
-  {t:"ANOVA",                      c:"Statistics"},
-  {t:"Chi-Square Test",            c:"Statistics"},
-  {t:"Confidence Intervals",       c:"Statistics"},
-  {t:"Central Limit Theorem",      c:"Statistics"},
-  {t:"Normal Distribution",        c:"Statistics"},
-  {t:"Correlation vs Causation",   c:"Statistics"},
-  {t:"Time Series Analysis",       c:"Statistics"},
-  {t:"Survival Analysis",          c:"Statistics"},
-  {t:"Multiple Regression",        c:"Statistics"},
-  {t:"Sampling Methods",           c:"Statistics"},
-  {t:"Statistical Power",          c:"Statistics"},
-  {t:"A/B Testing",                c:"Statistics"},
-  {t:"Experimental Design",        c:"Statistics"},
-
-  // Machine Learning
-  {t:"Decision Trees",             c:"Machine Learning"},
-  {t:"Random Forests",             c:"Machine Learning"},
-  {t:"Support Vector Machines",    c:"Machine Learning"},
-  {t:"K-Nearest Neighbors",        c:"Machine Learning"},
-  {t:"Naive Bayes",                c:"Machine Learning"},
-  {t:"Gradient Boosting",          c:"Machine Learning"},
-  {t:"XGBoost",                    c:"Machine Learning"},
-  {t:"Ensemble Methods",           c:"Machine Learning"},
-  {t:"Bias-Variance Tradeoff",     c:"Machine Learning"},
-  {t:"Overfitting and Underfitting",c:"Machine Learning"},
-  {t:"Cross-Validation",           c:"Machine Learning"},
-  {t:"Feature Engineering",        c:"Machine Learning"},
-  {t:"Feature Selection",          c:"Machine Learning"},
-  {t:"Hyperparameter Tuning",      c:"Machine Learning"},
-  {t:"Model Evaluation Metrics",   c:"Machine Learning"},
-  {t:"ROC Curve and AUC",          c:"Machine Learning"},
-  {t:"Confusion Matrix",           c:"Machine Learning"},
-  {t:"Regularization",             c:"Machine Learning"},
-  {t:"Principal Component Analysis",c:"Machine Learning"},
-  {t:"Dimensionality Reduction",   c:"Machine Learning"},
-
-  // Deep Learning
-  {t:"Neural Networks",            c:"Deep Learning"},
-  {t:"Convolutional Neural Networks",c:"Deep Learning"},
-  {t:"Recurrent Neural Networks",  c:"Deep Learning"},
-  {t:"LSTM Networks",              c:"Deep Learning"},
-  {t:"Transformers",               c:"Deep Learning"},
-  {t:"Attention Mechanism",        c:"Deep Learning"},
-  {t:"Transfer Learning",          c:"Deep Learning"},
-  {t:"Backpropagation",            c:"Deep Learning"},
-  {t:"Activation Functions",       c:"Deep Learning"},
-  {t:"Dropout Regularization",     c:"Deep Learning"},
-  {t:"Batch Normalization",        c:"Deep Learning"},
-  {t:"Generative Adversarial Networks",c:"Deep Learning"},
-  {t:"Autoencoders",               c:"Deep Learning"},
-  {t:"Object Detection",           c:"Deep Learning"},
-  {t:"Natural Language Processing",c:"Deep Learning"},
-
-  // Data Engineering
-  {t:"SQL Fundamentals",           c:"Data Engineering"},
-  {t:"Advanced SQL",               c:"Data Engineering"},
-  {t:"NoSQL Databases",            c:"Data Engineering"},
-  {t:"Data Warehousing",           c:"Data Engineering"},
-  {t:"ETL Pipelines",              c:"Data Engineering"},
-  {t:"Apache Spark",               c:"Data Engineering"},
-  {t:"Apache Kafka",               c:"Data Engineering"},
-  {t:"Data Lakes",                 c:"Data Engineering"},
-  {t:"Data Modeling",              c:"Data Engineering"},
-  {t:"Database Indexing",          c:"Data Engineering"},
-  {t:"Data Quality",               c:"Data Engineering"},
-  {t:"Data Governance",            c:"Data Engineering"},
-  {t:"REST APIs",                  c:"Data Engineering"},
-  {t:"GraphQL",                    c:"Data Engineering"},
-  {t:"Airflow and Orchestration",  c:"Data Engineering"},
-
-  // Programming
-  {t:"Python for Data Science",    c:"Programming"},
-  {t:"Pandas",                     c:"Programming"},
-  {t:"NumPy",                      c:"Programming"},
-  {t:"Matplotlib",                 c:"Programming"},
-  {t:"Scikit-Learn",               c:"Programming"},
-  {t:"TensorFlow",                 c:"Programming"},
-  {t:"PyTorch",                    c:"Programming"},
-  {t:"R Programming",              c:"Programming"},
-  {t:"Version Control with Git",   c:"Programming"},
-  {t:"Object-Oriented Programming",c:"Programming"},
-  {t:"Functional Programming",     c:"Programming"},
-  {t:"Web Scraping",               c:"Programming"},
-  {t:"Regular Expressions",        c:"Programming"},
-  {t:"Jupyter Notebooks",          c:"Programming"},
-  {t:"Virtual Environments",       c:"Programming"},
-
-  // Data Visualisation
-  {t:"Data Visualisation Principles",c:"Visualisation"},
-  {t:"Seaborn",                    c:"Visualisation"},
-  {t:"Plotly",                     c:"Visualisation"},
-  {t:"Tableau",                    c:"Visualisation"},
-  {t:"Power BI",                   c:"Visualisation"},
-  {t:"D3.js",                      c:"Visualisation"},
-  {t:"Dashboard Design",           c:"Visualisation"},
-  {t:"Storytelling with Data",     c:"Visualisation"},
-  {t:"Geospatial Visualisation",   c:"Visualisation"},
-  {t:"Interactive Charts",         c:"Visualisation"},
-
-  // AI Ethics
-  {t:"AI Ethics",                  c:"AI Ethics"},
-  {t:"Algorithmic Bias",           c:"AI Ethics"},
-  {t:"Fairness in Machine Learning",c:"AI Ethics"},
-  {t:"Explainable AI",             c:"AI Ethics"},
-  {t:"Privacy and Data Protection",c:"AI Ethics"},
-  {t:"GDPR and Data Laws",         c:"AI Ethics"},
-  {t:"Responsible AI",             c:"AI Ethics"},
-  {t:"AI and Society",             c:"AI Ethics"},
-
-  // Cloud
-  {t:"AWS for Data Science",       c:"Cloud"},
-  {t:"Google Cloud Platform",      c:"Cloud"},
-  {t:"Azure Machine Learning",     c:"Cloud"},
-  {t:"Docker",                     c:"Cloud"},
-  {t:"Kubernetes",                 c:"Cloud"},
-  {t:"MLOps",                      c:"Cloud"},
-  {t:"Model Deployment",           c:"Cloud"},
-  {t:"Cloud Storage",              c:"Cloud"},
-
-  // Business / Analytics
-  {t:"Business Intelligence",      c:"Analytics"},
-  {t:"KPIs and Metrics",           c:"Analytics"},
-  {t:"Cohort Analysis",            c:"Analytics"},
-  {t:"Customer Segmentation",      c:"Analytics"},
-  {t:"Churn Prediction",           c:"Analytics"},
-  {t:"Recommendation Systems",     c:"Analytics"},
-  {t:"Market Basket Analysis",     c:"Analytics"},
-  {t:"Forecasting",                c:"Analytics"},
-  {t:"Anomaly Detection",          c:"Analytics"},
-  {t:"Text Mining",                c:"Analytics"},
+  {t:"Linear Regression",c:"Statistics"},{t:"Logistic Regression",c:"Statistics"},{t:"Hypothesis Testing",c:"Statistics"},{t:"Probability Theory",c:"Statistics"},{t:"Bayesian Statistics",c:"Statistics"},{t:"Descriptive Statistics",c:"Statistics"},{t:"Inferential Statistics",c:"Statistics"},{t:"ANOVA",c:"Statistics"},{t:"Chi-Square Test",c:"Statistics"},{t:"Confidence Intervals",c:"Statistics"},{t:"Central Limit Theorem",c:"Statistics"},{t:"Normal Distribution",c:"Statistics"},{t:"Correlation vs Causation",c:"Statistics"},{t:"Time Series Analysis",c:"Statistics"},{t:"Survival Analysis",c:"Statistics"},{t:"Multiple Regression",c:"Statistics"},{t:"Sampling Methods",c:"Statistics"},{t:"Statistical Power",c:"Statistics"},{t:"A/B Testing",c:"Statistics"},{t:"Experimental Design",c:"Statistics"},
+  {t:"Decision Trees",c:"Machine Learning"},{t:"Random Forests",c:"Machine Learning"},{t:"Support Vector Machines",c:"Machine Learning"},{t:"K-Nearest Neighbors",c:"Machine Learning"},{t:"Naive Bayes",c:"Machine Learning"},{t:"Gradient Boosting",c:"Machine Learning"},{t:"XGBoost",c:"Machine Learning"},{t:"Ensemble Methods",c:"Machine Learning"},{t:"Bias-Variance Tradeoff",c:"Machine Learning"},{t:"Overfitting and Underfitting",c:"Machine Learning"},{t:"Cross-Validation",c:"Machine Learning"},{t:"Feature Engineering",c:"Machine Learning"},{t:"Feature Selection",c:"Machine Learning"},{t:"Hyperparameter Tuning",c:"Machine Learning"},{t:"Model Evaluation Metrics",c:"Machine Learning"},{t:"ROC Curve and AUC",c:"Machine Learning"},{t:"Confusion Matrix",c:"Machine Learning"},{t:"Regularization",c:"Machine Learning"},{t:"Principal Component Analysis",c:"Machine Learning"},{t:"Dimensionality Reduction",c:"Machine Learning"},
+  {t:"Neural Networks",c:"Deep Learning"},{t:"Convolutional Neural Networks",c:"Deep Learning"},{t:"Recurrent Neural Networks",c:"Deep Learning"},{t:"LSTM Networks",c:"Deep Learning"},{t:"Transformers",c:"Deep Learning"},{t:"Attention Mechanism",c:"Deep Learning"},{t:"Transfer Learning",c:"Deep Learning"},{t:"Backpropagation",c:"Deep Learning"},{t:"Activation Functions",c:"Deep Learning"},{t:"Dropout Regularization",c:"Deep Learning"},{t:"Batch Normalization",c:"Deep Learning"},{t:"Generative Adversarial Networks",c:"Deep Learning"},{t:"Autoencoders",c:"Deep Learning"},{t:"Object Detection",c:"Deep Learning"},{t:"Natural Language Processing",c:"Deep Learning"},
+  {t:"SQL Fundamentals",c:"Data Engineering"},{t:"Advanced SQL",c:"Data Engineering"},{t:"NoSQL Databases",c:"Data Engineering"},{t:"Data Warehousing",c:"Data Engineering"},{t:"ETL Pipelines",c:"Data Engineering"},{t:"Apache Spark",c:"Data Engineering"},{t:"Apache Kafka",c:"Data Engineering"},{t:"Data Lakes",c:"Data Engineering"},{t:"Data Modeling",c:"Data Engineering"},{t:"Database Indexing",c:"Data Engineering"},{t:"Data Quality",c:"Data Engineering"},{t:"Data Governance",c:"Data Engineering"},{t:"REST APIs",c:"Data Engineering"},{t:"GraphQL",c:"Data Engineering"},{t:"Airflow and Orchestration",c:"Data Engineering"},
+  {t:"Python for Data Science",c:"Programming"},{t:"Pandas",c:"Programming"},{t:"NumPy",c:"Programming"},{t:"Matplotlib",c:"Programming"},{t:"Scikit-Learn",c:"Programming"},{t:"TensorFlow",c:"Programming"},{t:"PyTorch",c:"Programming"},{t:"R Programming",c:"Programming"},{t:"Version Control with Git",c:"Programming"},{t:"Object-Oriented Programming",c:"Programming"},{t:"Functional Programming",c:"Programming"},{t:"Web Scraping",c:"Programming"},{t:"Regular Expressions",c:"Programming"},{t:"Jupyter Notebooks",c:"Programming"},{t:"Virtual Environments",c:"Programming"},
+  {t:"Data Visualisation Principles",c:"Visualisation"},{t:"Seaborn",c:"Visualisation"},{t:"Plotly",c:"Visualisation"},{t:"Tableau",c:"Visualisation"},{t:"Power BI",c:"Visualisation"},{t:"D3.js",c:"Visualisation"},{t:"Dashboard Design",c:"Visualisation"},{t:"Storytelling with Data",c:"Visualisation"},{t:"Geospatial Visualisation",c:"Visualisation"},{t:"Interactive Charts",c:"Visualisation"},
+  {t:"AI Ethics",c:"AI Ethics"},{t:"Algorithmic Bias",c:"AI Ethics"},{t:"Fairness in Machine Learning",c:"AI Ethics"},{t:"Explainable AI",c:"AI Ethics"},{t:"Privacy and Data Protection",c:"AI Ethics"},{t:"GDPR and Data Laws",c:"AI Ethics"},{t:"Responsible AI",c:"AI Ethics"},{t:"AI and Society",c:"AI Ethics"},
+  {t:"AWS for Data Science",c:"Cloud"},{t:"Google Cloud Platform",c:"Cloud"},{t:"Azure Machine Learning",c:"Cloud"},{t:"Docker",c:"Cloud"},{t:"Kubernetes",c:"Cloud"},{t:"MLOps",c:"Cloud"},{t:"Model Deployment",c:"Cloud"},{t:"Cloud Storage",c:"Cloud"},
+  {t:"Business Intelligence",c:"Analytics"},{t:"KPIs and Metrics",c:"Analytics"},{t:"Cohort Analysis",c:"Analytics"},{t:"Customer Segmentation",c:"Analytics"},{t:"Churn Prediction",c:"Analytics"},{t:"Recommendation Systems",c:"Analytics"},{t:"Market Basket Analysis",c:"Analytics"},{t:"Forecasting",c:"Analytics"},{t:"Anomaly Detection",c:"Analytics"},{t:"Text Mining",c:"Analytics"},
 ];
 
 const OBJECTIVES_MAP = {
-  "Linear Regression": "1. Understand what linear regression is and when to use it\n2. Interpret coefficients and the regression equation\n3. Evaluate model fit using R-squared and RMSE\n4. Identify assumptions and when they are violated",
-  "Logistic Regression": "1. Understand the difference between linear and logistic regression\n2. Interpret log-odds, odds ratios, and probabilities\n3. Evaluate a logistic regression model using accuracy and AUC\n4. Apply logistic regression to a binary classification problem",
-  "Neural Networks": "1. Understand the structure of a neural network — layers, nodes, weights\n2. Explain how backpropagation and gradient descent work\n3. Identify appropriate activation functions for different tasks\n4. Build a simple neural network using Python",
-  "Decision Trees": "1. Understand how a decision tree splits data using information gain\n2. Interpret a decision tree visually and make predictions from it\n3. Identify overfitting in trees and apply pruning techniques\n4. Compare decision trees to other classifiers",
-  "SQL Fundamentals": "1. Write basic SELECT, WHERE, and JOIN queries\n2. Understand primary keys, foreign keys, and table relationships\n3. Use aggregate functions like COUNT, SUM, and AVG\n4. Filter and sort query results effectively",
-  "Python for Data Science": "1. Write Python code using variables, loops, and functions\n2. Load and manipulate data using Pandas\n3. Create basic visualisations with Matplotlib\n4. Understand list comprehensions and lambda functions",
-  "Hypothesis Testing": "1. Understand the null and alternative hypothesis\n2. Choose the right statistical test for a given problem\n3. Interpret p-values and confidence intervals correctly\n4. Avoid common mistakes like p-hacking and multiple comparisons",
-  "Random Forests": "1. Understand how random forests extend decision trees using bagging\n2. Explain feature importance from a random forest model\n3. Tune hyperparameters like n_estimators and max_depth\n4. Compare random forests to gradient boosting",
-  "K-Nearest Neighbors": "1. Understand how KNN classifies points using distance\n2. Choose an appropriate value of K using cross-validation\n3. Explain the curse of dimensionality and its effect on KNN\n4. Normalise features before applying KNN",
-  "Cross-Validation": "1. Explain why cross-validation gives a better estimate than a single split\n2. Implement k-fold cross-validation in Python\n3. Understand stratified cross-validation for imbalanced datasets\n4. Use cross-validation to compare multiple models",
-  "Pandas": "1. Load, inspect, and clean a DataFrame\n2. Filter, sort, and group data using Pandas methods\n3. Handle missing values and duplicates\n4. Merge and reshape DataFrames",
-  "Natural Language Processing": "1. Understand tokenisation, stemming, and lemmatisation\n2. Represent text as numerical features using TF-IDF\n3. Build a simple text classifier\n4. Understand the basics of word embeddings",
-  "Deep Learning": "1. Explain what makes deep learning different from traditional ML\n2. Understand layers, activation functions, and weights\n3. Describe the training process including loss and optimisation\n4. Identify appropriate use cases for deep learning",
-  "Data Visualisation Principles": "1. Choose the right chart type for different data and goals\n2. Apply principles of clarity, accuracy, and colour in charts\n3. Avoid misleading visualisations\n4. Create an effective data story using visuals",
-  "AI Ethics": "1. Identify common sources of bias in AI systems\n2. Explain fairness metrics and their limitations\n3. Understand legal and ethical frameworks for AI use\n4. Critically evaluate the societal impact of an AI application",
+  "Linear Regression":"1. Understand what linear regression is and when to use it\n2. Interpret coefficients and the regression equation\n3. Evaluate model fit using R-squared and RMSE\n4. Identify assumptions and when they are violated",
+  "Logistic Regression":"1. Understand the difference between linear and logistic regression\n2. Interpret log-odds, odds ratios, and probabilities\n3. Evaluate a logistic regression model using accuracy and AUC\n4. Apply logistic regression to a binary classification problem",
+  "Neural Networks":"1. Understand the structure of a neural network — layers, nodes, weights\n2. Explain how backpropagation and gradient descent work\n3. Identify appropriate activation functions for different tasks\n4. Build a simple neural network using Python",
+  "Decision Trees":"1. Understand how a decision tree splits data using information gain\n2. Interpret a decision tree visually and make predictions from it\n3. Identify overfitting in trees and apply pruning techniques\n4. Compare decision trees to other classifiers",
+  "SQL Fundamentals":"1. Write basic SELECT, WHERE, and JOIN queries\n2. Understand primary keys, foreign keys, and table relationships\n3. Use aggregate functions like COUNT, SUM, and AVG\n4. Filter and sort query results effectively",
+  "Python for Data Science":"1. Write Python code using variables, loops, and functions\n2. Load and manipulate data using Pandas\n3. Create basic visualisations with Matplotlib\n4. Understand list comprehensions and lambda functions",
+  "Hypothesis Testing":"1. Understand the null and alternative hypothesis\n2. Choose the right statistical test for a given problem\n3. Interpret p-values and confidence intervals correctly\n4. Avoid common mistakes like p-hacking and multiple comparisons",
+  "Random Forests":"1. Understand how random forests extend decision trees using bagging\n2. Explain feature importance from a random forest model\n3. Tune hyperparameters like n_estimators and max_depth\n4. Compare random forests to gradient boosting",
+  "Pandas":"1. Load, inspect, and clean a DataFrame\n2. Filter, sort, and group data using Pandas methods\n3. Handle missing values and duplicates\n4. Merge and reshape DataFrames",
+  "Natural Language Processing":"1. Understand tokenisation, stemming, and lemmatisation\n2. Represent text as numerical features using TF-IDF\n3. Build a simple text classifier\n4. Understand the basics of word embeddings",
+  "AI Ethics":"1. Identify common sources of bias in AI systems\n2. Explain fairness metrics and their limitations\n3. Understand legal and ethical frameworks for AI use\n4. Critically evaluate the societal impact of an AI application",
+  "Data Visualisation Principles":"1. Choose the right chart type for different data and goals\n2. Apply principles of clarity, accuracy, and colour in charts\n3. Avoid misleading visualisations\n4. Create an effective data story using visuals",
+  "Cross-Validation":"1. Explain why cross-validation gives a better estimate than a single split\n2. Implement k-fold cross-validation in Python\n3. Understand stratified cross-validation for imbalanced datasets\n4. Use cross-validation to compare multiple models",
 };
 
-// ═══════════════════════════════════════════════════════
-// AUTH
-// ═══════════════════════════════════════════════════════
-
 let selectedRole = "";
-let currentUser  = null;
+let currentUser = null;
 
 function pickRole(role){
   selectedRole = role;
@@ -667,19 +481,17 @@ function switchAuthTab(tab){
 
 function getUsers(){ return JSON.parse(localStorage.getItem("lai_users")||"[]"); }
 function saveUsers(u){ localStorage.setItem("lai_users", JSON.stringify(u)); }
-function getClasses(){ return JSON.parse(localStorage.getItem("lai_classes")||"[]"); }
-function saveClasses(c){ localStorage.setItem("lai_classes", JSON.stringify(c)); }
 function getReports(){ return JSON.parse(localStorage.getItem("lai_reports")||"[]"); }
 function saveReports(r){ localStorage.setItem("lai_reports", JSON.stringify(r)); }
 
 function doLogin(){
   if(!selectedRole){ alert("Select Teacher or Student first."); return; }
   const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-  const pass  = document.getElementById("loginPassword").value;
+  const pass = document.getElementById("loginPassword").value;
   const users = getUsers();
-  const user  = users.find(u=> u.email===email && u.password===pass && u.role===selectedRole);
+  const user = users.find(u=> u.email===email && u.password===pass && u.role===selectedRole);
   if(!user){
-    document.getElementById("loginError").textContent = "Email or password not found for this role.";
+    document.getElementById("loginError").textContent="Email or password not found for this role.";
     document.getElementById("loginError").style.display="block";
     return;
   }
@@ -688,17 +500,16 @@ function doLogin(){
 
 function doSignup(){
   if(!selectedRole){ alert("Select Teacher or Student first."); return; }
-  const name  = document.getElementById("suName").value.trim();
+  const name = document.getElementById("suName").value.trim();
   const email = document.getElementById("suEmail").value.trim().toLowerCase();
-  const pass  = document.getElementById("suPassword").value;
+  const pass = document.getElementById("suPassword").value;
   if(!name||!email||!pass){ showSignupErr("Please fill in all required fields."); return; }
   const users = getUsers();
   if(users.find(u=>u.email===email)){ showSignupErr("An account with this email already exists."); return; }
-
   const user = {name, email, password:pass, role:selectedRole};
   if(selectedRole==="student"){
-    user.age        = document.getElementById("suAge").value;
-    user.year       = document.getElementById("suYear").value;
+    user.age = document.getElementById("suAge").value;
+    user.year = document.getElementById("suYear").value;
     user.background = document.getElementById("suBackground").value;
   }
   users.push(user);
@@ -727,18 +538,16 @@ function doLogout(){
 
 function initApp(){
   const u = currentUser;
-  document.getElementById("userBadge").textContent = u.name + (u.role==="teacher"?" · Teacher":" · Student");
+  document.getElementById("userBadge").textContent = u.name + (u.role==="teacher" ? " · Teacher" : " · Student");
   if(u.role==="teacher"){
     document.getElementById("teacherTabs").classList.remove("hidden");
     document.getElementById("studentTabs").classList.add("hidden");
     loadOrCreateClassCode();
     loadReports();
-    // make sure builder is active
     switchTab("builder");
   } else {
     document.getElementById("teacherTabs").classList.add("hidden");
     document.getElementById("studentTabs").classList.remove("hidden");
-    // Remove all section active classes then activate studenthome
     document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
     document.getElementById("studenthome").classList.add("active");
     document.getElementById("stuWelcome").textContent = "Welcome back, " + u.name + " 👋";
@@ -746,46 +555,35 @@ function initApp(){
   }
 }
 
-// ═══════════════════════════════════════════════════════
-// CLASS CODE
-// ═══════════════════════════════════════════════════════
+async function generateClassCode(){
+  const code = Math.random().toString(36).substring(2,8).toUpperCase();
+  const cls = {code, teacherEmail:currentUser.email, teacherName:currentUser.name, topic:"", level:""};
+  localStorage.setItem("lai_teacher_code_"+currentUser.email, JSON.stringify(cls));
+  document.getElementById("classCodeDisplay").textContent = code;
+  await fetch("/save_class", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(cls)});
+}
 
-function loadOrCreateClassCode(){
-  const classes = getClasses();
-  const existing = classes.find(c=>c.teacherEmail===currentUser.email);
-  if(existing){
-    document.getElementById("classCodeDisplay").textContent = existing.code;
+async function loadOrCreateClassCode(){
+  const saved = localStorage.getItem("lai_teacher_code_"+currentUser.email);
+  if(saved){
+    const cls = JSON.parse(saved);
+    document.getElementById("classCodeDisplay").textContent = cls.code;
+    await fetch("/save_class", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(cls)});
   } else {
     generateClassCode();
   }
 }
 
-function generateClassCode(){
-  const code = Math.random().toString(36).substring(2,8).toUpperCase();
-  const classes = getClasses().filter(c=>c.teacherEmail!==currentUser.email);
-  classes.push({teacherEmail:currentUser.email, teacherName:currentUser.name, code, topic:"", level:""});
-  saveClasses(classes);
-  document.getElementById("classCodeDisplay").textContent = code;
-}
-
-function getTeacherCode(){
-  const classes = getClasses();
-  const c = classes.find(x=>x.teacherEmail===currentUser.email);
-  return c ? c.code : null;
-}
-
-// ═══════════════════════════════════════════════════════
-// STUDENT CLASS CONNECTION
-// ═══════════════════════════════════════════════════════
-
-function joinClass(){
+async function joinClass(){
   const code = document.getElementById("classCodeInput").value.trim().toUpperCase();
-  if(code.length<4){ showJoinErr("Enter a valid class code."); return; }
-  const classes = getClasses();
-  const cls = classes.find(c=>c.code===code);
-  if(!cls){ showJoinErr("Code not found. Check with your teacher."); return; }
-  localStorage.setItem("lai_student_class_"+currentUser.email, JSON.stringify(cls));
-  showConnectedClass(cls);
+  if(code.length < 4){ showJoinErr("Enter a valid class code."); return; }
+  try {
+    const res = await fetch("/get_class", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({code})});
+    const data = await res.json();
+    if(!data.success){ showJoinErr("Code not found. Check with your teacher."); return; }
+    localStorage.setItem("lai_student_class_"+currentUser.email, JSON.stringify(data.class));
+    showConnectedClass(data.class);
+  } catch(e){ showJoinErr("Could not connect. Try again."); }
 }
 
 function showJoinErr(msg){
@@ -803,9 +601,7 @@ function disconnectClass(){
 
 function checkStudentConnection(){
   const saved = localStorage.getItem("lai_student_class_"+currentUser.email);
-  if(saved){
-    showConnectedClass(JSON.parse(saved));
-  }
+  if(saved){ showConnectedClass(JSON.parse(saved)); }
 }
 
 function showConnectedClass(cls){
@@ -818,30 +614,20 @@ function showConnectedClass(cls){
   document.getElementById("joinError").style.display="none";
 }
 
-// ═══════════════════════════════════════════════════════
-// AUTOCOMPLETE
-// ═══════════════════════════════════════════════════════
-
 function handleTopicInput(val){
   const list = document.getElementById("acList");
   if(!val||val.length<1){ list.classList.remove("show"); return; }
   const filtered = TOPICS.filter(t=>t.t.toLowerCase().includes(val.toLowerCase())).slice(0,12);
   if(!filtered.length){ list.classList.remove("show"); return; }
-  list.innerHTML = filtered.map(t=>`
-    <div class="autocomplete-item" onmousedown="selectTopic('${t.t.replace(/'/g,"\\'")}')">
-      ${t.t} <span class="autocomplete-cat">${t.c}</span>
-    </div>`).join("");
+  list.innerHTML = filtered.map(t=>`<div class="autocomplete-item" onmousedown="selectTopic('${t.t.replace(/'/g,"\\'")}')">${t.t} <span class="autocomplete-cat">${t.c}</span></div>`).join("");
   list.classList.add("show");
 }
 
 function selectTopic(topic){
   document.getElementById("topic").value = topic;
   closeAC();
-  // suggest objectives
   if(OBJECTIVES_MAP[topic]){
-    document.getElementById("objSuggestions").innerHTML = `
-      <div style="font-size:0.82rem;color:#2d6a4f;margin-bottom:0.3rem;font-weight:600">💡 Suggested objectives for ${topic}:</div>
-      <button class="btn-outline" style="font-size:0.82rem;padding:0.4rem 0.8rem;margin-top:0" onclick="useObjectives('${topic.replace(/'/g,"\\'")}')">Use these objectives ↓</button>`;
+    document.getElementById("objSuggestions").innerHTML = `<div style="font-size:0.82rem;color:#2d6a4f;margin-bottom:0.3rem;font-weight:600">Suggested objectives for ${topic}:</div><button class="btn-outline" style="font-size:0.82rem;padding:0.4rem 0.8rem;margin-top:0" onclick="useObjectives('${topic.replace(/'/g,"\\'")}')">Use these objectives</button>`;
   } else {
     document.getElementById("objSuggestions").innerHTML="";
   }
@@ -854,18 +640,14 @@ function useObjectives(topic){
 
 function closeAC(){ document.getElementById("acList").classList.remove("show"); }
 
-// ═══════════════════════════════════════════════════════
-// LESSON BUILDER
-// ═══════════════════════════════════════════════════════
-
 let currentPlan = null;
 
 const SEGMENTS=[
-  {name:"Introduction & Hook",      icap:"Active",       pct:0.12, desc:(t,s)=>`Open with a compelling real-world question related to "${t}". Use ${s} to immediately engage students.`},
-  {name:"Core Concept Explanation",  icap:"Passive",      pct:0.35, desc:(t,s)=>`Explain the foundational ideas of "${t}" using layered analogies. Present visual and formal representations.`},
-  {name:"Guided In-Class Activity",  icap:"Constructive", pct:0.28, desc:(t,s)=>`Students apply "${t}" to a structured hands-on task. Pairs encouraged to explain reasoning aloud.`},
-  {name:"Peer Discussion & Debate",  icap:"Interactive",  pct:0.13, desc:(t,s)=>`Pose a conceptual challenge about "${t}". Groups compare answers and defend reasoning.`},
-  {name:"Wrap-Up & Reflection",      icap:"Constructive", pct:0.12, desc:(t,s)=>`Summarise key takeaways. Students write a 2-sentence exit ticket about "${t}".`},
+  {name:"Introduction and Hook",icap:"Active",pct:0.12,desc:(t,s)=>`Open with a compelling real-world question related to "${t}". Use ${s} to immediately engage students.`},
+  {name:"Core Concept Explanation",icap:"Passive",pct:0.35,desc:(t,s)=>`Explain the foundational ideas of "${t}" using layered analogies. Present visual and formal representations.`},
+  {name:"Guided In-Class Activity",icap:"Constructive",pct:0.28,desc:(t,s)=>`Students apply "${t}" to a structured hands-on task. Pairs encouraged to explain reasoning aloud.`},
+  {name:"Peer Discussion and Debate",icap:"Interactive",pct:0.13,desc:(t,s)=>`Pose a conceptual challenge about "${t}". Groups compare answers and defend reasoning.`},
+  {name:"Wrap-Up and Reflection",icap:"Constructive",pct:0.12,desc:(t,s)=>`Summarise key takeaways. Students write a 2-sentence exit ticket about "${t}".`},
 ];
 const ANALOGIES=[
   (t)=>`Beginner: Think of "${t}" like sorting a messy drawer — you create rules before you touch anything.`,
@@ -873,9 +655,9 @@ const ANALOGIES=[
   (t)=>`Cross-disciplinary: For non-technical students, "${t}" is like a recipe — ingredients, steps, and a quality check.`,
 ];
 const ACTIVITIES=[
-  {title:"Think-Pair-Share", icap:"Interactive", prompt:(t)=>`Identify one place where "${t}" would change the result. Discuss with a partner.`},
-  {title:"Error Spotting",   icap:"Constructive",prompt:(t)=>`Find the mistake in this incorrect application of "${t}" and explain why it is wrong.`},
-  {title:"Concept Map",      icap:"Constructive",prompt:(t)=>`In 5 minutes, sketch how "${t}" connects to two ideas from previous lectures.`},
+  {title:"Think-Pair-Share",icap:"Interactive",prompt:(t)=>`Identify one place where "${t}" would change the result. Discuss with a partner.`},
+  {title:"Error Spotting",icap:"Constructive",prompt:(t)=>`Find the mistake in this incorrect application of "${t}" and explain why it is wrong.`},
+  {title:"Concept Map",icap:"Constructive",prompt:(t)=>`In 5 minutes, sketch how "${t}" connects to two ideas from previous lectures.`},
 ];
 const REFLECTIONS=[
   (t)=>`What is the single most important idea you learned about "${t}" today?`,
@@ -884,12 +666,12 @@ const REFLECTIONS=[
   (t)=>`What question would you still like to ask about "${t}"?`,
 ];
 const PRACTICE=[
-  {diff:"Easy",   q:(t)=>`In one sentence define "${t}" in your own words.`,                            hint:"Focus on what it does, not how it works."},
-  {diff:"Easy",   q:(t)=>`Give one real-life example where "${t}" would be useful.`,                    hint:"Think about everyday decisions that rely on patterns."},
-  {diff:"Medium", q:(t)=>`Explain one advantage and one limitation of "${t}".`,                         hint:"Consider what assumptions it makes about the data."},
-  {diff:"Medium", q:(t)=>`How would you explain "${t}" to a friend who never studied data science?`,    hint:"Use an analogy from everyday life."},
-  {diff:"Hard",   q:(t)=>`Design a small experiment to test whether "${t}" performs well. What metrics would you use?`, hint:"Think about what success means for your problem."},
-  {diff:"Hard",   q:(t)=>`What ethical concerns might arise when applying "${t}" in hiring or healthcare?`, hint:"Consider bias, transparency, and accountability."},
+  {diff:"Easy",q:(t)=>`In one sentence define "${t}" in your own words.`,hint:"Focus on what it does, not how it works."},
+  {diff:"Easy",q:(t)=>`Give one real-life example where "${t}" would be useful.`,hint:"Think about everyday decisions that rely on patterns."},
+  {diff:"Medium",q:(t)=>`Explain one advantage and one limitation of "${t}".`,hint:"Consider what assumptions it makes about the data."},
+  {diff:"Medium",q:(t)=>`How would you explain "${t}" to a friend who never studied data science?`,hint:"Use an analogy from everyday life."},
+  {diff:"Hard",q:(t)=>`Design a small experiment to test whether "${t}" performs well. What metrics would you use?`,hint:"Think about what success means for your problem."},
+  {diff:"Hard",q:(t)=>`What ethical concerns might arise when applying "${t}" in hiring or healthcare?`,hint:"Consider bias, transparency, and accountability."},
 ];
 const SRL=[
   "Before studying: What do I already know about this topic?",
@@ -898,11 +680,11 @@ const SRL=[
   "Reflection: What is my study plan for the parts I found difficult?",
 ];
 const RUBRIC_CRITERIA=[
-  {name:"Relevance",         desc:"Does output match the topic and stated learning objectives?"},
-  {name:"Clarity",           desc:"Is the language understandable for the target student level?"},
-  {name:"Pedagogical Value", desc:"Does it support active / constructive / interactive engagement?"},
-  {name:"Correctness",       desc:"Are concepts and examples technically accurate?"},
-  {name:"Usability",         desc:"Is the workflow easy and intuitive for instructors?"},
+  {name:"Relevance",desc:"Does output match the topic and stated learning objectives?"},
+  {name:"Clarity",desc:"Is the language understandable for the target student level?"},
+  {name:"Pedagogical Value",desc:"Does it support active / constructive / interactive engagement?"},
+  {name:"Correctness",desc:"Are concepts and examples technically accurate?"},
+  {name:"Usability",desc:"Is the workflow easy and intuitive for instructors?"},
 ];
 
 function badge(icap){
@@ -914,46 +696,45 @@ function generateLesson(){
   const topic = document.getElementById("topic").value.trim();
   const objectives = document.getElementById("objectives").value.trim();
   if(!topic||!objectives){alert("Please fill in Topic and Learning Objectives.");return;}
-  const level    = document.getElementById("level").value;
+  const level = document.getElementById("level").value;
   const duration = parseInt(document.getElementById("duration").value);
-  const style    = document.getElementById("style").value;
-
+  const style = document.getElementById("style").value;
   currentPlan = {topic,objectives,level,duration,style,generatedAt:new Date().toLocaleString()};
 
-  // update teacher class info
-  const classes = getClasses();
-  const idx = classes.findIndex(c=>c.teacherEmail===currentUser.email);
-  if(idx>-1){ classes[idx].topic=topic; classes[idx].level=level; saveClasses(classes); }
+  const savedCode = localStorage.getItem("lai_teacher_code_"+currentUser.email);
+  if(savedCode){
+    const cls = JSON.parse(savedCode);
+    cls.topic = topic;
+    cls.level = level;
+    localStorage.setItem("lai_teacher_code_"+currentUser.email, JSON.stringify(cls));
+    fetch("/save_class", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(cls)});
+  }
 
-  document.getElementById("mTopic").textContent = topic.length>12?topic.substring(0,12)+"…":topic;
+  document.getElementById("mTopic").textContent = topic.length>12?topic.substring(0,12)+"...":topic;
   document.getElementById("mLevel").textContent = level;
-  document.getElementById("mDur").textContent   = duration+" min";
+  document.getElementById("mDur").textContent = duration+" min";
 
-  const outlineEl=document.getElementById("outlineCards");
+  const outlineEl = document.getElementById("outlineCards");
   outlineEl.innerHTML="";
   let counts={Passive:0,Active:0,Constructive:0,Interactive:0};
   SEGMENTS.forEach((seg,i)=>{
     counts[seg.icap]++;
     const mins=Math.max(5,Math.round(duration*seg.pct));
-    outlineEl.innerHTML+=`<div class="card"><h3>${i+1}. ${seg.name} (${mins} min) ${badge(seg.icap)}</h3><p>${seg.desc(topic,style)}</p><div class="approve-row"><input type="checkbox" id="approve${i}" checked/><label for="approve${i}">✅ Approve this segment</label></div><div class="form-group" style="margin-top:0.5rem"><input placeholder="Add instructor notes…" style="font-size:0.83rem"/></div></div>`;
+    outlineEl.innerHTML+=`<div class="card"><h3>${i+1}. ${seg.name} (${mins} min) ${badge(seg.icap)}</h3><p>${seg.desc(topic,style)}</p><div class="approve-row"><input type="checkbox" id="approve${i}" checked/><label for="approve${i}">Approve this segment</label></div><div class="form-group" style="margin-top:0.5rem"><input placeholder="Add instructor notes..." style="font-size:0.83rem"/></div></div>`;
   });
   document.getElementById("icapP").textContent=counts.Passive;
   document.getElementById("icapA").textContent=counts.Active;
   document.getElementById("icapC").textContent=counts.Constructive;
   document.getElementById("icapI").textContent=counts.Interactive;
-
-  document.getElementById("analogyCards").innerHTML  = ANALOGIES.map(a=>`<div class="card"><p>${a(topic)}</p></div>`).join("");
-  document.getElementById("activityCards").innerHTML = ACTIVITIES.map(a=>`<div class="card"><h3>${a.title} ${badge(a.icap)}</h3><p>${a.prompt(topic)}</p></div>`).join("");
-  document.getElementById("reflectionList").innerHTML= "<div class='card'><ul style='padding-left:1.2rem'>"+REFLECTIONS.map(r=>`<li style='margin-bottom:0.4rem;font-size:0.88rem'>${r(topic)}</li>`).join("")+"</ul></div>";
-
-  document.getElementById("microExp").textContent=`${topic} – Plain Language Summary: "${topic}" is the process of taking raw information and applying a systematic method to reach a useful conclusion. Think of it as a recipe: right ingredients (data), right steps (method), and a way to check the result (evaluation). For a ${level.toLowerCase()}-level student, start with intuition before moving to formulas.`;
-  document.getElementById("practiceQs").innerHTML=PRACTICE.map(p=>`<div class="q-card"><div class="diff ${p.diff.toLowerCase()}">[${p.diff}]</div><p style="font-size:0.88rem;font-weight:600">${p.q(topic)}</p><p style="font-size:0.8rem;color:#666;margin-top:0.3rem">💡 Hint: ${p.hint}</p></div>`).join("");
-  document.getElementById("srlCards").innerHTML=SRL.map(s=>`<div class="card"><p>🔹 ${s}</p></div>`).join("");
-
+  document.getElementById("analogyCards").innerHTML=ANALOGIES.map(a=>`<div class="card"><p>${a(topic)}</p></div>`).join("");
+  document.getElementById("activityCards").innerHTML=ACTIVITIES.map(a=>`<div class="card"><h3>${a.title} ${badge(a.icap)}</h3><p>${a.prompt(topic)}</p></div>`).join("");
+  document.getElementById("reflectionList").innerHTML="<div class='card'><ul style='padding-left:1.2rem'>"+REFLECTIONS.map(r=>`<li style='margin-bottom:0.4rem;font-size:0.88rem'>${r(topic)}</li>`).join("")+"</ul></div>";
+  document.getElementById("microExp").textContent=`${topic} - Plain Language Summary: "${topic}" is the process of taking raw information and applying a systematic method to reach a useful conclusion. Think of it as a recipe: right ingredients (data), right steps (method), and a way to check the result (evaluation). For a ${level.toLowerCase()}-level student, start with intuition before moving to formulas.`;
+  document.getElementById("practiceQs").innerHTML=PRACTICE.map(p=>`<div class="q-card"><div class="diff ${p.diff.toLowerCase()}">[${p.diff}]</div><p style="font-size:0.88rem;font-weight:600">${p.q(topic)}</p><p style="font-size:0.8rem;color:#666;margin-top:0.3rem">Hint: ${p.hint}</p></div>`).join("");
+  document.getElementById("srlCards").innerHTML=SRL.map(s=>`<div class="card"><p>${s}</p></div>`).join("");
   document.getElementById("rubricRows").innerHTML=RUBRIC_CRITERIA.map((c,i)=>`<div class="rubric-row"><label>${c.name}</label><p style="font-size:0.8rem;color:#777;margin-bottom:0.4rem">${c.desc}</p><input type="range" min="1" max="5" value="3" id="r${i}" oninput="updateScore()"/><small>Score: <b id="rv${i}">3</b>/5</small></div>`).join("");
   updateScore();
   buildExport();
-
   document.getElementById("planOutput").classList.remove("hidden");
   document.getElementById("noplan1").classList.add("hidden");
   document.getElementById("studentContent").classList.remove("hidden");
@@ -967,37 +748,27 @@ function generateLesson(){
   document.getElementById("videoContent").classList.remove("hidden");
 }
 
-// ═══════════════════════════════════════════════════════
-// SLIDE GENERATION
-// ═══════════════════════════════════════════════════════
-
 async function generateSlides(){
   if(!currentPlan){alert("Generate a lesson plan first.");return;}
   const btn=document.getElementById("slidesBtn");
   const status=document.getElementById("slidesStatus");
-  btn.disabled=true;btn.textContent="⏳ Generating...";
-  status.textContent="This takes about 10 seconds...";
+  btn.disabled=true;btn.textContent="Generating...";status.textContent="This takes about 10 seconds...";
   try{
     const res=await fetch("/generate_slides",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(currentPlan)});
     if(!res.ok)throw new Error("Server error");
     const blob=await res.blob();
     const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");a.href=url;a.download=`LectureAI_${currentPlan.topic.replace(/\s+/g,"_")}.pptx`;a.click();
-    status.textContent="✅ Slides downloaded!";
-  }catch(e){status.textContent="❌ Could not generate slides. Check server is running.";}
-  finally{btn.disabled=false;btn.textContent="📊 Download Lecture Slides (.pptx)";}
+    const a=document.createElement("a");a.href=url;a.download="LectureAI_"+currentPlan.topic.replace(/\s+/g,"_")+".pptx";a.click();
+    status.textContent="Slides downloaded!";
+  }catch(e){status.textContent="Could not generate slides. Check server is running.";}
+  finally{btn.disabled=false;btn.textContent="Download Lecture Slides (.pptx)";}
 }
-
-// ═══════════════════════════════════════════════════════
-// VIDEO SCRIPT
-// ═══════════════════════════════════════════════════════
 
 async function generateVideoScript(){
   if(!currentPlan){alert("Generate a lesson plan first.");return;}
   const btn=document.getElementById("videoBtn");
   const status=document.getElementById("videoStatus");
-  btn.disabled=true;btn.textContent="⏳ Writing script...";
-  status.textContent="Generating full narration script...";
+  btn.disabled=true;btn.textContent="Writing script...";status.textContent="Generating full narration script...";
   try{
     const res=await fetch("/generate_video_script",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level})});
     const data=await res.json();
@@ -1005,19 +776,15 @@ async function generateVideoScript(){
     box.textContent=data.result||data.error;
     box.classList.remove("hidden");
     document.getElementById("copyScriptBtn").classList.remove("hidden");
-    status.textContent="✅ Script ready!";
-  }catch(e){status.textContent="❌ Could not generate script.";}
-  finally{btn.disabled=false;btn.textContent="🎬 Generate Video Script";}
+    status.textContent="Script ready!";
+  }catch(e){status.textContent="Could not generate script.";}
+  finally{btn.disabled=false;btn.textContent="Generate Video Script";}
 }
 
 function copyScript(){
   const text=document.getElementById("scriptBox").textContent;
   navigator.clipboard.writeText(text).then(()=>alert("Script copied to clipboard!"));
 }
-
-// ═══════════════════════════════════════════════════════
-// LAYER 2 TEACHER TOOLS
-// ═══════════════════════════════════════════════════════
 
 function setResult(id,text,speakId){
   document.getElementById(id).textContent=text;
@@ -1034,7 +801,7 @@ async function handleTeacherQuestion(){
     const res=await fetch("/layer2/question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,topic:currentPlan.topic,level:currentPlan.level})});
     const data=await res.json();
     setResult("teacherQResult",data.result||data.error,"speakTeacherQ");
-  }catch(e){setResult("teacherQResult","❌ Could not reach server.","speakTeacherQ");}
+  }catch(e){setResult("teacherQResult","Could not reach server.","speakTeacherQ");}
 }
 
 async function handleConfusion(){
@@ -1046,7 +813,7 @@ async function handleConfusion(){
     const res=await fetch("/layer2/confusion",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({confusion:c,topic:currentPlan.topic,level:currentPlan.level})});
     const data=await res.json();
     setResult("confusionResult",data.result||data.error,"speakConfusion");
-  }catch(e){setResult("confusionResult","❌ Could not reach server.","speakConfusion");}
+  }catch(e){setResult("confusionResult","Could not reach server.","speakConfusion");}
 }
 
 async function handleConceptCheck(){
@@ -1059,7 +826,7 @@ async function handleConceptCheck(){
     const res=await fetch("/layer2/conceptcheck",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,correct_pct:pct,topic:currentPlan.topic,level:currentPlan.level})});
     const data=await res.json();
     setResult("conceptResult",data.result||data.error,"speakConcept");
-  }catch(e){setResult("conceptResult","❌ Could not reach server.","speakConcept");}
+  }catch(e){setResult("conceptResult","Could not reach server.","speakConcept");}
 }
 
 async function handlePacing(){
@@ -1072,87 +839,47 @@ async function handlePacing(){
     const res=await fetch("/layer2/pacing",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mins_elapsed:mins,current_segment:seg,topic:currentPlan.topic,level:currentPlan.level,total_duration:currentPlan.duration})});
     const data=await res.json();
     setResult("pacingResult",data.result||data.error,"speakPacing");
-  }catch(e){setResult("pacingResult","❌ Could not reach server.","speakPacing");}
+  }catch(e){setResult("pacingResult","Could not reach server.","speakPacing");}
 }
-
-// ═══════════════════════════════════════════════════════
-// LAYER 2 STUDENT QUESTION (with personalisation + save report)
-// ═══════════════════════════════════════════════════════
 
 async function handleStudentQuestion(){
   const question=document.getElementById("stuQuestion").value.trim();
   if(!question){alert("Type your question first.");return;}
-
-  // get connected class
   const saved=localStorage.getItem("lai_student_class_"+currentUser.email);
   if(!saved){alert("Connect to your teacher's class first.");return;}
   const cls=JSON.parse(saved);
-
   setLoading("stuQuestionResult");
   try{
-    const res=await fetch("/layer2/student_question",{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        question,
-        name:currentUser.name,
-        age:currentUser.age||"unknown",
-        year:currentUser.year||"unknown",
-        background:currentUser.background||"unknown",
-        topic:cls.topic||"the current topic",
-        level:cls.level||"Intermediate"
-      })
-    });
+    const res=await fetch("/layer2/student_question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question,name:currentUser.name,age:currentUser.age||"unknown",year:currentUser.year||"unknown",background:currentUser.background||"unknown",topic:cls.topic||"the current topic",level:cls.level||"Intermediate"})});
     const data=await res.json();
     const answer=data.result||data.error;
     setResult("stuQuestionResult",answer,"speakStuQ");
-
-    // save report for teacher
     const reports=getReports();
-    reports.push({
-      classCode:cls.code,
-      teacherEmail:cls.teacherEmail,
-      studentName:currentUser.name,
-      studentEmail:currentUser.email,
-      question,
-      answer,
-      type:"question",
-      timestamp:new Date().toLocaleString()
-    });
+    reports.push({classCode:cls.code,teacherEmail:cls.teacherEmail,studentName:currentUser.name,studentEmail:currentUser.email,question,answer,type:"question",timestamp:new Date().toLocaleString()});
     saveReports(reports);
-  }catch(e){setResult("stuQuestionResult","❌ Could not reach server.","speakStuQ");}
+  }catch(e){setResult("stuQuestionResult","Could not reach server.","speakStuQ");}
 }
 
-// ═══════════════════════════════════════════════════════
-// REPORTS (teacher view)
-// ═══════════════════════════════════════════════════════
-
 function loadReports(){
-  const code=getTeacherCode();
-  if(!code)return;
+  const saved=localStorage.getItem("lai_teacher_code_"+currentUser.email);
+  if(!saved)return;
+  const code=JSON.parse(saved).code;
   const reports=getReports().filter(r=>r.classCode===code);
   const empty=document.getElementById("reportsEmpty");
   const list=document.getElementById("reportsList");
-  if(!reports.length){ empty.classList.remove("hidden"); list.innerHTML=""; return; }
+  if(!reports.length){empty.classList.remove("hidden");list.innerHTML="";return;}
   empty.classList.add("hidden");
-  list.innerHTML=reports.map(r=>`
-    <div class="report-card">
-      <div class="who">👤 ${r.studentName} · ${r.timestamp} · <span class="type-badge type-${r.type}">${r.type}</span></div>
-      <div class="what">❓ "${r.question}"</div>
-      <div style="font-size:0.82rem;color:#555;margin-top:0.4rem;line-height:1.5">${r.answer.substring(0,200)}${r.answer.length>200?"…":""}</div>
-    </div>`).join("");
+  list.innerHTML=reports.map(r=>`<div class="report-card"><div class="who">${r.studentName} · ${r.timestamp} · <span class="type-badge type-question">question</span></div><div class="what">"${r.question}"</div><div style="font-size:0.82rem;color:#555;margin-top:0.4rem;line-height:1.5">${r.answer.substring(0,200)}${r.answer.length>200?"...":""}</div></div>`).join("");
 }
 
 function clearReports(){
   if(!confirm("Clear all student reports for your class?"))return;
-  const code=getTeacherCode();
-  const remaining=getReports().filter(r=>r.classCode!==code);
-  saveReports(remaining);
+  const saved=localStorage.getItem("lai_teacher_code_"+currentUser.email);
+  if(!saved)return;
+  const code=JSON.parse(saved).code;
+  saveReports(getReports().filter(r=>r.classCode!==code));
   loadReports();
 }
-
-// ═══════════════════════════════════════════════════════
-// VOICE
-// ═══════════════════════════════════════════════════════
 
 let activeRecognition=null;
 function startVoice(targetId){
@@ -1160,9 +887,9 @@ function startVoice(targetId){
   if(!SR){alert("Voice input not supported. Try Chrome.");return;}
   if(activeRecognition){activeRecognition.stop();activeRecognition=null;return;}
   const r=new SR();r.lang="en-US";r.interimResults=false;r.maxAlternatives=1;activeRecognition=r;
-  document.querySelectorAll(".voice-btn").forEach(b=>{if(b.getAttribute("onclick")===`startVoice('${targetId}')`){b.classList.add("listening");b.textContent="🔴 Listening...";}});
+  document.querySelectorAll(".voice-btn").forEach(b=>{if(b.getAttribute("onclick")==="startVoice('"+targetId+"')"){b.classList.add("listening");b.textContent="Listening...";}});
   r.onresult=(e)=>{document.getElementById(targetId).value=e.results[0][0].transcript;};
-  r.onend=()=>{document.querySelectorAll(".voice-btn").forEach(b=>{b.classList.remove("listening");if(b.getAttribute("onclick")===`startVoice('${targetId}')`)b.textContent="🎤 Speak";});activeRecognition=null;};
+  r.onend=()=>{document.querySelectorAll(".voice-btn").forEach(b=>{b.classList.remove("listening");if(b.getAttribute("onclick")==="startVoice('"+targetId+"')")b.textContent="Speak";});activeRecognition=null;};
   r.start();
 }
 
@@ -1174,50 +901,37 @@ function speakText(id){
   window.speechSynthesis.speak(u);
 }
 
-// ═══════════════════════════════════════════════════════
-// LIVE CLASS SUB-TABS
-// ═══════════════════════════════════════════════════════
-
 function switchLiveTab(id){
   document.querySelectorAll(".live-subtab").forEach((t,i)=>t.classList.toggle("active",["teacher","studentlive"][i]===id));
   document.getElementById("teacherTools").classList.toggle("hidden",id!=="teacher");
   document.getElementById("teacherStudentPreview").classList.toggle("hidden",id!=="studentlive");
 }
 
-// ═══════════════════════════════════════════════════════
-// RUBRIC
-// ═══════════════════════════════════════════════════════
-
 function updateScore(){
   let total=0;
   RUBRIC_CRITERIA.forEach((_,i)=>{const v=parseInt(document.getElementById("r"+i).value);document.getElementById("rv"+i).textContent=v;total+=v;});
   const pct=Math.round(total/(RUBRIC_CRITERIA.length*5)*100);
-  document.getElementById("totalScore").textContent=`${total}/${RUBRIC_CRITERIA.length*5}`;
+  document.getElementById("totalScore").textContent=total+"/"+(RUBRIC_CRITERIA.length*5);
   document.getElementById("totalPct").textContent=pct+"%";
-  document.getElementById("rating").textContent=pct>=80?"Excellent ⭐":pct>=60?"Good 👍":"Needs Work ⚠️";
+  document.getElementById("rating").textContent=pct>=80?"Excellent":pct>=60?"Good":"Needs Work";
 }
-function saveRubric(){alert("Scores saved! They are included in the export.");}
 
-// ═══════════════════════════════════════════════════════
-// EXPORT
-// ═══════════════════════════════════════════════════════
+function saveRubric(){ alert("Scores saved!"); }
 
 function buildExport(){
   if(!currentPlan)return;
   const t=currentPlan.topic;
-  const lines=[`LESSON PLAN: ${t}`,`Generated: ${currentPlan.generatedAt}`,`Level: ${currentPlan.level} | Duration: ${currentPlan.duration} min | Style: ${currentPlan.style}`,``,`LEARNING OBJECTIVES`,currentPlan.objectives,``,`LECTURE OUTLINE`,...SEGMENTS.map((s,i)=>`${i+1}. ${s.name} [${s.icap}]\n   ${s.desc(t,currentPlan.style)}`),``,`EXAMPLES & ANALOGIES`,...ANALOGIES.map(a=>a(t)),``,`IN-CLASS ACTIVITIES`,...ACTIVITIES.map(a=>`[${a.icap}] ${a.title}: ${a.prompt(t)}`),``,`REFLECTION QUESTIONS`,...REFLECTIONS.map(r=>r(t)),``,`PRACTICE QUESTIONS`,...PRACTICE.map(p=>`[${p.diff}] ${p.q(t)}\n  Hint: ${p.hint}`),``,`SRL PROMPTS`,...SRL];
+  const lines=["LESSON PLAN: "+t,"Generated: "+currentPlan.generatedAt,"Level: "+currentPlan.level+" | Duration: "+currentPlan.duration+" min | Style: "+currentPlan.style,"","LEARNING OBJECTIVES",currentPlan.objectives,"","LECTURE OUTLINE",...SEGMENTS.map((s,i)=>(i+1)+". "+s.name+" ["+s.icap+"]\n   "+s.desc(t,currentPlan.style)),"","EXAMPLES AND ANALOGIES",...ANALOGIES.map(a=>a(t)),"","IN-CLASS ACTIVITIES",...ACTIVITIES.map(a=>"["+a.icap+"] "+a.title+": "+a.prompt(t)),"","REFLECTION QUESTIONS",...REFLECTIONS.map(r=>r(t)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(t)+"\n  Hint: "+p.hint),"","SRL PROMPTS",...SRL];
   document.getElementById("exportPreview").textContent=lines.join("\n");
 }
+
 function downloadTxt(){
   if(!currentPlan)return;
   const a=document.createElement("a");
   a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(document.getElementById("exportPreview").textContent);
-  a.download=`LessonPlan_${currentPlan.topic.replace(/\s+/g,"_")}.txt`;a.click();
+  a.download="LessonPlan_"+currentPlan.topic.replace(/\s+/g,"_")+".txt";
+  a.click();
 }
-
-// ═══════════════════════════════════════════════════════
-// TAB SWITCHING
-// ═══════════════════════════════════════════════════════
 
 function switchTab(id){
   const teacherIds=["builder","liveclass","student","reports","video","rubric","export"];
@@ -1227,10 +941,6 @@ function switchTab(id){
   const el=document.getElementById(id);if(el)el.classList.add("active");
   if(id==="reports")loadReports();
 }
-
-// ═══════════════════════════════════════════════════════
-// AUTO-LOGIN ON PAGE LOAD
-// ═══════════════════════════════════════════════════════
 
 window.onload=function(){
   const saved=localStorage.getItem("lai_session");
