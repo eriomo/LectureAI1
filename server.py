@@ -15,6 +15,8 @@ CORS(app)
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
+classes_db = {}
+
 def ask_groq(prompt, max_tokens=1500):
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
@@ -46,6 +48,22 @@ def clean_json(raw):
 def index():
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates", "index.html")
     return open(path).read()
+
+@app.route("/save_class", methods=["POST"])
+def save_class():
+    d = request.json
+    code = d.get("code", "")
+    classes_db[code] = d
+    return jsonify({"success": True})
+
+@app.route("/get_class", methods=["POST"])
+def get_class():
+    d = request.json
+    code = d.get("code", "")
+    cls = classes_db.get(code.upper())
+    if cls:
+        return jsonify({"success": True, "class": cls})
+    return jsonify({"success": False})
 
 @app.route("/generate", methods=["POST"])
 def generate():
