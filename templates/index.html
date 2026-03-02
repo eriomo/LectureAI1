@@ -3,240 +3,209 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LectureAI – AI Powered</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<title>LectureAI v2</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-:root{
-  --green-900:#0d2b1e;--green-800:#1b4332;--green-700:#2d6a4f;--green-600:#40916c;
-  --green-400:#74c69d;--green-200:#b7e4c7;--green-100:#d8f3dc;--green-50:#f0faf4;
-  --cream:#faf8f4;--warm:#f2ede6;--border:#e2ddd6;--text:#1a1a1a;--muted:#6b6b6b;
-  --shadow:0 4px 24px rgba(0,0,0,0.08);--radius:14px;
-}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
-header{background:linear-gradient(135deg,var(--green-900) 0%,var(--green-800) 60%,var(--green-700) 100%);
-  color:white;padding:1.1rem 1.8rem;display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 2px 20px rgba(0,0,0,0.3);position:sticky;top:0;z-index:100}
-.header-left{display:flex;align-items:center;gap:1rem}
-.logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700}
-.logo span{color:var(--green-400)}
-.header-sub{font-size:0.78rem;opacity:0.65;margin-top:1px}
-.ai-badge{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);
-  color:white;padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:600;letter-spacing:0.5px}
-.tabs{display:flex;background:white;border-bottom:2px solid var(--border);overflow-x:auto}
-.tab{padding:0.85rem 1.4rem;cursor:pointer;font-weight:500;font-size:0.88rem;white-space:nowrap;
-  border-bottom:3px solid transparent;color:var(--muted);transition:all 0.2s}
-.tab:hover{color:var(--green-700);background:var(--green-50)}
-.tab.active{border-bottom-color:var(--green-700);color:var(--green-700);font-weight:600;background:var(--green-50)}
-.content{max-width:900px;margin:0 auto;padding:1.6rem 1.2rem}
-.section{display:none;animation:fadeIn 0.3s ease}.section.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-@media(max-width:620px){.form-grid{grid-template-columns:1fr}}
-.form-group{margin-bottom:0;position:relative}
-.form-group.full{grid-column:1/-1}
-label{display:block;font-weight:600;font-size:0.82rem;margin-bottom:0.4rem;color:var(--green-800);
-  letter-spacing:0.3px;text-transform:uppercase}
-input,select,textarea{width:100%;padding:0.65rem 0.9rem;border:1.5px solid var(--border);border-radius:10px;
-  font-family:'Source Sans 3',sans-serif;font-size:0.94rem;background:white;color:var(--text);transition:border-color 0.2s}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green-600);box-shadow:0 0 0 3px rgba(64,145,108,0.12)}
-textarea{resize:vertical;min-height:100px;line-height:1.5}
-.autocomplete-wrapper{position:relative}
-.suggestions{position:absolute;top:100%;left:0;right:0;z-index:200;background:white;
-  border:1.5px solid var(--green-400);border-top:none;border-radius:0 0 12px 12px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.12);max-height:220px;overflow-y:auto;display:none}
-.suggestions.show{display:block}
-.suggestion-item{padding:0.6rem 0.9rem;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;gap:0.6rem;transition:background 0.15s}
-.suggestion-item:hover,.suggestion-item.active{background:var(--green-50)}
-.suggestion-highlight{color:var(--green-700);font-weight:700}
-.cat{font-size:0.7rem;padding:2px 7px;border-radius:10px;font-weight:600;white-space:nowrap}
-.cat-stats{background:#fde8d8;color:#c0440a}.cat-ml{background:#dce8fd;color:#1a3f80}
-.cat-data{background:#f0d8fd;color:#6a1a80}.cat-viz{background:#fff3cd;color:#856404}
-.cat-prog{background:#d8f0e8;color:#1a6640}.cat-ethics{background:#f8d7da;color:#842029}
-.cat-cloud{background:#cfe2ff;color:#084298}.cat-db{background:#e2d9f3;color:#3d1a78}
-.obj-suggest{margin-top:0.5rem;display:flex;flex-wrap:wrap;gap:0.4rem}
-.obj-chip{background:var(--green-100);color:var(--green-800);border:1px solid var(--green-200);
-  padding:3px 10px;border-radius:20px;font-size:0.78rem;cursor:pointer;transition:all 0.15s}
-.obj-chip:hover{background:var(--green-200)}
-.range-row{display:flex;align-items:center;gap:0.8rem}
-.range-row input[type=range]{flex:1;accent-color:var(--green-700)}
-.range-val{background:var(--green-700);color:white;padding:2px 10px;border-radius:8px;font-size:0.82rem;font-weight:600;min-width:56px;text-align:center}
-.btn{background:var(--green-700);color:white;border:none;border-radius:10px;padding:0.75rem 1.6rem;
-  font-weight:600;font-family:'Source Sans 3',sans-serif;cursor:pointer;font-size:0.95rem;
-  width:100%;margin-top:0.8rem;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:0.5rem}
-.btn:hover{background:var(--green-800);transform:translateY(-1px);box-shadow:0 4px 16px rgba(45,106,79,0.3)}
-.btn:disabled{background:#aaa;cursor:not-allowed;transform:none;box-shadow:none}
-.btn-sm{padding:0.35rem 0.9rem;font-size:0.78rem;width:auto;margin-top:0;border-radius:7px}
-.btn-outline{background:transparent;color:var(--green-700);border:2px solid var(--green-700)}
-.btn-outline:hover{background:var(--green-50);transform:none;box-shadow:none}
-.card{background:white;border-radius:var(--radius);padding:1.3rem 1.5rem;margin-bottom:1rem;
-  border-left:4px solid var(--green-600);box-shadow:var(--shadow)}
-.card h3{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:0.5rem;color:var(--green-900)}
-.card p{font-size:0.9rem;color:#444;line-height:1.65}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.7rem;font-weight:700;letter-spacing:0.5px}
-.badge-passive{background:#fde8d8;color:#c0440a}.badge-active{background:#d8f0e8;color:#1a6640}
-.badge-constructive{background:#dce8fd;color:#1a3f80}.badge-interactive{background:#f0d8fd;color:#6a1a80}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;margin-bottom:1.2rem}
-@media(max-width:500px){.metrics{grid-template-columns:repeat(2,1fr)}}
-.metric{background:white;border-radius:12px;padding:1rem;text-align:center;box-shadow:var(--shadow);border-top:3px solid var(--green-400)}
-.metric .val{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--green-800)}
-.metric .lbl{font-size:0.72rem;color:var(--muted);margin-top:3px;font-weight:600;text-transform:uppercase}
-.icap-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0.7rem;margin-bottom:1.2rem}
-.icap-box{border-radius:12px;padding:0.9rem 0.5rem;text-align:center}
-.icap-box .num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700}
-.icap-box .lbl{font-size:0.72rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-top:2px}
-.passive-box{background:#fde8d8;color:#c0440a}.active-box{background:#d8f0e8;color:#1a6640}
-.constructive-box{background:#dce8fd;color:#1a3f80}.interactive-box{background:#f0d8fd;color:#6a1a80}
-.section-title{font-family:'Playfair Display',serif;font-size:1.15rem;margin:1.4rem 0 0.7rem;
-  color:var(--green-900);border-bottom:2px solid var(--green-100);padding-bottom:0.4rem;
-  display:flex;align-items:center;gap:0.5rem}
-.approve-row{display:flex;align-items:center;gap:0.5rem;margin-top:0.7rem}
-.approve-row input{width:auto}
-.approve-row label{margin:0;font-weight:500;font-size:0.84rem;text-transform:none;letter-spacing:0;cursor:pointer}
-.q-card{background:white;border-radius:12px;padding:1rem 1.2rem;margin-bottom:0.7rem;
-  box-shadow:0 2px 8px rgba(0,0,0,0.06);border-top:3px solid #ddd}
-.q-card.easy{border-top-color:#74c69d}.q-card.medium{border-top-color:#f4a261}.q-card.hard{border-top-color:#e76f51}
-.diff-label{font-size:0.72rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:0.4rem}
-.easy .diff-label{color:#1a6640}.medium .diff-label{color:#7a5900}.hard .diff-label{color:#c0440a}
-.rubric-row{margin-bottom:1.4rem;background:white;border-radius:12px;padding:1rem 1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.rubric-row .r-name{font-weight:700;font-size:0.92rem;color:var(--green-800)}
-.rubric-row .r-desc{font-size:0.8rem;color:var(--muted);margin-bottom:0.6rem;margin-top:2px}
-.rubric-row input[type=range]{accent-color:var(--green-700);width:100%}
-.score-display{text-align:center;background:var(--green-50);border:2px solid var(--green-200);border-radius:var(--radius);padding:1.4rem;margin-top:1rem}
-.score-display .big{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--green-800)}
-.loader{display:flex;flex-direction:column;align-items:center;padding:3rem;gap:1rem}
-.spinner-ring{width:52px;height:52px;position:relative}
-.spinner-ring:before,.spinner-ring:after{content:'';position:absolute;border-radius:50%;border:4px solid transparent}
-.spinner-ring:before{inset:0;border-top-color:var(--green-700);animation:spin 0.9s linear infinite}
-.spinner-ring:after{inset:6px;border-top-color:var(--green-400);animation:spin 0.6s linear infinite reverse}
+:root{
+  --dg:#1B4332;--mg:#2D6A4F;--lg:#D8F3DC;--ac:#74C69D;
+  --or:#E67E22;--lor:#FDE8D8;--bl:#2980B9;--lbl:#DCE8FD;
+  --pu:#8E44AD;--lpu:#F0D8FD;--red:#E74C3C;--lred:#FADBD8;
+  --cream:#FAF8F4;--gray:#6B6B6B;--white:#fff;--dark:#1a1a1a;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+
+/* ── HEADER ── */
+header{background:var(--dg);color:#fff;padding:.9rem 1.4rem;display:flex;align-items:center;justify-content:space-between}
+header h1{font-family:'DM Serif Display',serif;font-size:1.4rem}
+.version-badge{background:var(--ac);color:var(--dg);font-size:.72rem;font-weight:700;padding:2px 10px;border-radius:20px}
+
+/* ── TABS ── */
+.tabs{display:flex;background:#fff;border-bottom:2px solid #e8e4de;overflow-x:auto}
+.tab{padding:.7rem 1.1rem;cursor:pointer;font-weight:500;font-size:.88rem;white-space:nowrap;border-bottom:3px solid transparent;color:#666;transition:all .2s}
+.tab.active{border-bottom-color:var(--mg);color:var(--mg);font-weight:600}
+
+/* ── LAYOUT ── */
+.content{max-width:900px;margin:0 auto;padding:1.2rem}
+.section{display:none}.section.active{display:block}
+
+/* ── FORMS ── */
+.form-group{margin-bottom:.9rem}
+label{display:block;font-weight:600;font-size:.87rem;margin-bottom:.3rem;color:#333}
+input,select,textarea{width:100%;padding:.6rem .8rem;border:1.5px solid #ddd;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.92rem;background:#fff;transition:border .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--mg)}
+textarea{resize:vertical;min-height:80px}
+
+/* ── BUTTONS ── */
+.btn{background:var(--mg);color:#fff;border:none;border-radius:8px;padding:.65rem 1.4rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:.93rem;width:100%;margin-top:.5rem;transition:background .2s}
+.btn:hover{background:var(--dg)}
+.btn:disabled{background:#aaa;cursor:not-allowed}
+.btn-outline{background:#fff;color:var(--mg);border:2px solid var(--mg)}
+.btn-outline:hover{background:var(--lg)}
+.btn-voice{background:var(--red);width:auto;padding:.5rem 1rem;font-size:.82rem;border-radius:20px;display:inline-flex;align-items:center;gap:.4rem}
+.btn-voice.listening{background:#c0392b;animation:pulse 1s infinite}
+.btn-sm{width:auto;padding:.45rem 1rem;font-size:.82rem;margin-top:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* ── CARDS ── */
+.card{background:#fff;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:.8rem;border-left:4px solid var(--mg);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.card h3{font-size:.97rem;margin-bottom:.35rem}
+.card p{font-size:.87rem;color:#444;line-height:1.55}
+.card-flat{background:#fff;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:.8rem;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+
+/* ── ICAP BADGES ── */
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.71rem;font-weight:700;margin-left:6px}
+.badge-Passive{background:var(--lor);color:#c0440a}
+.badge-Active{background:var(--lg);color:#1a6640}
+.badge-Constructive{background:var(--lbl);color:#1a3f80}
+.badge-Interactive{background:var(--lpu);color:#6a1a80}
+
+/* ── METRICS ── */
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-bottom:.9rem}
+.metric{background:#fff;border-radius:10px;padding:.75rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.metric .val{font-size:1.25rem;font-weight:700;color:var(--mg)}
+.metric .lbl{font-size:.73rem;color:#777;margin-top:2px}
+
+/* ── ICAP ROW ── */
+.icap-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:.9rem}
+.icap-box{border-radius:10px;padding:.65rem;text-align:center}
+.icap-box .num{font-size:1.4rem;font-weight:700}
+.icap-box .lbl{font-size:.71rem;font-weight:600}
+.passive-box{background:var(--lor);color:#c0440a}
+.active-box{background:var(--lg);color:#1a6640}
+.constructive-box{background:var(--lbl);color:#1a3f80}
+.interactive-box{background:var(--lpu);color:#6a1a80}
+
+/* ── SECTION TITLE ── */
+.section-title{font-family:'DM Serif Display',serif;font-size:1.05rem;margin:1.1rem 0 .55rem;border-bottom:2px solid #e8e4de;padding-bottom:.28rem;color:var(--dg)}
+
+/* ── STUDENT PORTAL ── */
+.student-hero{background:linear-gradient(135deg,var(--dg),var(--mg));border-radius:14px;padding:1.4rem;color:#fff;margin-bottom:1.2rem;text-align:center}
+.student-hero h2{font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:.4rem}
+.student-hero p{font-size:.88rem;opacity:.85}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.answer-card{background:#fff;border-radius:12px;padding:1.2rem;box-shadow:0 2px 10px rgba(0,0,0,.08);border-top:4px solid var(--mg)}
+.answer-card .field-label{font-size:.75rem;font-weight:700;color:var(--mg);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem}
+.answer-card .field-val{font-size:.93rem;color:var(--dark);line-height:1.6}
+.encourage{background:var(--lg);border-radius:10px;padding:.8rem 1rem;font-size:.88rem;color:var(--dg);font-weight:600;margin-top:.7rem;text-align:center}
+
+/* ── VOICE INDICATOR ── */
+.voice-bar{display:flex;align-items:center;gap:.6rem;background:var(--lred);border-radius:8px;padding:.5rem .8rem;margin-bottom:.7rem;font-size:.85rem;color:var(--red);font-weight:600}
+.voice-dot{width:10px;height:10px;background:var(--red);border-radius:50%;animation:pulse 1s infinite}
+
+/* ── SLIDES PREVIEW ── */
+.slides-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem;margin-top:.8rem}
+.slide-card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);cursor:pointer;transition:transform .2s}
+.slide-card:hover{transform:translateY(-2px)}
+.slide-header{background:var(--dg);color:#fff;padding:.6rem .8rem;font-size:.8rem;font-weight:700}
+.slide-body{padding:.7rem .8rem}
+.slide-emoji{font-size:1.6rem;margin-bottom:.3rem}
+.slide-title{font-size:.82rem;font-weight:700;color:var(--dark);margin-bottom:.3rem}
+.slide-bullets{font-size:.73rem;color:#555;line-height:1.5}
+
+/* ── VIDEO PLAYER ── */
+.video-container{background:var(--dg);border-radius:14px;overflow:hidden;margin-top:.8rem}
+.video-screen{background:var(--dark);min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;position:relative}
+.video-slide-title{font-family:'DM Serif Display',serif;font-size:1.8rem;color:#fff;text-align:center;margin-bottom:.6rem}
+.video-slide-sub{font-size:1rem;color:var(--ac);text-align:center;margin-bottom:1rem}
+.video-bullets{list-style:none;text-align:center}
+.video-bullets li{color:#eee;font-size:.88rem;padding:.2rem 0}
+.video-bullets li::before{content:"▸  ";color:var(--ac)}
+.video-controls{background:#111;padding:.7rem 1rem;display:flex;align-items:center;gap:.8rem}
+.video-btn{background:none;border:none;color:#fff;cursor:pointer;font-size:1.1rem;padding:.2rem .5rem}
+.video-btn:hover{color:var(--ac)}
+.progress-bar{flex:1;height:4px;background:#333;border-radius:2px;overflow:hidden;cursor:pointer}
+.progress-fill{height:100%;background:var(--ac);border-radius:2px;transition:width .5s linear}
+.slide-counter{color:#aaa;font-size:.8rem;white-space:nowrap}
+.narration-box{background:#1a1a1a;padding:.6rem 1rem;font-size:.82rem;color:#bbb;font-style:italic;min-height:42px}
+
+/* ── LAYER 2 ── */
+.l2-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.tool-card{background:#fff;border-radius:12px;padding:1rem;box-shadow:0 1px 6px rgba(0,0,0,.07);border-top:4px solid var(--mg)}
+.tool-card.orange{border-top-color:var(--or)}
+.tool-card.blue{border-top-color:var(--bl)}
+.tool-card.purple{border-top-color:var(--pu)}
+.tool-title{font-size:.9rem;font-weight:700;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.result-field{margin-top:.6rem}
+.result-label{font-size:.72rem;font-weight:700;color:var(--mg);text-transform:uppercase;letter-spacing:.04em}
+.result-val{font-size:.86rem;color:var(--dark);line-height:1.5;margin-top:.15rem;padding:.5rem .7rem;background:var(--lg);border-radius:6px}
+
+/* ── MISC ── */
+.info-box{background:var(--lbl);border:1px solid #b3d4f0;border-radius:8px;padding:.85rem;font-size:.87rem;color:#1a3f80;margin-bottom:.9rem}
+.loading{text-align:center;padding:1.5rem;color:var(--gray);font-size:.9rem}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid #ddd;border-top-color:var(--mg);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:.5rem}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loader-step{font-size:0.82rem;color:var(--muted);transition:all 0.3s}
-.loader-step.active{color:var(--green-700);font-weight:600}
-.loader-step.done{color:var(--green-400)}
-.export-box{background:white;border-radius:var(--radius);padding:1.3rem;box-shadow:var(--shadow);
-  white-space:pre-wrap;font-size:0.76rem;font-family:'Courier New',monospace;max-height:340px;overflow-y:auto;color:#333}
-.info-box{background:#e8f4fd;border:1px solid #b3d4f0;border-radius:10px;padding:1rem 1.2rem;font-size:0.88rem;color:#1a3f80;margin-bottom:1rem}
-.status-bar{background:var(--green-50);border:1px solid var(--green-200);border-radius:8px;
-  padding:0.5rem 1rem;font-size:0.82rem;color:var(--green-800);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
 .hidden{display:none}
-.live-badge{background:#e74c3c;color:white;padding:2px 8px;border-radius:10px;font-size:0.68rem;font-weight:700;letter-spacing:0.5px;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
-.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem}
-@media(max-width:620px){.tool-grid{grid-template-columns:1fr}}
-.tool-card{background:white;border-radius:var(--radius);padding:1.3rem;box-shadow:var(--shadow);border-top:4px solid var(--green-600)}
-.tool-card.confusion{border-top-color:#e67e22}
-.tool-card.check{border-top-color:#8e44ad}
-.tool-card.pacing{border-top-color:#2980b9}
-.tool-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--green-900);margin-bottom:0.3rem;display:flex;align-items:center;gap:0.4rem}
-.tool-desc{font-size:0.8rem;color:var(--muted);margin-bottom:0.8rem;line-height:1.4}
-.tool-btn{background:var(--green-700);color:white;border:none;border-radius:8px;padding:0.55rem 1rem;
-  font-weight:600;font-family:'Source Sans 3',sans-serif;cursor:pointer;font-size:0.85rem;
-  width:100%;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:0.4rem}
-.tool-btn:hover{background:var(--green-800);transform:translateY(-1px)}
-.tool-btn:disabled{background:#aaa;cursor:not-allowed;transform:none}
-.tool-btn.confusion-btn{background:#e67e22}.tool-btn.confusion-btn:hover{background:#d35400}
-.tool-btn.check-btn{background:#8e44ad}.tool-btn.check-btn:hover{background:#7d3c98}
-.tool-btn.pacing-btn{background:#2980b9}.tool-btn.pacing-btn:hover{background:#2471a3}
-.result-box{background:var(--green-50);border:1px solid var(--green-200);border-radius:10px;
-  padding:1rem;margin-top:0.8rem;display:none;animation:fadeIn 0.3s ease}
-.result-box.show{display:block}
-.result-item{margin-bottom:0.7rem;font-size:0.88rem;line-height:1.6}
-.result-item strong{color:var(--green-800);display:block;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:2px}
-.result-item.confusion-result{background:#fff8f0;border:1px solid #f0d0a0;border-radius:8px;padding:0.7rem;margin-bottom:0.5rem}
-.result-item.check-result{background:#f8f0ff;border:1px solid #d0a0f0;border-radius:8px;padding:0.7rem;margin-bottom:0.5rem}
-.result-item.pacing-result{background:#f0f8ff;border:1px solid #a0c8f0;border-radius:8px;padding:0.7rem;margin-bottom:0.5rem}
-.pct-row{display:flex;align-items:center;gap:0.7rem;margin-bottom:0.5rem}
-.pct-row input[type=range]{flex:1;accent-color:#8e44ad}
-.pct-val{background:#8e44ad;color:white;padding:2px 8px;border-radius:6px;font-size:0.8rem;font-weight:600;min-width:42px;text-align:center}
-.noplan-layer2{background:#fff8e8;border:1px solid #f0d080;border-radius:10px;padding:1rem 1.2rem;font-size:0.88rem;color:#856404;margin-bottom:1rem}
-.live-header{display:flex;align-items:center;gap:0.7rem;margin-bottom:1rem;flex-wrap:wrap}
-.live-topic-badge{background:var(--green-100);color:var(--green-800);border:1px solid var(--green-200);padding:3px 12px;border-radius:20px;font-size:0.82rem;font-weight:600}
-.thinking-dots{display:inline-block}
-.thinking-dots::after{content:'...';animation:dots 1.2s steps(4,end) infinite}
-@keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'}}
+.row{display:flex;gap:.7rem}
+.row .form-group{flex:1}
+.q-card{background:#fff;border-radius:10px;padding:.9rem;margin-bottom:.6rem;box-shadow:0 1px 5px rgba(0,0,0,.07)}
+.diff{font-size:.73rem;font-weight:700;margin-bottom:.3rem}
+.Easy{color:#1a6640}.Medium{color:#7a5900}.Hard{color:#c0440a}
+.score-display{text-align:center;background:#f0faf4;border:1px solid #b7dfc8;border-radius:10px;padding:1rem;margin-top:.9rem}
+.score-display .big{font-size:2rem;font-weight:700;color:var(--mg)}
+.rubric-row{margin-bottom:1rem}
+input[type=range]{accent-color:var(--mg)}
+.export-box{background:#fff;border-radius:10px;padding:1rem;box-shadow:0 1px 6px rgba(0,0,0,.07);white-space:pre-wrap;font-size:.76rem;font-family:monospace;max-height:280px;overflow-y:auto;color:#333}
+.tab-pill{display:inline-flex;background:#f0f0f0;border-radius:20px;padding:3px;margin-bottom:1rem;gap:2px}
+.tab-pill button{background:none;border:none;padding:.35rem .9rem;border-radius:16px;font-size:.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;color:#555;transition:all .2s}
+.tab-pill button.active{background:var(--mg);color:#fff}
+@media(max-width:600px){.l2-grid{grid-template-columns:1fr}.profile-grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="header-left">
-    <div>
-      <div class="logo">Lecture<span>AI</span></div>
-      <div class="header-sub">Human–AI Co-Orchestration · Groq Powered · Omolola</div>
-    </div>
+  <div style="display:flex;align-items:center;gap:.8rem">
+    <h1>🎓 LectureAI</h1>
+    <span class="version-badge">v2.0</span>
   </div>
-  <span class="ai-badge">✦ AI Live</span>
+  <div style="font-size:.78rem;opacity:.7">Human-AI Co-Orchestration · Groq Llama 3.3</div>
 </header>
 
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('builder')">📋 Lesson Builder</div>
-  <div class="tab" onclick="switchTab('live')">🔴 Live Class <span class="live-badge">LAYER 2</span></div>
-  <div class="tab" onclick="switchTab('student')">📚 Student Support</div>
-  <div class="tab" onclick="switchTab('rubric')">📊 Evaluation</div>
-  <div class="tab" onclick="switchTab('export')">📁 Export</div>
+  <div class="tab active"   onclick="switchTab('builder')">📋 Lesson Builder</div>
+  <div class="tab"          onclick="switchTab('live')">🔴 Live Class</div>
+  <div class="tab"          onclick="switchTab('student')">🎓 Student Portal</div>
+  <div class="tab"          onclick="switchTab('slides')">📊 Slides & Video</div>
+  <div class="tab"          onclick="switchTab('support')">📚 Student Support</div>
+  <div class="tab"          onclick="switchTab('eval')">⭐ Evaluation</div>
+  <div class="tab"          onclick="switchTab('export')">📁 Export</div>
 </div>
 
 <div class="content">
 
-<!-- LESSON BUILDER -->
+<!-- ═══════════════ LESSON BUILDER ═══════════════ -->
 <div id="builder" class="section active">
-  <div id="statusBar" class="status-bar">
-    <span id="statusDot">⚪</span>
-    <span id="statusMsg">Checking AI connection…</span>
-  </div>
-  <div class="form-grid">
-    <div class="form-group full">
-      <label>Topic *</label>
-      <div class="autocomplete-wrapper">
-        <input id="topic" autocomplete="off" placeholder="e.g. Cloud Computing, Neural Networks…"
-               oninput="onTopicInput()" onkeydown="onTopicKey(event)" onfocus="onTopicInput()"/>
-        <div class="suggestions" id="suggestions"></div>
-      </div>
-      <div id="topicCategory" style="margin-top:0.4rem;font-size:0.78rem;color:var(--muted)"></div>
-    </div>
-    <div class="form-group full">
-      <label>Learning Objectives *</label>
-      <textarea id="objectives" placeholder="e.g.&#10;1. Understand the core concepts&#10;2. Apply to real examples&#10;3. Evaluate different approaches"></textarea>
-      <div id="objSuggest" class="obj-suggest"></div>
-    </div>
-    <div class="form-group">
-      <label>Class Level</label>
-      <select id="level"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option></select>
-    </div>
-    <div class="form-group">
-      <label>Teaching Style</label>
-      <select id="style"><option>Lecture-based</option><option>Discussion-based</option><option>Project-based</option><option>Flipped</option></select>
-    </div>
-    <div class="form-group full">
-      <label>Duration</label>
-      <div class="range-row">
-        <input type="range" id="duration" min="30" max="180" value="75" step="5" oninput="document.getElementById('durVal').textContent=this.value+' min'"/>
-        <div class="range-val" id="durVal">75 min</div>
-      </div>
+  <div class="form-group">
+    <label>Topic *</label>
+    <div style="position:relative">
+      <input id="topic" placeholder="e.g. Linear Regression" oninput="showSuggestions(this.value)" autocomplete="off"/>
+      <div id="suggestions" style="position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid #ddd;border-top:none;border-radius:0 0 8px 8px;z-index:100;max-height:180px;overflow-y:auto;display:none"></div>
     </div>
   </div>
-  <button class="btn" id="generateBtn" onclick="generateLesson()">
-    <span id="btnIcon">✦</span> <span id="btnText">Generate Lesson Plan with AI</span>
-  </button>
-  <div id="loadingSpinner" class="hidden loader">
-    <div class="spinner-ring"></div>
-    <div style="display:flex;flex-direction:column;gap:0.3rem;align-items:center" id="loaderSteps"></div>
+  <div class="form-group"><label>Learning Objectives *</label><textarea id="objectives" placeholder="1. Understand what it is&#10;2. Apply it to data&#10;3. Evaluate results"></textarea></div>
+  <div class="row">
+    <div class="form-group"><label>Class Level</label><select id="level"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option></select></div>
+    <div class="form-group"><label>Duration: <span id="durLabel">75</span> min</label><input type="range" id="duration" min="30" max="180" value="75" step="5" oninput="document.getElementById('durLabel').textContent=this.value"/></div>
   </div>
+  <div class="form-group"><label>Teaching Style</label><select id="style"><option>Lecture-based</option><option>Discussion-based</option><option>Project-based</option><option>Flipped</option></select></div>
+
+  <div style="display:flex;gap:.6rem;align-items:center;margin-top:.3rem">
+    <button class="btn" style="flex:1" onclick="generateLesson()">✨ Generate Lesson Plan</button>
+    <button class="btn-voice btn" onclick="toggleVoiceInput('topic')">🎤 Voice</button>
+  </div>
+
+  <div id="voiceBar" class="voice-bar hidden"><div class="voice-dot"></div> Listening… speak your topic now</div>
+
   <div id="planOutput" class="hidden">
-    <div class="section-title" style="margin-top:1.4rem">📊 Overview</div>
+    <div class="section-title">📊 Overview</div>
     <div class="metrics">
       <div class="metric"><div class="val" id="mTopic">—</div><div class="lbl">Topic</div></div>
       <div class="metric"><div class="val" id="mLevel">—</div><div class="lbl">Level</div></div>
       <div class="metric"><div class="val" id="mDur">—</div><div class="lbl">Duration</div></div>
-      <div class="metric"><div class="val" id="mStyle">—</div><div class="lbl">Style</div></div>
     </div>
     <div class="section-title">🏷️ ICAP Coverage</div>
-    <div class="icap-row">
-      <div class="icap-box passive-box"><div class="num" id="cntPassive">—</div><div class="lbl">Passive</div></div>
-      <div class="icap-box active-box"><div class="num" id="cntActive">—</div><div class="lbl">Active</div></div>
-      <div class="icap-box constructive-box"><div class="num" id="cntConstructive">—</div><div class="lbl">Constructive</div></div>
-      <div class="icap-box interactive-box"><div class="num" id="cntInteractive">—</div><div class="lbl">Interactive</div></div>
-    </div>
+    <div class="icap-row" id="icapRow"></div>
     <div class="section-title">📐 Lecture Outline</div>
     <div id="outlineCards"></div>
     <div class="section-title">💡 Examples & Analogies</div>
@@ -245,469 +214,716 @@ textarea{resize:vertical;min-height:100px;line-height:1.5}
     <div id="activityCards"></div>
     <div class="section-title">🪞 Reflection Questions</div>
     <div id="reflectionList"></div>
+    <div style="display:flex;gap:.6rem;margin-top:.8rem">
+      <button class="btn btn-outline" onclick="switchTab('slides')">📊 Generate Slides & Video</button>
+      <button class="btn btn-outline" onclick="switchTab('live')">🔴 Go to Live Class</button>
+    </div>
   </div>
 </div>
 
-<!-- STUDENT SUPPORT -->
+<!-- ═══════════════ LIVE CLASS ═══════════════ -->
+<div id="live" class="section">
+  <div id="noplan-live" class="info-box">⚠️ Generate a lesson plan first in the Lesson Builder tab.</div>
+  <div id="liveContent" class="hidden">
+    <div style="background:var(--dg);color:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-family:'DM Serif Display',serif;font-size:1.1rem">🔴 Live Classroom Cockpit</div><div style="font-size:.8rem;opacity:.75;margin-top:.2rem">Topic: <span id="live-topic-label">—</span> · Level: <span id="live-level-label">—</span></div></div>
+      <button class="btn-voice btn" onclick="toggleVoiceInput('l2-question')">🎤</button>
+    </div>
+
+    <div class="l2-grid">
+      <!-- Tool 1 -->
+      <div class="tool-card">
+        <div class="tool-title">💬 Student Question Handler</div>
+        <div style="display:flex;gap:.4rem">
+          <input id="l2-question" placeholder="Type or speak student question…" style="flex:1"/>
+          <button class="btn-voice btn" style="width:auto;padding:.4rem .7rem;font-size:.8rem" onclick="toggleVoiceInput('l2-question')">🎤</button>
+        </div>
+        <button class="btn btn-sm" style="margin-top:.5rem" onclick="handleQuestion()">Get Response Strategy</button>
+        <div id="q-result" class="hidden" style="margin-top:.6rem">
+          <div class="result-field"><div class="result-label">Say out loud</div><div class="result-val" id="q-answer"></div></div>
+          <div class="result-field"><div class="result-label">Misconception behind it</div><div class="result-val" id="q-misc"></div></div>
+          <div class="result-field"><div class="result-label">Follow-up for class</div><div class="result-val" id="q-follow"></div></div>
+          <div class="result-field"><div class="result-label">2-min activity</div><div class="result-val" id="q-act"></div></div>
+        </div>
+      </div>
+
+      <!-- Tool 2 -->
+      <div class="tool-card orange">
+        <div class="tool-title">😕 Confusion Detector</div>
+        <textarea id="l2-confusion" placeholder="Describe what students are confused about…" style="min-height:60px"></textarea>
+        <button class="btn btn-sm" style="margin-top:.5rem;background:var(--or)" onclick="handleConfusion()">Rescue Strategy</button>
+        <div id="c-result" class="hidden" style="margin-top:.6rem">
+          <div class="result-field"><div class="result-label" style="color:var(--or)">New explanation</div><div class="result-val" style="background:var(--lor)" id="c-exp"></div></div>
+          <div class="result-field"><div class="result-label" style="color:var(--or)">3-min activity</div><div class="result-val" style="background:var(--lor)" id="c-act"></div></div>
+          <div class="result-field"><div class="result-label" style="color:var(--or)">Draw on board</div><div class="result-val" style="background:var(--lor)" id="c-vis"></div></div>
+          <div class="result-field"><div class="result-label" style="color:var(--or)">Say to re-engage</div><div class="result-val" style="background:var(--lor)" id="c-rea"></div></div>
+        </div>
+      </div>
+
+      <!-- Tool 3 -->
+      <div class="tool-card blue">
+        <div class="tool-title">✅ Concept Check Interpreter</div>
+        <div class="form-group"><label style="font-size:.8rem">Question you asked the class</label><input id="l2-ccq" placeholder="e.g. What does the coefficient tell us?"/></div>
+        <div class="form-group"><label style="font-size:.8rem">% who answered correctly: <span id="pctLabel">50</span>%</label><input type="range" min="0" max="100" value="50" id="l2-pct" oninput="document.getElementById('pctLabel').textContent=this.value"/></div>
+        <button class="btn btn-sm" style="background:var(--bl)" onclick="handleCheck()">Interpret Results</button>
+        <div id="cc-result" class="hidden" style="margin-top:.6rem">
+          <div class="result-field"><div class="result-label" style="color:var(--bl)">What it means</div><div class="result-val" style="background:var(--lbl)" id="cc-int"></div></div>
+          <div class="result-field"><div class="result-label" style="color:var(--bl)">Do this next</div><div class="result-val" style="background:var(--lbl)" id="cc-act"></div></div>
+          <div class="result-field"><div class="result-label" style="color:var(--bl)">Ask class now</div><div class="result-val" style="background:var(--lbl)" id="cc-fol"></div></div>
+        </div>
+      </div>
+
+      <!-- Tool 4 -->
+      <div class="tool-card purple">
+        <div class="tool-title">⏱️ Pacing Assistant</div>
+        <div class="row">
+          <div class="form-group"><label style="font-size:.8rem">Minutes elapsed</label><input type="number" id="l2-elapsed" placeholder="45" min="0" max="180"/></div>
+          <div class="form-group"><label style="font-size:.8rem">Total duration</label><input type="number" id="l2-total" placeholder="75" min="30" max="180"/></div>
+        </div>
+        <div class="form-group"><label style="font-size:.8rem">Current segment</label><input id="l2-seg" placeholder="e.g. Core Concept Explanation"/></div>
+        <button class="btn btn-sm" style="background:var(--pu)" onclick="handlePacing()">Get Pacing Advice</button>
+        <div id="pa-result" class="hidden" style="margin-top:.6rem">
+          <div class="result-field"><div class="result-label" style="color:var(--pu)">Status</div><div class="result-val" style="background:var(--lpu)" id="pa-status"></div></div>
+          <div class="result-field"><div class="result-label" style="color:var(--pu)">What to adjust</div><div class="result-val" style="background:var(--lpu)" id="pa-rec"></div></div>
+          <div class="result-field"><div class="result-label" style="color:var(--pu)">Must cover</div><div class="result-val" style="background:var(--lpu)" id="pa-must"></div></div>
+          <div class="result-field"><div class="result-label" style="color:var(--pu)">Can skip</div><div class="result-val" style="background:var(--lpu)" id="pa-skip"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ STUDENT PORTAL ═══════════════ -->
 <div id="student" class="section">
-  <div id="noplan1" class="info-box">⚠️ Generate a lesson plan first in the Lesson Builder tab.</div>
-  <div id="studentContent" class="hidden">
-    <div class="section-title">📖 Micro-Explanation</div>
+  <div class="student-hero">
+    <h2>🎓 Student Portal</h2>
+    <p>Ask anything about today's class — your answer is personalised just for you</p>
+  </div>
+
+  <div class="card-flat">
+    <div style="font-weight:700;font-size:.9rem;color:var(--dg);margin-bottom:.8rem">Tell us about yourself so we can explain things in a way that makes sense to you</div>
+    <div class="profile-grid">
+      <div class="form-group"><label>Your Age</label><input id="s-age" placeholder="e.g. 20" type="number" min="10" max="80"/></div>
+      <div class="form-group"><label>Year of Study</label><select id="s-year"><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Masters</option><option>PhD</option></select></div>
+      <div class="form-group"><label>Your Academic Background</label><select id="s-bg"><option>No prior coding experience</option><option>Social Sciences</option><option>Business / Economics</option><option>Engineering</option><option>Mathematics / Statistics</option><option>Computer Science</option><option>Medicine / Health Sciences</option><option>Arts / Humanities</option></select></div>
+      <div class="form-group"><label>Native Language</label><select id="s-lang"><option>English</option><option>Yoruba</option><option>Hausa</option><option>Igbo</option><option>French</option><option>Spanish</option><option>Arabic</option><option>Portuguese</option><option>Swahili</option><option>Other</option></select></div>
+    </div>
+
+    <div class="form-group" style="margin-top:.4rem">
+      <label>Your Question About Today's Class</label>
+      <div style="display:flex;gap:.5rem">
+        <textarea id="s-question" placeholder="Type your question here — there are no stupid questions…" style="min-height:70px;flex:1"></textarea>
+        <button class="btn-voice btn" style="height:70px;width:50px;padding:0;font-size:1.2rem;margin-top:0" onclick="toggleVoiceInput('s-question')">🎤</button>
+      </div>
+    </div>
+
+    <div id="s-noplan" class="info-box" style="display:none">⚠️ Please generate a lesson plan first so the system knows the topic.</div>
+    <button class="btn" onclick="askStudentQuestion()">🤖 Get My Personalised Answer</button>
+  </div>
+
+  <div id="s-loading" class="loading hidden"><span class="spinner"></span>Personalising your answer…</div>
+
+  <div id="s-answer" class="hidden" style="margin-top:1rem">
+    <div class="answer-card">
+      <div class="field-label">Your personalised answer</div>
+      <div class="field-val" id="s-ans-main"></div>
+      <div style="margin-top:.8rem"><div class="field-label">Analogy just for you</div><div class="field-val" id="s-ans-analogy"></div></div>
+      <div style="margin-top:.8rem"><div class="field-label">What to look at next</div><div class="field-val" id="s-ans-next"></div></div>
+      <div class="encourage" id="s-ans-enc"></div>
+    </div>
+    <div style="display:flex;gap:.6rem;margin-top:.8rem">
+      <button class="btn btn-outline btn-sm" onclick="speakAnswer()">🔊 Read Answer Aloud</button>
+      <button class="btn btn-outline btn-sm" onclick="stopSpeaking()">⏹ Stop</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLIDES & VIDEO ═══════════════ -->
+<div id="slides" class="section">
+  <div id="noplan-slides" class="info-box">⚠️ Generate a lesson plan first in the Lesson Builder tab.</div>
+  <div id="slidesContent" class="hidden">
+
+    <div class="tab-pill">
+      <button class="active" onclick="showSlideTab('slide-tab','this')">📊 Slides</button>
+      <button onclick="showSlideTab('video-tab','this')">🎬 Video</button>
+    </div>
+
+    <!-- SLIDES TAB -->
+    <div id="slide-tab">
+      <button class="btn" onclick="generateSlides()" id="genSlidesBtn">✨ Generate Slides</button>
+      <div id="slides-loading" class="loading hidden"><span class="spinner"></span>Building slides…</div>
+      <div id="slides-preview" class="hidden">
+        <div class="section-title">Preview — click any slide to see speaker notes</div>
+        <div class="slides-grid" id="slidesGrid"></div>
+        <div id="slide-detail" class="card hidden" style="margin-top:.8rem;border-left-color:var(--bl)">
+          <h3 id="sd-title"></h3>
+          <p id="sd-notes" style="margin-top:.5rem"></p>
+          <div style="margin-top:.5rem;font-size:.8rem;color:var(--gray);font-style:italic" id="sd-visual"></div>
+        </div>
+        <button class="btn btn-outline" style="margin-top:.8rem" onclick="downloadSlidesTxt()">⬇️ Download Slide Content</button>
+      </div>
+    </div>
+
+    <!-- VIDEO TAB -->
+    <div id="video-tab" class="hidden">
+      <div class="info-box" style="margin-bottom:.8rem">🎬 LectureAI generates a narrated video slideshow you can play and download. The AI writes the script, the browser reads it aloud using voice synthesis.</div>
+      <button class="btn" onclick="generateVideo()" id="genVideoBtn">🎬 Generate Narrated Video</button>
+      <div id="video-loading" class="loading hidden"><span class="spinner"></span>Writing narration script…</div>
+
+      <div id="video-player" class="hidden" style="margin-top:1rem">
+        <div class="video-container">
+          <div class="video-screen" id="videoScreen">
+            <div style="font-size:2.5rem" id="vid-emoji">🎓</div>
+            <div class="video-slide-title" id="vid-title">Ready to Play</div>
+            <div class="video-slide-sub" id="vid-sub"></div>
+            <ul class="video-bullets" id="vid-bullets"></ul>
+          </div>
+          <div class="narration-box" id="narration-box">Press play to start the lecture video…</div>
+          <div class="video-controls">
+            <button class="video-btn" onclick="vidPrev()">⏮</button>
+            <button class="video-btn" id="playBtn" onclick="togglePlay()">▶️</button>
+            <button class="video-btn" onclick="vidNext()">⏭</button>
+            <div class="progress-bar" onclick="seekVideo(event)"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+            <div class="slide-counter" id="slideCounter">0 / 0</div>
+            <button class="video-btn" onclick="stopSpeaking()">🔇</button>
+          </div>
+        </div>
+        <button class="btn btn-outline" style="margin-top:.8rem" onclick="downloadVideoScript()">⬇️ Download Script</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ STUDENT SUPPORT (Layer 3) ═══════════════ -->
+<div id="support" class="section">
+  <div id="noplan-support" class="info-box">⚠️ Generate a lesson plan first in the Lesson Builder tab.</div>
+  <div id="supportContent" class="hidden">
+    <div class="section-title">📖 Plain-Language Explanation</div>
     <div class="card"><p id="microExp"></p></div>
     <div class="section-title">✏️ Practice Questions</div>
     <div id="practiceQs"></div>
-    <div class="section-title">🧠 SRL Prompts</div>
+    <div class="section-title">🧠 Self-Study Prompts</div>
     <div id="srlCards"></div>
   </div>
 </div>
 
-<!-- RUBRIC -->
-<div id="rubric" class="section">
-  <div id="noplan2" class="info-box">⚠️ Generate a lesson plan first in the Lesson Builder tab.</div>
-  <div id="rubricContent" class="hidden">
+<!-- ═══════════════ EVALUATION ═══════════════ -->
+<div id="eval" class="section">
+  <div id="noplan-eval" class="info-box">⚠️ Generate a lesson plan first in the Lesson Builder tab.</div>
+  <div id="evalContent" class="hidden">
+    <p style="font-size:.87rem;color:#555;margin-bottom:1rem">Score each criterion 1 (poor) to 5 (excellent).</p>
     <div id="rubricRows"></div>
     <div class="score-display">
       <div class="big" id="totalScore">—</div>
-      <div style="font-size:0.85rem;color:var(--muted)"><span id="totalPct">—</span> · <span id="rating">—</span></div>
+      <div style="font-size:.84rem;color:#555">Total · <span id="totalPct">—</span> · <span id="rating">—</span></div>
     </div>
-    <button class="btn" style="margin-top:1rem" onclick="alert('Saved!')">💾 Save Evaluation</button>
   </div>
 </div>
 
-<!-- EXPORT -->
+<!-- ═══════════════ EXPORT ═══════════════ -->
 <div id="export" class="section">
-  <div id="noplan3" class="info-box">⚠️ Generate a lesson plan first in the Lesson Builder tab.</div>
+  <div id="noplan-export" class="info-box">⚠️ Generate a lesson plan first in the Lesson Builder tab.</div>
   <div id="exportContent" class="hidden">
-    <div style="display:flex;gap:0.7rem;flex-wrap:wrap">
-      <button class="btn" style="flex:1;min-width:160px" onclick="downloadTxt()">⬇️ Download Text</button>
-      <button class="btn btn-outline" style="flex:1;min-width:160px" onclick="window.print()">🖨️ Print / PDF</button>
-    </div>
-    <div class="section-title" style="margin-top:1.2rem">Preview</div>
+    <button class="btn" onclick="downloadTxt()">⬇️ Download Lesson Plan</button>
+    <div class="section-title" style="margin-top:1rem">Preview</div>
     <div class="export-box" id="exportPreview"></div>
   </div>
 </div>
 
-<!-- LAYER 2: LIVE CLASS -->
-<div id="live" class="section">
-  <div id="noplan-layer2" class="noplan-layer2">⚠️ Generate a lesson plan first in the Lesson Builder tab.</div>
-  <div id="liveContent" class="hidden">
-    <div class="live-header">
-      <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--green-900);font-weight:700">🔴 Live Classroom Cockpit</span>
-      <span class="live-badge">LIVE</span>
-      <span class="live-topic-badge" id="liveTopic">No topic loaded</span>
-    </div>
-    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.2rem">Real-time AI assistance during your lecture.</p>
-    <div class="tool-grid">
-      <div class="tool-card">
-        <div class="tool-title">💬 Student Question Handler</div>
-        <div class="tool-desc">A student just asked a question. Get an instant answer to deliver out loud.</div>
-        <label>Student's question</label>
-        <textarea id="studentQ" style="min-height:70px" placeholder="e.g. Why do we need a sigmoid function?"></textarea>
-        <button class="tool-btn" id="qBtn" onclick="handleQuestion()">⚡ Get Response Strategy</button>
-        <div class="result-box" id="qResult"></div>
-      </div>
-      <div class="tool-card confusion">
-        <div class="tool-title">😕 Confusion Detector</div>
-        <div class="tool-desc">Students look lost. Describe the confusion and get a rescue strategy.</div>
-        <label>What are students confused about?</label>
-        <textarea id="confusionInput" style="min-height:70px" placeholder="e.g. Students don't understand coefficients vs predictions"></textarea>
-        <button class="tool-btn confusion-btn" id="confBtn" onclick="handleConfusion()">⚡ Get Rescue Strategy</button>
-        <div class="result-box" id="confResult"></div>
-      </div>
-      <div class="tool-card check">
-        <div class="tool-title">✅ Concept Check Interpreter</div>
-        <div class="tool-desc">Enter how many students answered correctly and get advice on next steps.</div>
-        <label>Concept check question you asked</label>
-        <input id="checkQ" placeholder="e.g. What does a p-value of 0.03 mean?"/>
-        <label style="margin-top:0.6rem">% correct: <span id="pctDisplay" style="color:#8e44ad;font-weight:700">50%</span></label>
-        <div class="pct-row">
-          <input type="range" min="0" max="100" value="50" id="correctPct" oninput="document.getElementById('pctDisplay').textContent=this.value+'%'"/>
-          <div class="pct-val">50%</div>
-        </div>
-        <button class="tool-btn check-btn" id="checkBtn" onclick="handleConceptCheck()">⚡ Interpret Results</button>
-        <div class="result-box" id="checkResult"></div>
-      </div>
-      <div class="tool-card pacing">
-        <div class="tool-title">⏱️ Pacing Assistant</div>
-        <div class="tool-desc">Running behind or ahead? Get real-time advice on pacing.</div>
-        <label>Time elapsed (minutes)</label>
-        <input type="number" id="elapsedMin" placeholder="e.g. 45" min="0" max="180"/>
-        <label style="margin-top:0.6rem">Currently teaching</label>
-        <input id="currentSeg" placeholder="e.g. Core Concept Explanation"/>
-        <button class="tool-btn pacing-btn" style="margin-top:0.7rem" id="paceBtn" onclick="handlePacing()">⚡ Analyse Pacing</button>
-        <div class="result-box" id="paceResult"></div>
-      </div>
-    </div>
-    <div class="section-title" style="margin-top:0.5rem">📋 Session Log</div>
-    <div id="liveLog" style="background:white;border-radius:var(--radius);padding:1rem;box-shadow:var(--shadow);
-      min-height:80px;font-size:0.82rem;color:var(--muted);font-family:'Courier New',monospace;max-height:200px;overflow-y:auto">
-      Session log will appear here as you use the tools...
-    </div>
-    <button class="btn btn-outline" style="margin-top:0.5rem;width:auto;padding:0.4rem 1rem;font-size:0.8rem" onclick="clearLog()">🗑 Clear Log</button>
-  </div>
-</div>
-
-</div>
+</div><!-- /content -->
 
 <script>
-const BACKEND = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:5000'
-  : window.location.origin;
-let currentPlan = null;
+// ── GLOBAL STATE ─────────────────────────────────────────────────────────────
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:5000' : '';
 
-async function checkHealth(){
-  try{
-    const r = await fetch(BACKEND+"/health");
-    await r.json();
-    document.getElementById("statusDot").textContent = "🟢";
-    document.getElementById("statusMsg").textContent = "AI connected and ready";
-    document.getElementById("statusBar").style.background = "var(--green-50)";
-  } catch(e){
-    document.getElementById("statusDot").textContent = "🔴";
-    document.getElementById("statusMsg").textContent = "Backend not running — start server.py first";
-    document.getElementById("statusBar").style.background = "#fff0f0";
-  }
-}
-checkHealth();
+let currentPlan   = null;
+let currentSlides = null;
+let videoData     = null;
+let videoPlaying  = false;
+let currentSlide  = 0;
+let synth         = window.speechSynthesis;
+let recognition   = null;
 
+// ── TOPIC AUTOCOMPLETE ────────────────────────────────────────────────────────
 const TOPICS = [
-  {t:"Linear Regression",c:"stats"},{t:"Logistic Regression",c:"stats"},{t:"Hypothesis Testing",c:"stats"},
-  {t:"Probability Distributions",c:"stats"},{t:"Bayesian Statistics",c:"stats"},{t:"Time Series Analysis",c:"stats"},
-  {t:"Confidence Intervals",c:"stats"},{t:"Correlation and Causation",c:"stats"},
-  {t:"Decision Trees",c:"ml"},{t:"Random Forests",c:"ml"},{t:"Neural Networks",c:"ml"},
-  {t:"Support Vector Machines",c:"ml"},{t:"Gradient Boosting",c:"ml"},{t:"Clustering Algorithms",c:"ml"},
-  {t:"Reinforcement Learning",c:"ml"},{t:"Natural Language Processing",c:"ml"},{t:"Transfer Learning",c:"ml"},
-  {t:"Explainable AI",c:"ml"},{t:"Feature Engineering",c:"ml"},{t:"Model Evaluation",c:"ml"},
-  {t:"Data Cleaning",c:"data"},{t:"Data Wrangling with Pandas",c:"data"},{t:"Exploratory Data Analysis",c:"data"},
-  {t:"Missing Value Imputation",c:"data"},{t:"ETL Processes",c:"data"},{t:"Outlier Detection",c:"data"},
-  {t:"Data Visualisation Principles",c:"viz"},{t:"Matplotlib and Seaborn",c:"viz"},
-  {t:"Interactive Dashboards",c:"viz"},{t:"Storytelling with Data",c:"viz"},
-  {t:"Python for Data Science",c:"prog"},{t:"SQL Fundamentals",c:"prog"},{t:"SQL Joins",c:"prog"},
-  {t:"Git and Version Control",c:"prog"},{t:"API Integration",c:"prog"},{t:"Web Scraping",c:"prog"},
-  {t:"AI Ethics",c:"ethics"},{t:"Bias and Fairness in AI",c:"ethics"},{t:"Data Privacy",c:"ethics"},{t:"Responsible AI",c:"ethics"},
-  {t:"Cloud Computing",c:"cloud"},{t:"AWS for Data Science",c:"cloud"},{t:"Big Data with Spark",c:"cloud"},
-  {t:"Docker and Containerisation",c:"cloud"},{t:"Azure Machine Learning",c:"cloud"},
-  {t:"Database Design",c:"db"},{t:"NoSQL Databases",c:"db"},{t:"MongoDB",c:"db"},{t:"Data Warehousing",c:"db"},
+  {t:"Linear Regression",cat:"Statistics"},{t:"Logistic Regression",cat:"Statistics"},{t:"Hypothesis Testing",cat:"Statistics"},
+  {t:"Bayesian Inference",cat:"Statistics"},{t:"Probability Distributions",cat:"Statistics"},{t:"ANOVA",cat:"Statistics"},
+  {t:"Time Series Analysis",cat:"Statistics"},{t:"Correlation vs Causation",cat:"Statistics"},
+  {t:"Neural Networks",cat:"Machine Learning"},{t:"Decision Trees",cat:"Machine Learning"},
+  {t:"Random Forest",cat:"Machine Learning"},{t:"K-Means Clustering",cat:"Machine Learning"},
+  {t:"Support Vector Machines",cat:"Machine Learning"},{t:"Gradient Boosting",cat:"Machine Learning"},
+  {t:"Convolutional Neural Networks",cat:"Machine Learning"},{t:"Reinforcement Learning",cat:"Machine Learning"},
+  {t:"Natural Language Processing",cat:"Machine Learning"},{t:"Transfer Learning",cat:"Machine Learning"},
+  {t:"Data Cleaning",cat:"Data Engineering"},{t:"ETL Pipelines",cat:"Data Engineering"},
+  {t:"Apache Spark",cat:"Data Engineering"},{t:"Data Warehousing",cat:"Data Engineering"},
+  {t:"SQL",cat:"Databases"},{t:"NoSQL Databases",cat:"Databases"},{t:"Database Indexing",cat:"Databases"},
+  {t:"Data Visualisation",cat:"Visualisation"},{t:"Matplotlib",cat:"Visualisation"},{t:"Tableau",cat:"Visualisation"},
+  {t:"Python for Data Science",cat:"Programming"},{t:"Pandas",cat:"Programming"},{t:"NumPy",cat:"Programming"},
+  {t:"AI Ethics",cat:"Ethics"},{t:"Data Privacy",cat:"Ethics"},{t:"Algorithmic Bias",cat:"Ethics"},
+  {t:"Cloud Computing",cat:"Cloud"},{t:"AWS for Data Science",cat:"Cloud"},{t:"Docker",cat:"Cloud"},
 ];
-const CAT_LABELS={stats:"Statistics",ml:"Machine Learning",data:"Data Engineering",viz:"Visualisation",prog:"Programming",ethics:"Ethics",cloud:"Cloud / Big Data",db:"Databases"};
-const CAT_CLASSES={stats:"cat-stats",ml:"cat-ml",data:"cat-data",viz:"cat-viz",prog:"cat-prog",ethics:"cat-ethics",cloud:"cat-cloud",db:"cat-db"};
-const OBJ_SUGGESTIONS={
-  stats:["Understand and interpret statistical outputs","Apply to a real dataset","Identify assumptions and violations","Compare with one alternative method"],
-  ml:["Explain how the algorithm learns","Implement a basic version in Python","Evaluate model performance","Identify and address overfitting"],
-  data:["Identify common data quality issues","Apply appropriate cleaning techniques","Document all transformation decisions","Assess impact on downstream analysis"],
-  viz:["Choose appropriate chart types","Apply visual design principles","Build an interactive visualisation","Critique a misleading chart"],
-  prog:["Write clean readable code","Debug a broken implementation","Explain logic to non-technical audience","Extend solution to new use case"],
-  ethics:["Identify ethical risks in a scenario","Apply a fairness framework","Propose mitigation strategies","Reflect on practitioner responsibility"],
-  cloud:["Explain architecture and components","Compare cloud and on-premise","Set up a basic pipeline","Identify cost and performance trade-offs"],
-  db:["Design an appropriate schema","Write queries to retrieve data","Compare database types","Explain indexing and optimisation"],
-};
 
-let filteredSuggestions=[],selectedSuggestionIndex=-1;
-function onTopicInput(){
-  const val=document.getElementById("topic").value.trim();
-  const box=document.getElementById("suggestions");
-  if(val.length<1){box.classList.remove("show");return;}
-  filteredSuggestions=TOPICS.filter(t=>t.t.toLowerCase().includes(val.toLowerCase())).slice(0,8);
-  if(!filteredSuggestions.length){box.classList.remove("show");return;}
-  box.innerHTML=filteredSuggestions.map((t,i)=>{
-    const hl=t.t.replace(new RegExp(`(${val.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),'<span class="suggestion-highlight">$1</span>');
-    return `<div class="suggestion-item" onmousedown="selectSuggestion(${i})">${hl}<span class="cat ${CAT_CLASSES[t.c]}">${CAT_LABELS[t.c]}</span></div>`;
-  }).join("");
-  selectedSuggestionIndex=-1;
-  box.classList.add("show");
+function showSuggestions(val) {
+  const box = document.getElementById('suggestions');
+  if(!val || val.length < 2){box.style.display='none';return;}
+  const matches = TOPICS.filter(t => t.t.toLowerCase().includes(val.toLowerCase())).slice(0,7);
+  if(!matches.length){box.style.display='none';return;}
+  box.innerHTML = matches.map(m =>
+    `<div onclick="selectTopic('${m.t}','${m.cat}')" style="padding:.55rem .8rem;cursor:pointer;font-size:.88rem;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;transition:background .15s" onmouseover="this.style.background='#f0faf4'" onmouseout="this.style.background=''">${m.t}<span style="font-size:.72rem;background:var(--lg);color:var(--dg);padding:1px 7px;border-radius:12px;font-weight:600">${m.cat}</span></div>`
+  ).join('');
+  box.style.display='block';
 }
-function onTopicKey(e){
-  const box=document.getElementById("suggestions");
-  if(!box.classList.contains("show"))return;
-  if(e.key==="ArrowDown"){e.preventDefault();selectedSuggestionIndex=Math.min(selectedSuggestionIndex+1,filteredSuggestions.length-1);highlightSug();}
-  else if(e.key==="ArrowUp"){e.preventDefault();selectedSuggestionIndex=Math.max(selectedSuggestionIndex-1,-1);highlightSug();}
-  else if(e.key==="Enter"||e.key==="Tab"){if(selectedSuggestionIndex>=0){e.preventDefault();selectSuggestion(selectedSuggestionIndex);}else box.classList.remove("show");}
-  else if(e.key==="Escape")box.classList.remove("show");
-}
-function highlightSug(){document.querySelectorAll(".suggestion-item").forEach((el,i)=>el.classList.toggle("active",i===selectedSuggestionIndex));}
-function selectSuggestion(i){
-  const t=filteredSuggestions[i];
-  document.getElementById("topic").value=t.t;
-  document.getElementById("suggestions").classList.remove("show");
-  document.getElementById("topicCategory").innerHTML=`Detected: <strong style="color:var(--green-700)">${CAT_LABELS[t.c]}</strong>`;
-  const sugs=OBJ_SUGGESTIONS[t.c];
-  if(sugs) document.getElementById("objSuggest").innerHTML=
-    `<span style="font-size:0.78rem;color:var(--muted);font-weight:600;width:100%;display:block;margin-bottom:2px">Suggested objectives:</span>`+
-    sugs.map((s,i)=>`<span class="obj-chip" onclick="addObj('${s.replace(/'/g,"\\'")}',${i})">${s}</span>`).join("");
-}
-function addObj(text,idx){
-  const el=document.getElementById("objectives");
-  const num=(el.value.trim().match(/^\d+\./mg)||[]).length+1;
-  el.value=(el.value.trim()?el.value.trim()+"\n":"")+`${num}. ${text}`;
-  document.querySelectorAll(".obj-chip")[idx].style.opacity="0.4";
-}
-document.addEventListener("click",e=>{if(!e.target.closest(".autocomplete-wrapper"))document.getElementById("suggestions").classList.remove("show");});
 
-async function generateLesson(){
-  const topic=document.getElementById("topic").value.trim();
-  const objectives=document.getElementById("objectives").value.trim();
-  if(!topic||!objectives){alert("Please fill in Topic and Learning Objectives.");return;}
-  const level=document.getElementById("level").value;
-  const duration=parseInt(document.getElementById("duration").value);
-  const style=document.getElementById("style").value;
-  document.getElementById("generateBtn").disabled=true;
-  document.getElementById("btnIcon").textContent="⏳";
-  document.getElementById("btnText").textContent="AI is thinking…";
-  document.getElementById("loadingSpinner").classList.remove("hidden");
-  document.getElementById("planOutput").classList.add("hidden");
-  const steps=["Sending topic to AI…","Applying ICAP framework…","Generating unique content…","Building student support…","Finalising lesson plan…"];
-  const stepsEl=document.getElementById("loaderSteps");
-  stepsEl.innerHTML=steps.map((s,i)=>`<div class="loader-step" id="lstep${i}">${s}</div>`).join("");
-  let stepIdx=0;
-  const stepTimer=setInterval(()=>{
-    if(stepIdx>0)document.getElementById(`lstep${stepIdx-1}`).classList.replace("active","done");
-    if(stepIdx<steps.length)document.getElementById(`lstep${stepIdx}`).classList.add("active");
-    stepIdx++;
-    if(stepIdx>=steps.length)clearInterval(stepTimer);
-  },800);
-  try{
-    const lessonRes = await fetch(BACKEND+"/generate",{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({topic,objectives,level,duration,style})
+function selectTopic(topic, cat) {
+  document.getElementById('topic').value = topic;
+  document.getElementById('suggestions').style.display = 'none';
+  const objSuggestions = {
+    'Statistics': '1. Understand key statistical concepts\n2. Apply statistical tests to real data\n3. Interpret results correctly',
+    'Machine Learning': '1. Understand how the algorithm works\n2. Implement and train a model\n3. Evaluate model performance',
+    'Data Engineering': '1. Understand data pipeline concepts\n2. Build and optimise a pipeline\n3. Handle common data quality issues',
+    'Databases': '1. Understand database structure\n2. Write effective queries\n3. Optimise for performance',
+    'Visualisation': '1. Choose the right chart type\n2. Build clear effective visuals\n3. Tell a story with data',
+    'Programming': '1. Understand core syntax and concepts\n2. Write clean readable code\n3. Apply to a data problem',
+    'Ethics': '1. Identify ethical issues in AI\n2. Evaluate case studies critically\n3. Propose responsible design choices',
+    'Cloud': '1. Understand cloud infrastructure\n2. Deploy a data application\n3. Manage cost and performance',
+  };
+  if(objSuggestions[cat]) document.getElementById('objectives').value = objSuggestions[cat];
+}
+
+document.addEventListener('click', e => {
+  if(!e.target.closest('#topic') && !e.target.closest('#suggestions'))
+    document.getElementById('suggestions').style.display = 'none';
+});
+
+// ── VOICE INPUT ───────────────────────────────────────────────────────────────
+function toggleVoiceInput(targetId) {
+  if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){
+    alert('Voice input is not supported in this browser. Please use Chrome.');return;
+  }
+  const bar = document.getElementById('voiceBar');
+  if(recognition){recognition.stop();recognition=null;if(bar)bar.classList.add('hidden');return;}
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  if(bar && targetId==='topic') bar.classList.remove('hidden');
+  recognition.onresult = e => {
+    const text = e.results[0][0].transcript;
+    document.getElementById(targetId).value = text;
+    if(targetId==='topic') showSuggestions(text);
+    if(bar) bar.classList.add('hidden');
+    recognition = null;
+  };
+  recognition.onerror = () => { if(bar) bar.classList.add('hidden'); recognition=null; };
+  recognition.onend  = () => { if(bar) bar.classList.add('hidden'); recognition=null; };
+  recognition.start();
+}
+
+function speakAnswer() {
+  const text = document.getElementById('s-ans-main').textContent + '. ' +
+               document.getElementById('s-ans-analogy').textContent + '. ' +
+               document.getElementById('s-ans-next').textContent;
+  if(synth.speaking) synth.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.9; utt.pitch = 1;
+  synth.speak(utt);
+}
+
+function stopSpeaking() { if(synth.speaking) synth.cancel(); videoPlaying=false; document.getElementById('playBtn').textContent='▶️'; }
+
+// ── GENERATE LESSON PLAN ─────────────────────────────────────────────────────
+async function generateLesson() {
+  const topic = document.getElementById('topic').value.trim();
+  const objectives = document.getElementById('objectives').value.trim();
+  if(!topic||!objectives){alert('Please fill in Topic and Learning Objectives.');return;}
+
+  const btn = document.querySelector('#builder .btn');
+  btn.textContent='⏳ Generating…'; btn.disabled=true;
+
+  const level    = document.getElementById('level').value;
+  const duration = parseInt(document.getElementById('duration').value);
+  const style    = document.getElementById('style').value;
+
+  try {
+    const res = await fetch(`${API}/generate`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({topic, objectives, level, duration, style})
     });
-    const lessonData = await lessonRes.json();
-    if(!lessonData.success) throw new Error(lessonData.error||'Generation failed');
-    if(!lessonData.data)    throw new Error('No data returned from server');
-    clearInterval(stepTimer);
-    currentPlan={topic,objectives,level,duration,style,generatedAt:new Date().toLocaleString(),...lessonData.data,student:lessonData.data.student};
-    renderLesson(currentPlan);
-  } catch(err){
-    clearInterval(stepTimer);
-    alert("Error: "+err.message);
-  } finally{
-    document.getElementById("generateBtn").disabled=false;
-    document.getElementById("btnIcon").textContent="✦";
-    document.getElementById("btnText").textContent="Generate Lesson Plan with AI";
-    document.getElementById("loadingSpinner").classList.add("hidden");
+    const json = await res.json();
+    if(!json.success) throw new Error('API failed');
+    currentPlan = {...json.data, topic, level, duration, style, generatedAt: new Date().toLocaleString()};
+    renderLesson();
+  } catch(e) {
+    alert('Could not reach the AI server. Is server_v2.py running?');
+  } finally {
+    btn.textContent='✨ Generate Lesson Plan'; btn.disabled=false;
   }
 }
 
-function badge(icap){
-  const cls={Passive:"passive",Active:"active",Constructive:"constructive",Interactive:"interactive"}[icap]||"active";
-  return `<span class="badge badge-${cls}">${icap}</span>`;
-}
+function renderLesson() {
+  const p = currentPlan;
+  document.getElementById('mTopic').textContent = p.topic.length>12 ? p.topic.substring(0,12)+'…':p.topic;
+  document.getElementById('mLevel').textContent = p.level;
+  document.getElementById('mDur').textContent   = p.duration+' min';
 
-function renderLesson(plan){
-  plan.outline     = Array.isArray(plan.outline)     ? plan.outline     : [];
-  plan.analogies   = Array.isArray(plan.analogies)   ? plan.analogies   : [];
-  plan.activities  = Array.isArray(plan.activities)  ? plan.activities  : [];
-  plan.reflections = Array.isArray(plan.reflections) ? plan.reflections : [];
-  plan.student     = plan.student && typeof plan.student==='object' ? plan.student : {};
-  plan.student.micro_explanation  = plan.student.micro_explanation  || '';
-  plan.student.practice_questions = Array.isArray(plan.student.practice_questions) ? plan.student.practice_questions : [];
-  plan.student.srl_prompts        = Array.isArray(plan.student.srl_prompts)        ? plan.student.srl_prompts        : [];
+  // ICAP count
+  const counts = {Passive:0,Active:0,Constructive:0,Interactive:0};
+  (p.outline||[]).forEach(s => { if(counts[s.icap]!==undefined) counts[s.icap]++; });
+  (p.activities||[]).forEach(a => { if(counts[a.icap]!==undefined) counts[a.icap]++; });
+  document.getElementById('icapRow').innerHTML = `
+    <div class="icap-box passive-box"><div class="num">${counts.Passive}</div><div class="lbl">Passive</div></div>
+    <div class="icap-box active-box"><div class="num">${counts.Active}</div><div class="lbl">Active</div></div>
+    <div class="icap-box constructive-box"><div class="num">${counts.Constructive}</div><div class="lbl">Constructive</div></div>
+    <div class="icap-box interactive-box"><div class="num">${counts.Interactive}</div><div class="lbl">Interactive</div></div>`;
 
-  const t=plan.topic;
-  document.getElementById("mTopic").textContent=t.length>13?t.substring(0,13)+"…":t;
-  document.getElementById("mLevel").textContent=plan.level;
-  document.getElementById("mDur").textContent=plan.duration+" min";
-  document.getElementById("mStyle").textContent=plan.style.split("-")[0];
-
-  const c={Passive:0,Active:0,Constructive:0,Interactive:0};
-  [...plan.outline,...plan.activities].forEach(x=>{if(c[x.icap]!==undefined)c[x.icap]++;});
-  document.getElementById("cntPassive").textContent=c.Passive;
-  document.getElementById("cntActive").textContent=c.Active;
-  document.getElementById("cntConstructive").textContent=c.Constructive;
-  document.getElementById("cntInteractive").textContent=c.Interactive;
-
-  document.getElementById("outlineCards").innerHTML=plan.outline.map((seg,i)=>`
-    <div class="card">
-      <h3>${i+1}. ${seg.segment} <small style="font-size:0.8rem;font-weight:400">(${seg.duration_min} min)</small> ${badge(seg.icap)}</h3>
+  // Outline
+  const outlineEl = document.getElementById('outlineCards');
+  outlineEl.innerHTML = '';
+  (p.outline||[]).forEach((seg,i) => {
+    outlineEl.innerHTML += `<div class="card">
+      <h3>${i+1}. ${seg.segment} (${seg.duration_min} min) <span class="badge badge-${seg.icap}">${seg.icap}</span></h3>
       <p>${seg.description}</p>
-      <div class="approve-row">
-        <input type="checkbox" id="approve${i}" checked/>
-        <label for="approve${i}">✅ Approve segment</label>
-        <input id="note${i}" placeholder="Add notes…" style="flex:1;font-size:0.82rem;min-width:120px;margin-top:0;margin-left:8px"/>
-      </div>
-    </div>`).join("");
+      <div style="display:flex;align-items:center;gap:.5rem;margin-top:.6rem">
+        <input type="checkbox" id="app${i}" checked/>
+        <label for="app${i}" style="font-size:.83rem;font-weight:400">✅ Approve</label>
+        <input placeholder="Add notes…" style="flex:1;font-size:.8rem"/>
+      </div></div>`;
+  });
 
-  document.getElementById("analogyCards").innerHTML=plan.analogies.map(a=>`<div class="card"><p>${a}</p></div>`).join("");
-  document.getElementById("activityCards").innerHTML=plan.activities.map(a=>`<div class="card"><h3>${a.title} ${badge(a.icap)}</h3><p>${a.prompt}</p></div>`).join("");
-  document.getElementById("reflectionList").innerHTML=`<div class="card"><ul style="padding-left:1.2rem">${plan.reflections.map(r=>`<li style="margin-bottom:0.5rem;font-size:0.9rem">${r}</li>`).join("")}</ul></div>`;
-  document.getElementById("microExp").textContent=plan.student.micro_explanation;
-  document.getElementById("practiceQs").innerHTML=plan.student.practice_questions.map(q=>`
-    <div class="q-card ${(q.difficulty||'').toLowerCase()}">
-      <div class="diff-label">${q.difficulty}</div>
-      <p style="font-size:0.9rem;font-weight:600;margin-top:0.2rem">${q.question}</p>
-      <p style="font-size:0.8rem;color:var(--muted);margin-top:0.4rem">💡 ${q.hint}</p>
-    </div>`).join("");
-  document.getElementById("srlCards").innerHTML=plan.student.srl_prompts.map(s=>`<div class="card"><p>🔹 ${s}</p></div>`).join("");
+  // Analogies
+  document.getElementById('analogyCards').innerHTML =
+    (p.analogies||[]).map(a=>`<div class="card"><p>${a}</p></div>`).join('');
 
-  const RUBRIC=[
-    {name:"Relevance",desc:"Does output match topic and objectives?"},
-    {name:"Clarity",desc:"Is language appropriate for the student level?"},
-    {name:"Pedagogical Value",desc:"Does it support ICAP engagement?"},
-    {name:"Correctness",desc:"Are concepts technically accurate?"},
-    {name:"Usability",desc:"Is the workflow easy for instructors?"},
+  // Activities
+  document.getElementById('activityCards').innerHTML =
+    (p.activities||[]).map(a=>`<div class="card"><h3>${a.title} <span class="badge badge-${a.icap}">${a.icap}</span></h3><p>${a.prompt}</p></div>`).join('');
+
+  // Reflections
+  document.getElementById('reflectionList').innerHTML =
+    `<div class="card"><ul style="padding-left:1.2rem">${(p.reflections||[]).map(r=>`<li style="margin-bottom:.35rem;font-size:.87rem">${r}</li>`).join('')}</ul></div>`;
+
+  // Student support
+  if(p.student) {
+    document.getElementById('microExp').textContent = p.student.micro_explanation||'';
+    const pqEl = document.getElementById('practiceQs');
+    pqEl.innerHTML = (p.student.practice_questions||[]).map(q=>`
+      <div class="q-card">
+        <div class="diff ${q.difficulty}">[${q.difficulty}]</div>
+        <p style="font-size:.87rem;font-weight:600">${q.question}</p>
+        <p style="font-size:.79rem;color:#666;margin-top:.25rem">💡 ${q.hint}</p>
+      </div>`).join('');
+    document.getElementById('srlCards').innerHTML =
+      (p.student.srl_prompts||[]).map(s=>`<div class="card"><p>🔹 ${s}</p></div>`).join('');
+  }
+
+  // Live class labels
+  document.getElementById('live-topic-label').textContent = p.topic;
+  document.getElementById('live-level-label').textContent = p.level;
+
+  // Rubric
+  const CRITERIA = [
+    {n:"Relevance",d:"Does output match topic and objectives?"},
+    {n:"Clarity",d:"Is language right for the student level?"},
+    {n:"Pedagogical Value",d:"Does it support ICAP engagement?"},
+    {n:"Correctness",d:"Are concepts technically accurate?"},
+    {n:"Usability",d:"Is the workflow intuitive for instructors?"},
   ];
-  document.getElementById("rubricRows").innerHTML=RUBRIC.map((cr,i)=>`
+  document.getElementById('rubricRows').innerHTML = CRITERIA.map((c,i)=>`
     <div class="rubric-row">
-      <div class="r-name">${cr.name}</div><div class="r-desc">${cr.desc}</div>
-      <input type="range" min="1" max="5" value="3" id="r${i}" oninput="updateScore()"/>
-      <small>Score: <b id="rv${i}" style="color:var(--green-700)">3</b>/5</small>
-    </div>`).join("");
+      <label style="font-size:.88rem;font-weight:600">${c.n}</label>
+      <p style="font-size:.79rem;color:#777;margin-bottom:.3rem">${c.d}</p>
+      <input type="range" min="1" max="5" value="4" id="r${i}" oninput="updateScore()"/>
+      <small>Score: <b id="rv${i}">4</b>/5</small>
+    </div>`).join('');
   updateScore();
-  buildExport(plan);
 
-  document.getElementById("planOutput").classList.remove("hidden");
-  ["noplan1","noplan2","noplan3","noplan-layer2"].forEach(id=>document.getElementById(id).classList.add("hidden"));
-  document.getElementById("liveTopic").textContent=plan.topic;
-  document.getElementById("liveContent").classList.remove("hidden");
-  ["studentContent","rubricContent","exportContent"].forEach(id=>document.getElementById(id).classList.remove("hidden"));
+  // Export
+  buildExport();
+
+  // Show all sections
+  document.getElementById('planOutput').classList.remove('hidden');
+  ['noplan-live','noplan-slides','noplan-support','noplan-eval','noplan-export'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.classList.add('hidden');
+  });
+  ['liveContent','slidesContent','supportContent','evalContent','exportContent'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.classList.remove('hidden');
+  });
+  document.getElementById('s-noplan').style.display='none';
 }
 
-function updateScore(){
-  let total=0;
-  for(let i=0;i<5;i++){const v=parseInt(document.getElementById("r"+i).value);document.getElementById("rv"+i).textContent=v;total+=v;}
-  const pct=Math.round(total/25*100);
-  document.getElementById("totalScore").textContent=`${total}/25`;
-  document.getElementById("totalPct").textContent=pct+"%";
-  document.getElementById("rating").textContent=pct>=80?"Excellent ⭐":pct>=60?"Good 👍":"Needs Work ⚠️";
+// ── LAYER 2 HANDLERS ─────────────────────────────────────────────────────────
+async function l2call(endpoint, body, resultId, fields) {
+  const btn = event.target; btn.textContent='⏳…'; btn.disabled=true;
+  try {
+    const res = await fetch(`${API}${endpoint}`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const json = await res.json();
+    if(json.success) {
+      document.getElementById(resultId).classList.remove('hidden');
+      fields.forEach(([id,key])=>{ const el=document.getElementById(id); if(el) el.textContent=json.data[key]||''; });
+    }
+  } catch(e){alert('Server error — is server_v2.py running?');}
+  finally{btn.disabled=false; btn.textContent=btn.getAttribute('data-label')||btn.textContent.replace('⏳…','');}
 }
 
-function buildExport(plan){
-  const lines=[
-    `LECTUREAI — AI-GENERATED LESSON PLAN`,
-    `Topic: ${plan.topic} | Level: ${plan.level} | Duration: ${plan.duration} min | Style: ${plan.style}`,
-    `Generated: ${plan.generatedAt}`,``,
-    `LEARNING OBJECTIVES`,plan.objectives,``,
-    `LECTURE OUTLINE`,
-    ...plan.outline.map((s,i)=>`\n${i+1}. ${s.segment} (${s.duration_min} min) [${s.icap}]\n   ${s.description}`),
-    ``,`ANALOGIES`,...plan.analogies.map(a=>`• ${a}`),
-    ``,`ACTIVITIES`,...plan.activities.map(a=>`[${a.icap}] ${a.title}: ${a.prompt}`),
-    ``,`REFLECTIONS`,...plan.reflections.map(r=>`• ${r}`),
-    ``,`MICRO-EXPLANATION`,plan.student.micro_explanation,
-    ``,`PRACTICE QUESTIONS`,...plan.student.practice_questions.map(q=>`[${q.difficulty}] ${q.question}\n  Hint: ${q.hint}`),
-    ``,`SRL PROMPTS`,...plan.student.srl_prompts.map(s=>`• ${s}`),
-  ];
-  document.getElementById("exportPreview").textContent=lines.join("\n");
+function handleQuestion() {
+  const q=document.getElementById('l2-question').value.trim(); if(!q)return;
+  event.target.setAttribute('data-label','Get Response Strategy');
+  l2call('/layer2/question',{question:q,topic:currentPlan?.topic||'',level:currentPlan?.level||''},'q-result',
+    [['q-answer','suggested_answer'],['q-misc','common_misconception'],['q-follow','follow_up_question'],['q-act','quick_activity']]);
+}
+function handleConfusion() {
+  const c=document.getElementById('l2-confusion').value.trim(); if(!c)return;
+  event.target.setAttribute('data-label','Rescue Strategy');
+  l2call('/layer2/confusion',{confusion:c,topic:currentPlan?.topic||'',level:currentPlan?.level||''},'c-result',
+    [['c-exp','alternative_explanation'],['c-act','micro_activity'],['c-vis','visual_suggestion'],['c-rea','reassurance']]);
+}
+function handleCheck() {
+  event.target.setAttribute('data-label','Interpret Results');
+  l2call('/layer2/conceptcheck',{question:document.getElementById('l2-ccq').value,correct_pct:parseInt(document.getElementById('l2-pct').value),topic:currentPlan?.topic||''},'cc-result',
+    [['cc-int','interpretation'],['cc-act','recommended_action'],['cc-fol','follow_up_question']]);
+}
+function handlePacing() {
+  event.target.setAttribute('data-label','Get Pacing Advice');
+  l2call('/layer2/pacing',{elapsed_min:parseInt(document.getElementById('l2-elapsed').value||0),total_min:parseInt(document.getElementById('l2-total').value||75),current_segment:document.getElementById('l2-seg').value,topic:currentPlan?.topic||''},'pa-result',
+    [['pa-status','status'],['pa-rec','recommendation'],['pa-must','must_cover'],['pa-skip','can_skip']]);
 }
 
-function downloadTxt(){
+// ── STUDENT PERSONALISED QUESTION ────────────────────────────────────────────
+async function askStudentQuestion() {
+  const q = document.getElementById('s-question').value.trim();
+  if(!q){alert('Please type your question first.');return;}
+  if(!currentPlan){document.getElementById('s-noplan').style.display='block';return;}
+
+  document.getElementById('s-loading').classList.remove('hidden');
+  document.getElementById('s-answer').classList.add('hidden');
+
+  try {
+    const res = await fetch(`${API}/student/question`,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        question:q, topic:currentPlan.topic, level:currentPlan.level,
+        age:document.getElementById('s-age').value,
+        year:document.getElementById('s-year').value,
+        background:document.getElementById('s-bg').value,
+        language:document.getElementById('s-lang').value,
+      })
+    });
+    const json = await res.json();
+    if(json.success) {
+      document.getElementById('s-ans-main').textContent    = json.data.personalised_answer||'';
+      document.getElementById('s-ans-analogy').textContent = json.data.analogy||'';
+      document.getElementById('s-ans-next').textContent    = json.data.follow_up_suggestion||'';
+      document.getElementById('s-ans-enc').textContent     = json.data.encouragement||'';
+      document.getElementById('s-answer').classList.remove('hidden');
+    }
+  } catch(e){alert('Server error.');}
+  finally{document.getElementById('s-loading').classList.add('hidden');}
+}
+
+// ── GENERATE SLIDES ───────────────────────────────────────────────────────────
+async function generateSlides() {
   if(!currentPlan)return;
-  const a=document.createElement("a");
-  a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(document.getElementById("exportPreview").textContent);
-  a.download=`LessonPlan_${currentPlan.topic.replace(/\s+/g,"_")}.txt`;
+  const btn=document.getElementById('genSlidesBtn');
+  btn.textContent='⏳ Generating…'; btn.disabled=true;
+  document.getElementById('slides-loading').classList.remove('hidden');
+  document.getElementById('slides-preview').classList.add('hidden');
+
+  try {
+    const res = await fetch(`${API}/generate/slides`,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level,outline:currentPlan.outline})});
+    const json = await res.json();
+    if(json.success && json.data.slides) {
+      currentSlides = json.data.slides;
+      renderSlidesGrid(currentSlides);
+      document.getElementById('slides-preview').classList.remove('hidden');
+    }
+  } catch(e){alert('Server error.');}
+  finally{
+    btn.textContent='✨ Generate Slides'; btn.disabled=false;
+    document.getElementById('slides-loading').classList.add('hidden');
+  }
+}
+
+function renderSlidesGrid(slides) {
+  document.getElementById('slidesGrid').innerHTML = slides.map((sl,i)=>`
+    <div class="slide-card" onclick="showSlideDetail(${i})">
+      <div class="slide-header">Slide ${i+1}</div>
+      <div class="slide-body">
+        <div class="slide-emoji">${sl.emoji||'📊'}</div>
+        <div class="slide-title">${sl.title}</div>
+        <div class="slide-bullets">${(sl.bullet_points||[]).slice(0,3).map(b=>`• ${b}`).join('<br>')}</div>
+      </div>
+    </div>`).join('');
+}
+
+function showSlideDetail(i) {
+  const sl = currentSlides[i];
+  document.getElementById('sd-title').textContent  = `${sl.emoji||''} ${sl.title} — Speaker Notes`;
+  document.getElementById('sd-notes').textContent  = sl.speaker_notes||'';
+  document.getElementById('sd-visual').textContent = '🖼️ Visual: ' + (sl.visual_description||'');
+  document.getElementById('slide-detail').classList.remove('hidden');
+}
+
+function downloadSlidesTxt() {
+  if(!currentSlides) return;
+  const lines = [`SLIDES: ${currentPlan.topic}\n`];
+  currentSlides.forEach((sl,i)=>{
+    lines.push(`\n--- SLIDE ${i+1}: ${sl.title} ---`);
+    lines.push(`Subtitle: ${sl.subtitle||''}`);
+    (sl.bullet_points||[]).forEach(b=>lines.push(`• ${b}`));
+    lines.push(`\nSpeaker notes: ${sl.speaker_notes||''}`);
+    lines.push(`Visual: ${sl.visual_description||''}`);
+  });
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(lines.join('\n'));
+  a.download=`Slides_${currentPlan.topic.replace(/\s+/g,'_')}.txt`;
   a.click();
 }
 
-function logEvent(msg){
-  const log=document.getElementById("liveLog");
-  const time=new Date().toLocaleTimeString();
-  log.innerHTML+=`<div style="margin-bottom:4px"><span style="color:var(--green-600)">[${time}]</span> ${msg}</div>`;
-  log.scrollTop=log.scrollHeight;
-}
-function clearLog(){document.getElementById("liveLog").innerHTML="Session log will appear here as you use the tools...";}
-function setLoading(btnId,resultId,loading,label="⚡"){
-  const btn=document.getElementById(btnId);
-  const res=document.getElementById(resultId);
-  if(loading){btn.disabled=true;btn.innerHTML=`<span class="thinking-dots">AI thinking</span>`;res.classList.remove("show");}
-  else{btn.disabled=false;btn.innerHTML=label;}
+// ── VIDEO PLAYER ──────────────────────────────────────────────────────────────
+async function generateVideo() {
+  if(!currentSlides){alert('Generate slides first.');return;}
+  const btn=document.getElementById('genVideoBtn');
+  btn.textContent='⏳ Writing script…'; btn.disabled=true;
+  document.getElementById('video-loading').classList.remove('hidden');
+
+  try {
+    const res = await fetch(`${API}/generate/video-script`,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({topic:currentPlan.topic,slides:currentSlides})});
+    const json = await res.json();
+    if(json.success) {
+      videoData = {slides:currentSlides, narrations:json.data.narrations||[]};
+      currentSlide=0;
+      loadVideoSlide(0);
+      document.getElementById('video-player').classList.remove('hidden');
+      document.getElementById('slideCounter').textContent=`1 / ${videoData.slides.length}`;
+    }
+  } catch(e){alert('Server error.');}
+  finally{
+    btn.textContent='🎬 Generate Narrated Video'; btn.disabled=false;
+    document.getElementById('video-loading').classList.add('hidden');
+  }
 }
 
-async function handleQuestion(){
-  if(!currentPlan){alert("Generate a lesson plan first!");return;}
-  const q=document.getElementById("studentQ").value.trim();
-  if(!q){alert("Please type a student question.");return;}
-  setLoading("qBtn","qResult",true);
-  logEvent(`Student question: "${q.substring(0,50)}..."`);
-  try{
-    const res=await fetch(BACKEND+"/layer2/question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level,question:q})});
-    const data=await res.json();
-    if(!data.success)throw new Error(data.error);
-    const d=data.data;
-    document.getElementById("qResult").innerHTML=`
-      <div class="result-item"><strong>💬 Say this out loud</strong>${d.suggested_answer}</div>
-      <div class="result-item"><strong>❓ Follow-up for class</strong>${d.follow_up_question}</div>
-      <div class="result-item"><strong>🧠 Underlying misconception</strong>${d.common_misconception}</div>
-      <div class="result-item"><strong>⚡ Quick 2-min activity</strong>${d.quick_activity}</div>`;
-    document.getElementById("qResult").classList.add("show");
-    logEvent("✅ Question handled");
-  }catch(e){document.getElementById("qResult").innerHTML=`<div style="color:#c0440a">Error: ${e.message}</div>`;document.getElementById("qResult").classList.add("show");}
-  setLoading("qBtn","qResult",false,"⚡ Get Response Strategy");
+function loadVideoSlide(i) {
+  if(!videoData||!videoData.slides[i]) return;
+  const sl = videoData.slides[i];
+  document.getElementById('vid-emoji').textContent = sl.emoji||'📊';
+  document.getElementById('vid-title').textContent = sl.title||'';
+  document.getElementById('vid-sub').textContent   = sl.subtitle||'';
+  const bullets = document.getElementById('vid-bullets');
+  bullets.innerHTML = (sl.bullet_points||[]).map(b=>`<li>${b}</li>`).join('');
+  const narr = videoData.narrations.find(n=>n.slide_index===i);
+  document.getElementById('narration-box').textContent = narr ? narr.narration : '';
+  const pct = videoData.slides.length > 1 ? (i/(videoData.slides.length-1))*100 : 0;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('slideCounter').textContent = `${i+1} / ${videoData.slides.length}`;
 }
 
-async function handleConfusion(){
-  if(!currentPlan){alert("Generate a lesson plan first!");return;}
-  const c=document.getElementById("confusionInput").value.trim();
-  if(!c){alert("Please describe the confusion.");return;}
-  setLoading("confBtn","confResult",true);
-  logEvent(`Confusion: "${c.substring(0,50)}..."`);
-  try{
-    const res=await fetch(BACKEND+"/layer2/confusion",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level,confusion:c})});
-    const data=await res.json();
-    if(!data.success)throw new Error(data.error);
-    const d=data.data;
-    document.getElementById("confResult").innerHTML=`
-      <div class="result-item confusion-result"><strong>🔄 Alternative explanation</strong>${d.alternative_explanation}</div>
-      <div class="result-item confusion-result"><strong>⚡ Deploy this activity now</strong>${d.micro_activity}</div>
-      <div class="result-item confusion-result"><strong>🖊️ Draw on whiteboard</strong>${d.visual_suggestion}</div>
-      <div class="result-item confusion-result"><strong>💚 Say to re-engage class</strong>${d.reassurance}</div>`;
-    document.getElementById("confResult").classList.add("show");
-    logEvent("✅ Confusion addressed");
-  }catch(e){document.getElementById("confResult").innerHTML=`<div style="color:#c0440a">Error: ${e.message}</div>`;document.getElementById("confResult").classList.add("show");}
-  setLoading("confBtn","confResult",false,"⚡ Get Rescue Strategy");
+function speakAndAdvance(i) {
+  if(!videoPlaying||!videoData) return;
+  if(i>=videoData.slides.length){videoPlaying=false;document.getElementById('playBtn').textContent='▶️';return;}
+  loadVideoSlide(i); currentSlide=i;
+  const narr = videoData.narrations.find(n=>n.slide_index===i);
+  if(narr && narr.narration) {
+    if(synth.speaking) synth.cancel();
+    const utt = new SpeechSynthesisUtterance(narr.narration);
+    utt.rate=0.88; utt.pitch=1;
+    utt.onend = () => { setTimeout(()=>speakAndAdvance(i+1), 800); };
+    synth.speak(utt);
+  } else {
+    setTimeout(()=>speakAndAdvance(i+1), 3000);
+  }
 }
 
-async function handleConceptCheck(){
-  if(!currentPlan){alert("Generate a lesson plan first!");return;}
-  const q=document.getElementById("checkQ").value.trim();
-  const pct=parseInt(document.getElementById("correctPct").value);
-  if(!q){alert("Please enter your concept check question.");return;}
-  setLoading("checkBtn","checkResult",true);
-  logEvent(`Concept check: ${pct}% correct`);
-  try{
-    const res=await fetch(BACKEND+"/layer2/conceptcheck",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level,question:q,correct_pct:pct})});
-    const data=await res.json();
-    if(!data.success)throw new Error(data.error);
-    const d=data.data;
-    const color=pct>=70?"#1a6640":pct>=40?"#856404":"#c0440a";
-    document.getElementById("checkResult").innerHTML=`
-      <div class="result-item check-result"><strong>📊 What this tells you</strong>${d.interpretation}</div>
-      <div class="result-item check-result"><strong>▶️ Do this in the next 5 minutes</strong>${d.recommended_action}</div>
-      <div class="result-item check-result"><strong>❓ Ask the class now</strong>${d.follow_up_question}</div>
-      <div class="result-item check-result"><strong style="color:${color}">⏭️ Pacing advice</strong>${d.pace_advice}</div>`;
-    document.getElementById("checkResult").classList.add("show");
-    logEvent(`✅ Concept check: ${pct}% correct`);
-  }catch(e){document.getElementById("checkResult").innerHTML=`<div style="color:#c0440a">Error: ${e.message}</div>`;document.getElementById("checkResult").classList.add("show");}
-  setLoading("checkBtn","checkResult",false,"⚡ Interpret Results");
+function togglePlay() {
+  if(!videoData)return;
+  videoPlaying = !videoPlaying;
+  document.getElementById('playBtn').textContent = videoPlaying ? '⏸️' : '▶️';
+  if(videoPlaying) speakAndAdvance(currentSlide);
+  else synth.cancel();
+}
+function vidNext() { if(videoData && currentSlide<videoData.slides.length-1){currentSlide++;loadVideoSlide(currentSlide);} }
+function vidPrev() { if(videoData && currentSlide>0){currentSlide--;loadVideoSlide(currentSlide);} }
+function seekVideo(e) {
+  if(!videoData)return;
+  const pct = e.offsetX / e.currentTarget.offsetWidth;
+  currentSlide = Math.floor(pct*(videoData.slides.length));
+  loadVideoSlide(currentSlide);
 }
 
-async function handlePacing(){
-  if(!currentPlan){alert("Generate a lesson plan first!");return;}
-  const elapsed=parseInt(document.getElementById("elapsedMin").value);
-  const seg=document.getElementById("currentSeg").value.trim();
-  if(!elapsed||!seg){alert("Please fill in time elapsed and current segment.");return;}
-  setLoading("paceBtn","paceResult",true);
-  logEvent(`Pacing: ${elapsed}/${currentPlan.duration} min`);
-  const segsLeft=currentPlan.outline.map(s=>s.segment).filter(s=>s!==seg);
-  try{
-    const res=await fetch(BACKEND+"/layer2/pacing",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentPlan.topic,total_min:currentPlan.duration,elapsed_min:elapsed,current_segment:seg,segments_left:segsLeft})});
-    const data=await res.json();
-    if(!data.success)throw new Error(data.error);
-    const d=data.data;
-    const statusColor=d.status==="on_track"?"#1a6640":d.status==="behind"?"#c0440a":"#856404";
-    const statusIcon=d.status==="on_track"?"✅":d.status==="behind"?"⚠️":"⏩";
-    document.getElementById("paceResult").innerHTML=`
-      <div class="result-item pacing-result"><strong style="color:${statusColor}">${statusIcon} ${(d.status||'').replace("_"," ").toUpperCase()}</strong>${d.assessment}</div>
-      <div class="result-item pacing-result"><strong>📋 Recommendation</strong>${d.recommendation}</div>
-      <div class="result-item pacing-result"><strong>⭐ Must cover</strong>${d.must_cover}</div>
-      <div class="result-item pacing-result"><strong>✂️ Can skip</strong>${d.can_skip}</div>`;
-    document.getElementById("paceResult").classList.add("show");
-    logEvent(`✅ Pacing: ${d.status}`);
-  }catch(e){document.getElementById("paceResult").innerHTML=`<div style="color:#c0440a">Error: ${e.message}</div>`;document.getElementById("paceResult").classList.add("show");}
-  setLoading("paceBtn","paceResult",false,"⚡ Analyse Pacing");
+function downloadVideoScript() {
+  if(!videoData)return;
+  const lines=[`VIDEO SCRIPT: ${currentPlan.topic}\n`];
+  videoData.slides.forEach((sl,i)=>{
+    const narr=videoData.narrations.find(n=>n.slide_index===i);
+    lines.push(`\n[SLIDE ${i+1}] ${sl.title}`);
+    lines.push(`NARRATOR: ${narr?narr.narration:'...'}`);
+  });
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(lines.join('\n'));
+  a.download=`VideoScript_${currentPlan.topic.replace(/\s+/g,'_')}.txt`;
+  a.click();
 }
 
-function switchTab(id){
-  document.querySelectorAll(".tab").forEach((t,i)=>t.classList.toggle("active",["builder","live","student","rubric","export"][i]===id));
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(id) {
+  const tabMap = ['builder','live','student','slides','support','eval','export'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabMap[i]===id));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showSlideTab(tabId, btn) {
+  document.getElementById('slide-tab').classList.toggle('hidden', tabId!=='slide-tab');
+  document.getElementById('video-tab').classList.toggle('hidden', tabId!=='video-tab');
+  document.querySelectorAll('.tab-pill button').forEach((b,i)=>b.classList.toggle('active',[tabId==='slide-tab',tabId==='video-tab'][i]));
+}
+
+// ── RUBRIC ───────────────────────────────────────────────────────────────────
+function updateScore() {
+  let total=0;
+  for(let i=0;i<5;i++){
+    const v=parseInt(document.getElementById('r'+i)?.value||3);
+    const el=document.getElementById('rv'+i); if(el) el.textContent=v;
+    total+=v;
+  }
+  const pct=Math.round(total/25*100);
+  document.getElementById('totalScore').textContent=`${total}/25`;
+  document.getElementById('totalPct').textContent=pct+'%';
+  document.getElementById('rating').textContent=pct>=80?'Excellent ⭐':pct>=60?'Good 👍':'Needs Work ⚠️';
+}
+
+// ── EXPORT ───────────────────────────────────────────────────────────────────
+function buildExport() {
+  if(!currentPlan)return;
+  const p=currentPlan;
+  const lines=[
+    `LESSON PLAN: ${p.topic}`,`Generated: ${p.generatedAt}`,
+    `Level: ${p.level} | Duration: ${p.duration} min | Style: ${p.style}`,
+    ``,`LEARNING OBJECTIVES`,p.objectives||'',
+    ``,`LECTURE OUTLINE`,
+    ...(p.outline||[]).map((s,i)=>`${i+1}. ${s.segment} [${s.icap}] (${s.duration_min}min)\n   ${s.description}`),
+    ``,`ANALOGIES`,...(p.analogies||[]),
+    ``,`ACTIVITIES`,...(p.activities||[]).map(a=>`[${a.icap}] ${a.title}: ${a.prompt}`),
+    ``,`REFLECTIONS`,...(p.reflections||[]),
+    ``,`STUDENT SUPPORT`,
+    `Explanation: ${p.student?.micro_explanation||''}`,
+    ``,`PRACTICE QUESTIONS`,
+    ...(p.student?.practice_questions||[]).map(q=>`[${q.difficulty}] ${q.question}\n  Hint: ${q.hint}`),
+    ``,`SRL PROMPTS`,...(p.student?.srl_prompts||[]),
+  ];
+  document.getElementById('exportPreview').textContent=lines.join('\n');
+}
+
+function downloadTxt() {
+  if(!currentPlan)return;
+  const text=document.getElementById('exportPreview').textContent;
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(text);
+  a.download=`LessonPlan_${currentPlan.topic.replace(/\s+/g,'_')}.txt`;
+  a.click();
 }
 </script>
 </body>
