@@ -15,7 +15,17 @@ CORS(app)
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-classes_db = {}
+CLASSES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "classes.json")
+
+def load_classes():
+    if os.path.exists(CLASSES_FILE):
+        with open(CLASSES_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+def save_classes(data):
+    with open(CLASSES_FILE, "w") as f:
+        json.dump(data, f)
 
 def ask_groq(prompt, max_tokens=1500):
     response = client.chat.completions.create(
@@ -52,15 +62,18 @@ def index():
 @app.route("/save_class", methods=["POST"])
 def save_class():
     d = request.json
-    code = d.get("code", "")
-    classes_db[code] = d
+    code = d.get("code", "").upper()
+    classes = load_classes()
+    classes[code] = d
+    save_classes(classes)
     return jsonify({"success": True})
 
 @app.route("/get_class", methods=["POST"])
 def get_class():
     d = request.json
-    code = d.get("code", "")
-    cls = classes_db.get(code.upper())
+    code = d.get("code", "").upper()
+    classes = load_classes()
+    cls = classes.get(code)
     if cls:
         return jsonify({"success": True, "class": cls})
     return jsonify({"success": False})
