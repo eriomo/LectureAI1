@@ -10,27 +10,27 @@
 body{font-family:'DM Sans',sans-serif;background:#f7f5f2;color:#1a1a1a;min-height:100vh}
 .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1b4332 0%,#2d6a4f 100%);padding:1rem}
 .auth-box{background:white;border-radius:16px;padding:2rem;width:100%;max-width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.18)}
-.auth-logo{text-align:center;margin-bottom:1.5rem}
+.auth-logo{text-align:center;margin-bottom:1.2rem}
 .auth-logo h1{font-family:'DM Serif Display',serif;font-size:2rem;color:#2d6a4f}
 .auth-logo p{font-size:0.85rem;color:#888;margin-top:0.3rem}
-.role-pick{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1.5rem}
-.role-btn{border:2px solid #ddd;border-radius:10px;padding:1rem;cursor:pointer;text-align:center;background:white}
+.role-pick{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1.2rem}
+.role-btn{border:2px solid #ddd;border-radius:10px;padding:1rem;cursor:pointer;text-align:center;background:white;transition:all 0.2s}
 .role-btn.selected{border-color:#2d6a4f;background:#f0faf4}
 .role-btn .icon{font-size:1.8rem;margin-bottom:0.3rem}
 .role-btn .lbl{font-weight:600;font-size:0.9rem;color:#333}
-.role-btn .sub{font-size:0.75rem;color:#888;margin-top:0.15rem}
-.auth-tabs{display:flex;margin-bottom:1.2rem;border:1.5px solid #ddd;border-radius:8px;overflow:hidden}
+.role-btn .sub{font-size:0.75rem;color:#888}
+.auth-tabs{display:flex;margin-bottom:1rem;border:1.5px solid #ddd;border-radius:8px;overflow:hidden}
 .auth-tab{flex:1;padding:0.6rem;text-align:center;cursor:pointer;font-size:0.9rem;font-weight:600;color:#666;background:white}
 .auth-tab.active{background:#2d6a4f;color:white}
 header{background:#2d6a4f;color:white;padding:0.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
 header h1{font-family:'DM Serif Display',serif;font-size:1.3rem}
-.header-right{display:flex;align-items:center;gap:1rem}
+.header-right{display:flex;align-items:center;gap:0.8rem}
 .user-badge{background:rgba(255,255,255,0.15);border-radius:20px;padding:0.3rem 0.9rem;font-size:0.82rem}
 .logout-btn{background:rgba(255,255,255,0.2);border:none;color:white;border-radius:6px;padding:0.35rem 0.8rem;cursor:pointer;font-size:0.8rem;font-family:'DM Sans',sans-serif}
 .tabs{display:flex;background:white;border-bottom:2px solid #e8e4de;overflow-x:auto}
-.tab{padding:0.75rem 1.1rem;cursor:pointer;font-weight:500;font-size:0.88rem;white-space:nowrap;border-bottom:3px solid transparent;color:#666}
+.tab{padding:0.7rem 1rem;cursor:pointer;font-weight:500;font-size:0.85rem;white-space:nowrap;border-bottom:3px solid transparent;color:#666}
 .tab.active{border-bottom-color:#2d6a4f;color:#2d6a4f;font-weight:600}
-.content{max-width:900px;margin:0 auto;padding:1.2rem}
+.content{max-width:920px;margin:0 auto;padding:1.2rem}
 .section{display:none}.section.active{display:block}
 .form-group{margin-bottom:1rem;position:relative}
 label{display:block;font-weight:600;font-size:0.88rem;margin-bottom:0.35rem;color:#333}
@@ -38,38 +38,30 @@ input,select,textarea{width:100%;padding:0.6rem 0.8rem;border:1.5px solid #ddd;b
 input:focus,select:focus,textarea:focus{outline:none;border-color:#2d6a4f}
 textarea{resize:vertical;min-height:80px}
 .btn{background:#2d6a4f;color:white;border:none;border-radius:8px;padding:0.65rem 1.5rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.95rem;width:100%;margin-top:0.5rem}
-.btn:hover{background:#1e4d38}
-.btn:disabled{background:#aaa;cursor:not-allowed}
+.btn:hover{background:#1e4d38}.btn:disabled{background:#aaa;cursor:not-allowed}
+.btn-sm{background:#2d6a4f;color:white;border:none;border-radius:6px;padding:0.4rem 0.9rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.82rem}
 .btn-orange{background:#e67e22;color:white;border:none;border-radius:8px;padding:0.65rem 1.5rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.95rem;width:100%;margin-top:0.5rem}
 .btn-blue{background:#2980b9;color:white;border:none;border-radius:8px;padding:0.65rem 1.5rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.95rem;width:100%;margin-top:0.5rem}
 .btn-purple{background:#8e44ad;color:white;border:none;border-radius:8px;padding:0.65rem 1.5rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.95rem;width:100%;margin-top:0.5rem}
+.btn-red{background:#e74c3c;color:white;border:none;border-radius:6px;padding:0.35rem 0.8rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.82rem}
 .btn-outline{background:white;color:#2d6a4f;border:2px solid #2d6a4f;border-radius:8px;padding:0.6rem 1.2rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.9rem;margin-top:0.5rem}
 .card{background:white;border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:0.9rem;border-left:4px solid #2d6a4f;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.card h3{font-size:1rem;margin-bottom:0.4rem;color:#1a1a1a}
-.card p{font-size:0.88rem;color:#444;line-height:1.55}
-.card-blue{border-left-color:#2980b9}
-.card-orange{border-left-color:#e67e22}
+.card h3{font-size:1rem;margin-bottom:0.4rem}.card p{font-size:0.88rem;color:#444;line-height:1.55}
+.card-blue{border-left-color:#2980b9}.card-orange{border-left-color:#e67e22}.card-red{border-left-color:#e74c3c}.card-purple{border-left-color:#8e44ad}
 .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:0.72rem;font-weight:600;margin-left:6px}
-.badge-passive{background:#fde8d8;color:#c0440a}
-.badge-active{background:#d8f0e8;color:#1a6640}
-.badge-constructive{background:#dce8fd;color:#1a3f80}
-.badge-interactive{background:#f0d8fd;color:#6a1a80}
+.badge-passive{background:#fde8d8;color:#c0440a}.badge-active{background:#d8f0e8;color:#1a6640}
+.badge-constructive{background:#dce8fd;color:#1a3f80}.badge-interactive{background:#f0d8fd;color:#6a1a80}
 .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem;margin-bottom:1rem}
 .metric{background:white;border-radius:10px;padding:0.8rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.07)}
-.metric .val{font-size:1.3rem;font-weight:700;color:#2d6a4f}
-.metric .lbl{font-size:0.75rem;color:#777;margin-top:2px}
+.metric .val{font-size:1.3rem;font-weight:700;color:#2d6a4f}.metric .lbl{font-size:0.75rem;color:#777;margin-top:2px}
 .icap-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-bottom:1rem}
 .icap-box{border-radius:10px;padding:0.7rem;text-align:center}
-.icap-box .num{font-size:1.5rem;font-weight:700}
-.icap-box .lbl{font-size:0.72rem;font-weight:600}
-.passive-box{background:#fde8d8;color:#c0440a}
-.active-box{background:#d8f0e8;color:#1a6640}
-.constructive-box{background:#dce8fd;color:#1a3f80}
-.interactive-box{background:#f0d8fd;color:#6a1a80}
+.icap-box .num{font-size:1.5rem;font-weight:700}.icap-box .lbl{font-size:0.72rem;font-weight:600}
+.passive-box{background:#fde8d8;color:#c0440a}.active-box{background:#d8f0e8;color:#1a6640}
+.constructive-box{background:#dce8fd;color:#1a3f80}.interactive-box{background:#f0d8fd;color:#6a1a80}
 .section-title{font-family:'DM Serif Display',serif;font-size:1.1rem;margin:1.2rem 0 0.6rem;border-bottom:2px solid #e8e4de;padding-bottom:0.3rem}
 .approve-row{display:flex;align-items:center;gap:0.5rem;margin-top:0.7rem}
-.approve-row input{width:auto}
-.approve-row label{margin:0;font-weight:400;font-size:0.85rem}
+.approve-row input{width:auto}.approve-row label{margin:0;font-weight:400;font-size:0.85rem}
 .q-card{background:white;border-radius:10px;padding:1rem;margin-bottom:0.7rem;box-shadow:0 1px 5px rgba(0,0,0,0.07)}
 .q-card .diff{font-size:0.75rem;font-weight:700;margin-bottom:0.4rem}
 .easy{color:#1a6640}.medium{color:#7a5900}.hard{color:#c0440a}
@@ -81,9 +73,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
 .info-box{background:#e8f4fd;border:1px solid #b3d4f0;border-radius:8px;padding:0.9rem 1rem;font-size:0.88rem;color:#1a3f80;margin-bottom:1rem}
 .export-box{background:white;border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);white-space:pre-wrap;font-size:0.78rem;font-family:monospace;max-height:320px;overflow-y:auto;color:#333}
 .result-box{background:#f0faf4;border:1px solid #b7dfc8;border-radius:10px;padding:1rem;margin-top:0.8rem;font-size:0.88rem;line-height:1.7;color:#1a1a1a;min-height:50px;white-space:pre-wrap}
-.result-box.orange{background:#fef6ee;border-color:#f5cba7}
-.result-box.blue{background:#eaf4fd;border-color:#aed6f1}
-.result-box.purple{background:#f5eef8;border-color:#d2b4de}
+.result-box.orange{background:#fef6ee;border-color:#f5cba7}.result-box.blue{background:#eaf4fd;border-color:#aed6f1}.result-box.purple{background:#f5eef8;border-color:#d2b4de}
 .loading{color:#888;font-style:italic}
 .live-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:0.5rem}
 @media(max-width:600px){.live-tools-grid{grid-template-columns:1fr}}
@@ -92,11 +82,11 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
 .voice-btn{background:none;border:1.5px solid #2d6a4f;border-radius:8px;padding:0.35rem 0.75rem;cursor:pointer;font-size:0.8rem;color:#2d6a4f;font-family:'DM Sans',sans-serif;margin-top:0.4rem;display:inline-flex;align-items:center;gap:0.3rem}
 .voice-btn.listening{background:#ffe8e8;border-color:#e74c3c;color:#e74c3c}
 .speak-btn{background:#2d6a4f;color:white;border:none;border-radius:6px;padding:0.3rem 0.7rem;cursor:pointer;font-size:0.78rem;font-family:'DM Sans',sans-serif;margin-top:0.4rem}
-.autocomplete-list{position:absolute;top:100%;left:0;right:0;background:white;border:1.5px solid #2d6a4f;border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;z-index:999;display:none}
+.autocomplete-list{position:absolute;top:100%;left:0;right:0;background:white;border:1.5px solid #2d6a4f;border-top:none;border-radius:0 0 8px 8px;max-height:220px;overflow-y:auto;z-index:999;display:none}
 .autocomplete-list.show{display:block}
 .autocomplete-item{padding:0.5rem 0.8rem;cursor:pointer;font-size:0.9rem;color:#333;border-bottom:1px solid #f0f0f0}
 .autocomplete-item:hover{background:#f0faf4;color:#2d6a4f}
-.autocomplete-cat{font-size:0.72rem;color:#888;margin-left:6px}
+.autocomplete-cat{font-size:0.72rem;color:#888;margin-left:6px;background:#f0f0f0;padding:1px 6px;border-radius:10px}
 .code-display{background:#1b4332;color:#74c69d;font-family:monospace;font-size:2rem;font-weight:700;text-align:center;letter-spacing:0.3rem;padding:1rem;border-radius:10px;margin:0.7rem 0}
 .report-card{background:white;border-radius:10px;padding:1rem 1.2rem;margin-bottom:0.7rem;box-shadow:0 1px 5px rgba(0,0,0,0.07);border-left:4px solid #e67e22}
 .report-card .who{font-size:0.8rem;color:#888;margin-bottom:0.3rem}
@@ -120,18 +110,61 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
 .quiz-option.wrong{border-color:#c0440a;background:#fde8d8;color:#c0440a}
 .quiz-option.disabled{cursor:default;pointer-events:none}
 .quiz-feedback{margin-top:0.6rem;font-size:0.88rem;font-weight:600;padding:0.5rem 0.8rem;border-radius:6px}
-.quiz-feedback.pass{background:#d8f0e8;color:#1a6640}
-.quiz-feedback.fail{background:#fde8d8;color:#c0440a}
+.quiz-feedback.pass{background:#d8f0e8;color:#1a6640}.quiz-feedback.fail{background:#fde8d8;color:#c0440a}
 .quiz-score{text-align:center;background:#f0faf4;border:1px solid #b7dfc8;border-radius:10px;padding:1.2rem;margin-top:1rem}
 .quiz-score .big{font-size:2.5rem;font-weight:700;color:#2d6a4f}
+/* SLIDESHOW */
+.slideshow-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:#0d1117;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.slide-display{background:white;border-radius:16px;width:90%;max-width:900px;min-height:480px;padding:3rem;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.slide-header{background:#2d6a4f;border-radius:10px;padding:1rem 1.5rem;margin-bottom:1.5rem}
+.slide-header h2{color:white;font-family:'DM Serif Display',serif;font-size:1.8rem}
+.slide-bullets{list-style:none;padding:0}
+.slide-bullets li{padding:0.6rem 0;font-size:1.05rem;border-bottom:1px solid #f0f0f0;display:flex;align-items:flex-start;gap:0.6rem}
+.slide-bullets li::before{content:"▸";color:#2d6a4f;font-weight:700;flex-shrink:0}
+.slide-num{color:rgba(255,255,255,0.7);font-size:0.85rem;margin-top:0.3rem}
+.slide-controls{display:flex;align-items:center;gap:1rem;margin-top:1.5rem}
+.slide-ctrl-btn{background:white;border:2px solid rgba(255,255,255,0.3);color:white;border-radius:8px;padding:0.6rem 1.5rem;cursor:pointer;font-size:0.95rem;font-family:'DM Sans',sans-serif;font-weight:600}
+.slide-ctrl-btn:hover{background:rgba(255,255,255,0.1)}
+.slide-ctrl-btn.primary{background:#2d6a4f;border-color:#2d6a4f}
+.progress-bar{background:rgba(255,255,255,0.2);height:4px;border-radius:2px;width:300px}
+.progress-fill{background:#74c69d;height:100%;border-radius:2px;transition:width 0.3s}
+.speaking-badge{background:#e74c3c;color:white;padding:0.2rem 0.7rem;border-radius:20px;font-size:0.78rem;font-weight:600;display:inline-flex;align-items:center;gap:0.3rem}
+.speaking-badge.idle{background:#555}
+/* VOICE PICKER */
+.voice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem;margin:0.8rem 0}
+.voice-card{border:2px solid #ddd;border-radius:10px;padding:0.8rem;cursor:pointer;text-align:center;background:white;transition:all 0.2s}
+.voice-card:hover{border-color:#2d6a4f}.voice-card.selected{border-color:#2d6a4f;background:#f0faf4}
+.voice-card .v-avatar{font-size:2rem;margin-bottom:0.3rem}
+.voice-card .v-name{font-weight:700;font-size:0.9rem;color:#1a1a1a}
+.voice-card .v-desc{font-size:0.75rem;color:#888}
+/* ASSIGNMENTS */
+.assign-card{background:white;border-radius:12px;padding:1.2rem;margin-bottom:0.8rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid #e67e22}
+.assign-card h3{font-size:1rem;margin-bottom:0.3rem}
+.assign-card .meta{font-size:0.8rem;color:#888;margin-bottom:0.5rem}
+.assign-card .actions{display:flex;gap:0.5rem;margin-top:0.7rem;flex-wrap:wrap}
+.test-card{background:white;border-radius:12px;padding:1.2rem;margin-bottom:0.8rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid #8e44ad}
+.test-card h3{font-size:1rem;margin-bottom:0.3rem}
+.test-card .meta{font-size:0.8rem;color:#888;margin-bottom:0.5rem}
+.submission-card{background:#f9f9f9;border-radius:10px;padding:1rem;margin-bottom:0.6rem;border:1px solid #eee}
+.submission-card .stu-name{font-weight:600;font-size:0.9rem}
+.submission-card .stu-content{font-size:0.85rem;color:#444;margin-top:0.4rem;line-height:1.5;white-space:pre-wrap}
+.grade-row{display:flex;gap:0.5rem;margin-top:0.6rem;align-items:center}
+.grade-row input{width:80px}
+.grade-row textarea{min-height:50px}
+.test-builder .q-item{background:#f9f9f9;border-radius:10px;padding:1rem;margin-bottom:0.8rem;border:1px solid #eee}
+.test-builder .q-num{font-weight:700;color:#2d6a4f;font-size:0.9rem;margin-bottom:0.5rem}
+.results-table{width:100%;border-collapse:collapse;margin-top:0.8rem}
+.results-table th{background:#2d6a4f;color:white;padding:0.6rem;text-align:left;font-size:0.85rem}
+.results-table td{padding:0.6rem;border-bottom:1px solid #eee;font-size:0.85rem}
+.results-table tr:nth-child(even){background:#f9f9f9}
 </style>
 </head>
 <body>
 
+<!-- AUTH -->
 <div id="authScreen" class="auth-wrap">
   <div class="auth-box">
-    <div class="auth-logo"><h1>LectureAI</h1><p>Human-AI Co-Orchestration in Education</p></div>
-    <p style="font-size:0.88rem;color:#555;text-align:center;margin-bottom:1rem">Who are you?</p>
+    <div class="auth-logo"><h1>🎓 LectureAI</h1><p>Human-AI Co-Orchestration in Education</p></div>
     <div class="role-pick">
       <div class="role-btn" id="roleTeacher" onclick="pickRole('teacher')"><div class="icon">👩‍🏫</div><div class="lbl">Teacher</div><div class="sub">Full access</div></div>
       <div class="role-btn" id="roleStudent" onclick="pickRole('student')"><div class="icon">🙋</div><div class="lbl">Student</div><div class="sub">Join a class</div></div>
@@ -157,7 +190,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
             <select id="suYear"><option value="">Select year</option><option>Year 1 / First Year</option><option>Year 2 / Second Year</option><option>Year 3 / Final Year</option><option>Masters Student</option><option>PhD Student</option><option>Working Professional</option></select>
           </div>
           <div class="form-group"><label>Your Background</label>
-            <select id="suBackground"><option value="">Select background</option><option>Mathematics / Statistics</option><option>Computer Science</option><option>Engineering</option><option>Social Sciences</option><option>Business / Economics</option><option>Biology / Life Sciences</option><option>Arts / Humanities</option><option>No technical background</option></select>
+            <select id="suBackground"><option value="">Select background</option><option>Mathematics / Statistics</option><option>Computer Science</option><option>Engineering</option><option>Medicine / Healthcare</option><option>Law</option><option>Social Sciences</option><option>Business / Economics</option><option>Biology / Life Sciences</option><option>Arts / Humanities</option><option>No technical background</option></select>
           </div>
         </div>
         <button class="btn" onclick="doSignup()">Create Account</button>
@@ -167,6 +200,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
   </div>
 </div>
 
+<!-- MAIN APP -->
 <div id="mainApp" class="hidden">
   <header>
     <h1>🎓 LectureAI</h1>
@@ -175,11 +209,12 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       <button class="logout-btn" onclick="doLogout()">Log Out</button>
     </div>
   </header>
-
   <div class="tabs" id="teacherTabs">
     <div class="tab active" onclick="switchTab('builder')">📋 Lesson Builder</div>
     <div class="tab" onclick="switchTab('liveclass')">🔴 Live Class</div>
     <div class="tab" onclick="switchTab('studsupport')">📚 Student Support</div>
+    <div class="tab" onclick="switchTab('assignments')">📝 Assignments</div>
+    <div class="tab" onclick="switchTab('tests')">📋 Tests</div>
     <div class="tab" onclick="switchTab('reports')">📨 Reports</div>
     <div class="tab" onclick="switchTab('video')">🎬 Video Script</div>
     <div class="tab" onclick="switchTab('rubric')">📊 Evaluation</div>
@@ -191,21 +226,22 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
 
   <div class="content">
 
+    <!-- BUILDER -->
     <div id="builder" class="section active">
       <div class="card">
         <h3>🔑 Your Class Code</h3>
-        <p style="font-size:0.85rem;color:#555;margin-bottom:0.5rem">Share this with your students so they can connect from any device.</p>
+        <p style="font-size:0.85rem;color:#555;margin-bottom:0.5rem">Share with students so they can join from any device.</p>
         <div class="code-display" id="classCodeDisplay">------</div>
         <button class="btn-outline" onclick="generateClassCode()" style="width:auto">Generate New Code</button>
       </div>
       <div class="form-group">
-        <label>Topic *</label>
-        <input id="topic" placeholder="Start typing a topic..." autocomplete="off" oninput="handleTopicInput(this.value)" onblur="setTimeout(()=>closeAC(),200)"/>
+        <label>Topic * <span style="font-weight:400;color:#888;font-size:0.8rem">— search any subject: data science, medicine, law, engineering...</span></label>
+        <input id="topic" placeholder="Start typing any topic..." autocomplete="off" oninput="handleTopicInput(this.value)" onblur="setTimeout(()=>closeAC(),200)"/>
         <div class="autocomplete-list" id="acList"></div>
       </div>
       <div class="form-group">
         <label>Learning Objectives *</label>
-        <textarea id="objectives" placeholder="Click a topic above to get suggested objectives, or type your own..."></textarea>
+        <textarea id="objectives" placeholder="Click a topic suggestion above to auto-fill, or type your own objectives..."></textarea>
         <div id="objSuggestions" style="margin-top:0.4rem"></div>
       </div>
       <div class="form-group"><label>Class Level</label>
@@ -218,6 +254,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
         <select id="style"><option>Lecture-based</option><option>Discussion-based</option><option>Project-based</option><option>Flipped</option></select>
       </div>
       <button class="btn" onclick="generateLesson()">✨ Generate Lesson Plan</button>
+
       <div id="planOutput" class="hidden">
         <div class="section-title">📊 Overview</div>
         <div class="metrics">
@@ -236,22 +273,26 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
         <div class="section-title">💡 Examples and Analogies</div><div id="analogyCards"></div>
         <div class="section-title">🎯 In-Class Activities</div><div id="activityCards"></div>
         <div class="section-title">🪞 Reflection Questions</div><div id="reflectionList"></div>
-        <div class="section-title">📑 Lecture Slides</div>
+        <div class="section-title">📑 Slides & AI Slideshow</div>
         <div class="card">
-          <p style="font-size:0.88rem;color:#555;margin-bottom:0.7rem">Download a ready-to-use PowerPoint for this lesson.</p>
-          <button class="btn" id="slidesBtn" onclick="generateSlides()">📊 Download Slides (.pptx)</button>
+          <p style="font-size:0.88rem;color:#555;margin-bottom:0.8rem">Generate AI-powered slides with a voice reading each one — or download the PowerPoint.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem">
+            <button class="btn" id="slideshowBtn" onclick="launchAISlideshow()">🎙️ AI Narrated Slideshow</button>
+            <button class="btn-outline" id="slidesBtn" onclick="generateSlides(false)" style="margin-top:0">📊 Download PowerPoint</button>
+          </div>
           <div id="slidesStatus" style="margin-top:0.5rem;font-size:0.85rem;color:#888"></div>
         </div>
       </div>
     </div>
 
+    <!-- LIVE CLASS -->
     <div id="liveclass" class="section">
       <div id="noplanLive" class="info-box">⚠️ Generate a lesson plan first.</div>
       <div id="liveclassContent" class="hidden">
         <div class="live-tools-grid">
           <div class="tool-card">
             <h3>💬 Student Question Handler</h3>
-            <textarea id="teacherQ" rows="2" placeholder="e.g. Why do we square the error?"></textarea>
+            <textarea id="teacherQ" rows="2" placeholder="e.g. Why do we use gradient descent?"></textarea>
             <button class="voice-btn" onclick="startVoice('teacherQ')">🎤 Speak</button>
             <button class="btn" onclick="handleTeacherQuestion()">Get Response</button>
             <div class="result-box" id="teacherQResult"></div>
@@ -286,6 +327,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
+    <!-- STUDENT SUPPORT -->
     <div id="studsupport" class="section">
       <div id="noplan1" class="info-box">⚠️ Generate a lesson plan first.</div>
       <div id="studentContent" class="hidden">
@@ -296,14 +338,53 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <div id="reports" class="section">
-      <div class="section-title">📨 Student Reports</div>
-      <p style="font-size:0.88rem;color:#555;margin-bottom:1rem">Everything your students asked during class.</p>
-      <div id="reportsEmpty" class="info-box">No student reports yet.</div>
-      <div id="reportsList"></div>
-      <button class="btn-outline" onclick="clearReports()" style="margin-top:0.5rem">🗑️ Clear All Reports</button>
+    <!-- ASSIGNMENTS (TEACHER) -->
+    <div id="assignments" class="section">
+      <div class="section-title">📝 Assignments & Classwork</div>
+      <div id="noplanAssign" class="info-box">⚠️ Generate a lesson plan first to use assignments.</div>
+      <div id="assignContent" class="hidden">
+        <div class="card">
+          <h3>➕ Create New Assignment</h3>
+          <div class="form-group"><label>Title</label><input id="assignTitle" placeholder="e.g. Linear Regression Exercise"/></div>
+          <div class="form-group"><label>Description / Instructions</label><textarea id="assignDesc" placeholder="Describe what students should do..."></textarea></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem">
+            <div class="form-group"><label>Due Date</label><input id="assignDue" type="date"/></div>
+            <div class="form-group"><label>Max Score</label><input id="assignMax" type="number" value="100" min="1"/></div>
+          </div>
+          <button class="btn" onclick="createAssignment()">📤 Post Assignment</button>
+        </div>
+        <div class="section-title">Posted Assignments</div>
+        <div id="assignList"></div>
+      </div>
     </div>
 
+    <!-- TESTS (TEACHER) -->
+    <div id="tests" class="section">
+      <div class="section-title">📋 Tests & Quizzes</div>
+      <div id="noplanTests" class="info-box">⚠️ Generate a lesson plan first to use tests.</div>
+      <div id="testsContent" class="hidden">
+        <div class="card test-builder">
+          <h3>🔨 Build a Test</h3>
+          <div class="form-group"><label>Test Title</label><input id="testTitle" placeholder="e.g. Week 3 Quiz — Linear Regression"/></div>
+          <div class="form-group"><label>Time Limit (minutes, 0 = no limit)</label><input id="testTimeLimit" type="number" value="0" min="0"/></div>
+          <div id="testQuestions"></div>
+          <button class="btn-outline" onclick="addTestQuestion()" style="width:auto;margin-top:0.5rem">➕ Add Question</button>
+          <button class="btn" onclick="publishTest()" style="margin-top:0.8rem">📤 Publish Test</button>
+        </div>
+        <div class="section-title">Published Tests</div>
+        <div id="testList"></div>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div id="reports" class="section">
+      <div class="section-title">📨 Student Question Reports</div>
+      <div id="reportsEmpty" class="info-box">No student reports yet.</div>
+      <div id="reportsList"></div>
+      <button class="btn-outline" onclick="clearReports()" style="margin-top:0.5rem;width:auto">🗑️ Clear All</button>
+    </div>
+
+    <!-- VIDEO SCRIPT -->
     <div id="video" class="section">
       <div id="noplanVideo" class="info-box">⚠️ Generate a lesson plan first.</div>
       <div id="videoContent" class="hidden">
@@ -314,10 +395,11 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
           <div id="videoStatus" style="margin-top:0.5rem;font-size:0.85rem;color:#888"></div>
         </div>
         <div class="script-box hidden" id="scriptBox"></div>
-        <button class="btn-outline hidden" id="copyScriptBtn" onclick="copyScript()">📋 Copy Script</button>
+        <button class="btn-outline hidden" id="copyScriptBtn" onclick="copyScript()" style="width:auto">📋 Copy Script</button>
       </div>
     </div>
 
+    <!-- RUBRIC -->
     <div id="rubric" class="section">
       <div id="noplan2" class="info-box">⚠️ Generate a lesson plan first.</div>
       <div id="rubricContent" class="hidden">
@@ -331,6 +413,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
+    <!-- EXPORT -->
     <div id="export" class="section">
       <div id="noplan3" class="info-box">⚠️ Generate a lesson plan first.</div>
       <div id="exportContent" class="hidden">
@@ -340,13 +423,14 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
+    <!-- STUDENT HOME -->
     <div id="studenthome" class="section">
       <div class="student-hero">
         <h2 id="stuWelcome">Welcome back 👋</h2>
-        <p>Ask questions, download notes, and take quizzes</p>
+        <p>Ask questions, take quizzes, submit assignments and tests</p>
       </div>
       <div class="connect-box" id="connectBox">
-        <h3>🔗 Connect to Your Teacher's Class</h3>
+        <h3>🔗 Connect to Your Class</h3>
         <p style="font-size:0.85rem;color:#555;margin-bottom:0.8rem">Enter the 6-character code your teacher gave you.</p>
         <div style="display:flex;gap:0.5rem">
           <input id="classCodeInput" placeholder="e.g. ABC123" style="text-transform:uppercase;letter-spacing:0.1rem;flex:1" maxlength="6"/>
@@ -365,14 +449,15 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
       <div id="stuAskArea" class="hidden">
         <div class="stu-tabs">
-          <div class="stu-tab active" onclick="switchStuTab('ask')">🙋 Ask a Question</div>
-          <div class="stu-tab" onclick="switchStuTab('notes')">📄 Lecture Notes</div>
+          <div class="stu-tab active" onclick="switchStuTab('ask')">🙋 Ask</div>
+          <div class="stu-tab" onclick="switchStuTab('notes')">📄 Notes</div>
           <div class="stu-tab" onclick="switchStuTab('quiz')">🧠 Quiz</div>
+          <div class="stu-tab" onclick="switchStuTab('stuassign')">📝 Assignments</div>
+          <div class="stu-tab" onclick="switchStuTab('stutests')">📋 Tests</div>
         </div>
         <div id="stuAsk">
           <div class="card card-blue">
             <h3>🙋 Ask Your Question</h3>
-            <p style="font-size:0.82rem;color:#666;margin-bottom:0.6rem">Your profile is saved. Ask anything from today's class.</p>
             <textarea id="stuQuestion" rows="3" placeholder="Type anything you did not understand..."></textarea>
             <button class="voice-btn" onclick="startVoice('stuQuestion')">🎤 Speak</button>
             <button class="btn-blue" onclick="handleStudentQuestion()">Get My Answer</button>
@@ -382,7 +467,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
         </div>
         <div id="stuNotes" class="hidden">
           <div class="card">
-            <h3>📄 Download Lecture Notes</h3>
+            <h3>📄 Lecture Notes</h3>
             <p style="font-size:0.85rem;color:#555;margin-bottom:0.8rem">Download the full lecture notes for this topic.</p>
             <button class="btn" onclick="downloadStudentNotes()">⬇️ Download Notes (.txt)</button>
             <div id="notesStatus" style="margin-top:0.5rem;font-size:0.85rem;color:#888"></div>
@@ -393,7 +478,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
         <div id="stuQuiz" class="hidden">
           <div class="card">
             <h3>🧠 Practice Quiz</h3>
-            <p style="font-size:0.85rem;color:#555;margin-bottom:0.8rem">Test your understanding of the topic.</p>
             <button class="btn" id="startQuizBtn" onclick="startQuiz()">Start Quiz</button>
           </div>
           <div id="quizArea"></div>
@@ -403,6 +487,14 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
             <button class="btn" style="width:auto;margin-top:1rem" onclick="startQuiz()">Try Again</button>
           </div>
         </div>
+        <div id="stuassign" class="hidden">
+          <div class="section-title">📝 Your Assignments</div>
+          <div id="stuAssignList"><div class="info-box">Loading assignments...</div></div>
+        </div>
+        <div id="stutests" class="hidden">
+          <div class="section-title">📋 Your Tests</div>
+          <div id="stuTestList"><div class="info-box">Loading tests...</div></div>
+        </div>
       </div>
       <div id="stuNoClass" class="info-box" style="margin-top:1rem">Enter your teacher's class code above to get started.</div>
     </div>
@@ -410,55 +502,152 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
   </div>
 </div>
 
+<!-- AI NARRATED SLIDESHOW OVERLAY -->
+<div id="slideshowOverlay" class="slideshow-overlay hidden">
+  <div style="width:90%;max-width:900px;display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <div style="color:white">
+      <span id="slideshowTitle" style="font-size:1.1rem;font-weight:600"></span>
+      <span id="speakingBadge" class="speaking-badge idle" style="margin-left:0.7rem">🔊 Ready</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <select id="voiceSelect" style="background:#1a2a3a;color:white;border:1px solid #444;border-radius:6px;padding:0.3rem 0.6rem;font-size:0.85rem">
+        <option value="">Loading voices...</option>
+      </select>
+      <button onclick="closeSlideshow()" style="background:none;border:1.5px solid rgba(255,255,255,0.4);color:white;border-radius:6px;padding:0.4rem 0.9rem;cursor:pointer;font-family:'DM Sans',sans-serif">✕ Close</button>
+    </div>
+  </div>
+  <div class="slide-display" id="slideDisplay">
+    <div id="slideLoadingMsg" style="text-align:center;padding:3rem;color:#888">
+      <div style="font-size:2rem;margin-bottom:1rem">🤖</div>
+      <div style="font-size:1.1rem;font-weight:600;color:#2d6a4f">Generating AI slide content...</div>
+      <div style="font-size:0.88rem;color:#aaa;margin-top:0.5rem">This takes about 15 seconds</div>
+    </div>
+    <div id="slideContent" class="hidden">
+      <div class="slide-header"><h2 id="slideTitle">-</h2><div class="slide-num" id="slideNum">-</div></div>
+      <ul class="slide-bullets" id="slideBullets"></ul>
+    </div>
+  </div>
+  <div class="slide-controls" id="slideControls" style="display:none">
+    <button class="slide-ctrl-btn" onclick="prevSlide()">← Previous</button>
+    <div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <button class="slide-ctrl-btn primary" onclick="nextSlide()">Next →</button>
+    <button class="slide-ctrl-btn" onclick="toggleAutoPlay()" id="autoPlayBtn">▶ Auto-play</button>
+  </div>
+</div>
+
+<!-- VOICE PICKER MODAL -->
+<div id="voicePickerModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:8888;display:none;align-items:center;justify-content:center">
+  <div style="background:white;border-radius:16px;padding:1.5rem;width:90%;max-width:480px">
+    <h3 style="margin-bottom:1rem;color:#2d6a4f">🎙️ Choose Your AI Voice</h3>
+    <div class="voice-grid" id="voicePickerGrid"></div>
+    <button class="btn" onclick="closeVoicePicker()">Done</button>
+  </div>
+</div>
+
 <script>
-const TOPICS=[
-  {t:"Linear Regression",c:"Statistics"},{t:"Logistic Regression",c:"Statistics"},{t:"Hypothesis Testing",c:"Statistics"},{t:"Probability Theory",c:"Statistics"},{t:"Bayesian Statistics",c:"Statistics"},{t:"Descriptive Statistics",c:"Statistics"},{t:"Inferential Statistics",c:"Statistics"},{t:"ANOVA",c:"Statistics"},{t:"Chi-Square Test",c:"Statistics"},{t:"Confidence Intervals",c:"Statistics"},{t:"Central Limit Theorem",c:"Statistics"},{t:"Normal Distribution",c:"Statistics"},{t:"Correlation vs Causation",c:"Statistics"},{t:"Time Series Analysis",c:"Statistics"},{t:"Multiple Regression",c:"Statistics"},{t:"Sampling Methods",c:"Statistics"},{t:"A/B Testing",c:"Statistics"},{t:"Experimental Design",c:"Statistics"},
-  {t:"Decision Trees",c:"Machine Learning"},{t:"Random Forests",c:"Machine Learning"},{t:"Support Vector Machines",c:"Machine Learning"},{t:"K-Nearest Neighbors",c:"Machine Learning"},{t:"Naive Bayes",c:"Machine Learning"},{t:"Gradient Boosting",c:"Machine Learning"},{t:"XGBoost",c:"Machine Learning"},{t:"Bias-Variance Tradeoff",c:"Machine Learning"},{t:"Overfitting and Underfitting",c:"Machine Learning"},{t:"Cross-Validation",c:"Machine Learning"},{t:"Feature Engineering",c:"Machine Learning"},{t:"Hyperparameter Tuning",c:"Machine Learning"},{t:"Model Evaluation Metrics",c:"Machine Learning"},{t:"ROC Curve and AUC",c:"Machine Learning"},{t:"Confusion Matrix",c:"Machine Learning"},{t:"Regularization",c:"Machine Learning"},{t:"Principal Component Analysis",c:"Machine Learning"},{t:"Dimensionality Reduction",c:"Machine Learning"},
-  {t:"Neural Networks",c:"Deep Learning"},{t:"Convolutional Neural Networks",c:"Deep Learning"},{t:"Recurrent Neural Networks",c:"Deep Learning"},{t:"LSTM Networks",c:"Deep Learning"},{t:"Transformers",c:"Deep Learning"},{t:"Attention Mechanism",c:"Deep Learning"},{t:"Transfer Learning",c:"Deep Learning"},{t:"Backpropagation",c:"Deep Learning"},{t:"Activation Functions",c:"Deep Learning"},{t:"Natural Language Processing",c:"Deep Learning"},{t:"Generative Adversarial Networks",c:"Deep Learning"},{t:"Autoencoders",c:"Deep Learning"},
-  {t:"SQL Fundamentals",c:"Data Engineering"},{t:"Advanced SQL",c:"Data Engineering"},{t:"NoSQL Databases",c:"Data Engineering"},{t:"Data Warehousing",c:"Data Engineering"},{t:"ETL Pipelines",c:"Data Engineering"},{t:"Apache Spark",c:"Data Engineering"},{t:"Data Modeling",c:"Data Engineering"},{t:"Data Quality",c:"Data Engineering"},{t:"REST APIs",c:"Data Engineering"},{t:"Airflow and Orchestration",c:"Data Engineering"},
-  {t:"Python for Data Science",c:"Programming"},{t:"Pandas",c:"Programming"},{t:"NumPy",c:"Programming"},{t:"Matplotlib",c:"Programming"},{t:"Scikit-Learn",c:"Programming"},{t:"TensorFlow",c:"Programming"},{t:"PyTorch",c:"Programming"},{t:"R Programming",c:"Programming"},{t:"Version Control with Git",c:"Programming"},{t:"Object-Oriented Programming",c:"Programming"},{t:"Web Scraping",c:"Programming"},
-  {t:"Data Visualisation Principles",c:"Visualisation"},{t:"Seaborn",c:"Visualisation"},{t:"Plotly",c:"Visualisation"},{t:"Tableau",c:"Visualisation"},{t:"Power BI",c:"Visualisation"},{t:"Dashboard Design",c:"Visualisation"},{t:"Storytelling with Data",c:"Visualisation"},
-  {t:"AI Ethics",c:"AI Ethics"},{t:"Algorithmic Bias",c:"AI Ethics"},{t:"Fairness in Machine Learning",c:"AI Ethics"},{t:"Explainable AI",c:"AI Ethics"},{t:"Privacy and Data Protection",c:"AI Ethics"},{t:"Responsible AI",c:"AI Ethics"},
-  {t:"AWS for Data Science",c:"Cloud"},{t:"Google Cloud Platform",c:"Cloud"},{t:"Docker",c:"Cloud"},{t:"Kubernetes",c:"Cloud"},{t:"MLOps",c:"Cloud"},{t:"Model Deployment",c:"Cloud"},
-  {t:"Business Intelligence",c:"Analytics"},{t:"KPIs and Metrics",c:"Analytics"},{t:"Customer Segmentation",c:"Analytics"},{t:"Churn Prediction",c:"Analytics"},{t:"Recommendation Systems",c:"Analytics"},{t:"Forecasting",c:"Analytics"},{t:"Anomaly Detection",c:"Analytics"},{t:"Text Mining",c:"Analytics"},
+// ── DATA ─────────────────────────────────────────────────────────────────
+
+const TOPICS = [
+  // Data Science & AI
+  {t:"Linear Regression",c:"Data Science"},{t:"Logistic Regression",c:"Data Science"},{t:"Decision Trees",c:"Data Science"},{t:"Random Forests",c:"Data Science"},{t:"Neural Networks",c:"Data Science"},{t:"Deep Learning",c:"Data Science"},{t:"Natural Language Processing",c:"Data Science"},{t:"Computer Vision",c:"Data Science"},{t:"Reinforcement Learning",c:"Data Science"},{t:"Clustering Algorithms",c:"Data Science"},{t:"Dimensionality Reduction",c:"Data Science"},{t:"Feature Engineering",c:"Data Science"},{t:"Model Evaluation Metrics",c:"Data Science"},{t:"Overfitting and Underfitting",c:"Data Science"},{t:"Cross-Validation",c:"Data Science"},{t:"Gradient Boosting",c:"Data Science"},{t:"Support Vector Machines",c:"Data Science"},{t:"Recommendation Systems",c:"Data Science"},{t:"Anomaly Detection",c:"Data Science"},{t:"Time Series Analysis",c:"Data Science"},{t:"Transfer Learning",c:"Data Science"},{t:"Transformers and Attention",c:"Data Science"},{t:"Generative AI",c:"Data Science"},{t:"Explainable AI",c:"Data Science"},{t:"MLOps",c:"Data Science"},{t:"A/B Testing",c:"Data Science"},
+  // Statistics
+  {t:"Hypothesis Testing",c:"Statistics"},{t:"Probability Theory",c:"Statistics"},{t:"Bayesian Statistics",c:"Statistics"},{t:"Descriptive Statistics",c:"Statistics"},{t:"Inferential Statistics",c:"Statistics"},{t:"ANOVA",c:"Statistics"},{t:"Chi-Square Test",c:"Statistics"},{t:"Confidence Intervals",c:"Statistics"},{t:"Central Limit Theorem",c:"Statistics"},{t:"Normal Distribution",c:"Statistics"},{t:"Correlation vs Causation",c:"Statistics"},{t:"Sampling Methods",c:"Statistics"},{t:"Experimental Design",c:"Statistics"},{t:"Regression Analysis",c:"Statistics"},{t:"Multiple Regression",c:"Statistics"},
+  // Programming
+  {t:"Python for Data Science",c:"Programming"},{t:"Pandas",c:"Programming"},{t:"NumPy",c:"Programming"},{t:"SQL Fundamentals",c:"Programming"},{t:"Advanced SQL",c:"Programming"},{t:"R Programming",c:"Programming"},{t:"Scikit-Learn",c:"Programming"},{t:"TensorFlow",c:"Programming"},{t:"PyTorch",c:"Programming"},{t:"Web Scraping",c:"Programming"},{t:"APIs and REST",c:"Programming"},{t:"Version Control with Git",c:"Programming"},{t:"Docker",c:"Programming"},{t:"Object-Oriented Programming",c:"Programming"},
+  // Medicine & Healthcare
+  {t:"Anatomy and Physiology",c:"Medicine"},{t:"Pharmacology Basics",c:"Medicine"},{t:"Clinical Diagnosis",c:"Medicine"},{t:"Medical Ethics",c:"Medicine"},{t:"Epidemiology",c:"Medicine"},{t:"Pathophysiology",c:"Medicine"},{t:"Evidence-Based Medicine",c:"Medicine"},{t:"AI in Healthcare",c:"Medicine"},{t:"Medical Imaging",c:"Medicine"},{t:"Public Health",c:"Medicine"},{t:"Genetics and Genomics",c:"Medicine"},{t:"Neuroscience",c:"Medicine"},{t:"Cardiology Fundamentals",c:"Medicine"},{t:"Oncology Basics",c:"Medicine"},{t:"Mental Health",c:"Medicine"},
+  // Law
+  {t:"Contract Law",c:"Law"},{t:"Criminal Law",c:"Law"},{t:"Constitutional Law",c:"Law"},{t:"Tort Law",c:"Law"},{t:"Intellectual Property",c:"Law"},{t:"Data Privacy Law",c:"Law"},{t:"Corporate Law",c:"Law"},{t:"International Law",c:"Law"},{t:"Legal Research Methods",c:"Law"},{t:"Human Rights Law",c:"Law"},{t:"Environmental Law",c:"Law"},{t:"Cybersecurity Law",c:"Law"},
+  // Engineering
+  {t:"Thermodynamics",c:"Engineering"},{t:"Fluid Mechanics",c:"Engineering"},{t:"Structural Analysis",c:"Engineering"},{t:"Electrical Circuits",c:"Engineering"},{t:"Control Systems",c:"Engineering"},{t:"Signal Processing",c:"Engineering"},{t:"Materials Science",c:"Engineering"},{t:"Software Engineering",c:"Engineering"},{t:"Systems Design",c:"Engineering"},{t:"Robotics",c:"Engineering"},{t:"Renewable Energy",c:"Engineering"},{t:"Civil Engineering Basics",c:"Engineering"},
+  // Business & Economics
+  {t:"Microeconomics",c:"Business"},{t:"Macroeconomics",c:"Business"},{t:"Financial Accounting",c:"Business"},{t:"Marketing Strategy",c:"Business"},{t:"Operations Management",c:"Business"},{t:"Organisational Behaviour",c:"Business"},{t:"Business Intelligence",c:"Business"},{t:"Entrepreneurship",c:"Business"},{t:"Supply Chain Management",c:"Business"},{t:"Financial Markets",c:"Business"},{t:"Corporate Finance",c:"Business"},{t:"Project Management",c:"Business"},{t:"Strategic Management",c:"Business"},
+  // Social Sciences
+  {t:"Research Methods",c:"Social Sciences"},{t:"Sociology",c:"Social Sciences"},{t:"Psychology",c:"Social Sciences"},{t:"Political Science",c:"Social Sciences"},{t:"Anthropology",c:"Social Sciences"},{t:"Communication Theory",c:"Social Sciences"},{t:"Behavioural Economics",c:"Social Sciences"},{t:"Education Theory",c:"Social Sciences"},
+  // Ethics & AI
+  {t:"AI Ethics",c:"Ethics"},{t:"Algorithmic Bias",c:"Ethics"},{t:"Fairness in AI",c:"Ethics"},{t:"Data Privacy",c:"Ethics"},{t:"Responsible Innovation",c:"Ethics"},{t:"Tech and Society",c:"Ethics"},
+  // Visualisation
+  {t:"Data Visualisation Principles",c:"Visualisation"},{t:"Tableau",c:"Visualisation"},{t:"Power BI",c:"Visualisation"},{t:"Storytelling with Data",c:"Visualisation"},{t:"Dashboard Design",c:"Visualisation"},{t:"Matplotlib and Seaborn",c:"Visualisation"},
 ];
 
-const OBJECTIVES_MAP={
+const OBJECTIVES_MAP = {
   "Linear Regression":"1. Understand what linear regression is and when to use it\n2. Interpret coefficients and the regression equation\n3. Evaluate model fit using R-squared and RMSE\n4. Identify assumptions and when they are violated",
-  "Logistic Regression":"1. Understand the difference between linear and logistic regression\n2. Interpret log-odds, odds ratios, and probabilities\n3. Evaluate a logistic regression model using accuracy and AUC\n4. Apply logistic regression to a binary classification problem",
   "Neural Networks":"1. Understand the structure of a neural network — layers, nodes, weights\n2. Explain how backpropagation and gradient descent work\n3. Identify appropriate activation functions\n4. Build a simple neural network using Python",
-  "Decision Trees":"1. Understand how a decision tree splits data using information gain\n2. Interpret a decision tree visually\n3. Identify overfitting and apply pruning\n4. Compare decision trees to other classifiers",
-  "SQL Fundamentals":"1. Write basic SELECT WHERE and JOIN queries\n2. Understand primary keys foreign keys and relationships\n3. Use aggregate functions like COUNT SUM and AVG\n4. Filter and sort query results effectively",
-  "Python for Data Science":"1. Write Python code using variables loops and functions\n2. Load and manipulate data using Pandas\n3. Create basic visualisations with Matplotlib\n4. Understand list comprehensions and lambda functions",
+  "Decision Trees":"1. Understand how a decision tree splits data\n2. Interpret a decision tree visually\n3. Identify overfitting and apply pruning\n4. Compare decision trees to other classifiers",
+  "SQL Fundamentals":"1. Write basic SELECT, WHERE and JOIN queries\n2. Understand primary keys, foreign keys and relationships\n3. Use aggregate functions like COUNT, SUM and AVG\n4. Filter and sort query results effectively",
+  "Python for Data Science":"1. Write Python code using variables, loops and functions\n2. Load and manipulate data using Pandas\n3. Create basic visualisations with Matplotlib\n4. Understand list comprehensions and lambda functions",
   "Hypothesis Testing":"1. Understand the null and alternative hypothesis\n2. Choose the right statistical test\n3. Interpret p-values and confidence intervals\n4. Avoid common mistakes like p-hacking",
-  "Pandas":"1. Load inspect and clean a DataFrame\n2. Filter sort and group data\n3. Handle missing values and duplicates\n4. Merge and reshape DataFrames",
-  "Natural Language Processing":"1. Understand tokenisation stemming and lemmatisation\n2. Represent text as numerical features using TF-IDF\n3. Build a simple text classifier\n4. Understand the basics of word embeddings",
   "AI Ethics":"1. Identify common sources of bias in AI systems\n2. Explain fairness metrics and their limitations\n3. Understand legal and ethical frameworks\n4. Critically evaluate the societal impact of AI",
-  "Data Visualisation Principles":"1. Choose the right chart type for different data\n2. Apply principles of clarity accuracy and colour\n3. Avoid misleading visualisations\n4. Create an effective data story using visuals",
-  "Cross-Validation":"1. Explain why cross-validation gives a better estimate than a single split\n2. Implement k-fold cross-validation in Python\n3. Understand stratified cross-validation\n4. Use cross-validation to compare multiple models",
+  "Medical Ethics":"1. Understand the four principles of medical ethics\n2. Apply ethical frameworks to clinical scenarios\n3. Analyse consent and autonomy in healthcare\n4. Debate real-world ethical dilemmas",
+  "Contract Law":"1. Define a valid contract and its essential elements\n2. Identify offer, acceptance and consideration\n3. Understand breach of contract and remedies\n4. Apply contract principles to case studies",
+  "Thermodynamics":"1. Understand the laws of thermodynamics\n2. Apply energy conservation principles\n3. Analyse heat engines and refrigeration cycles\n4. Solve thermodynamic problems using state equations",
+  "Microeconomics":"1. Understand supply and demand principles\n2. Analyse market equilibrium and price elasticity\n3. Explain consumer and producer surplus\n4. Evaluate market failures and government interventions",
+  "Psychology":"1. Understand the major schools of psychological thought\n2. Explain key psychological theories and their applications\n3. Critically evaluate research methods in psychology\n4. Apply psychological concepts to real-world scenarios",
+  "Epidemiology":"1. Define key epidemiological measures (incidence, prevalence)\n2. Understand study designs — cohort, case-control, RCT\n3. Interpret risk ratios and odds ratios\n4. Evaluate public health interventions",
 };
 
-const QUIZ_QUESTIONS={
+const QUIZ_QUESTIONS = {
   "Linear Regression":[
-    {q:"What does a regression line minimise?",options:["Sum of squared errors","Sum of absolute values","R-squared","Mean of the data"],ans:0,exp:"Linear regression finds the line that minimises the sum of squared differences between actual and predicted values."},
-    {q:"What does R-squared measure?",options:["Prediction error","Proportion of variance explained","Number of variables","Slope of the line"],ans:1,exp:"R-squared tells you how much of the variation in the outcome is explained by your model."},
-    {q:"What happens when you add irrelevant variables to a regression?",options:["R-squared always decreases","R-squared always increases","The model crashes","Coefficients become zero"],ans:1,exp:"Adding any variable even irrelevant ones will never decrease R-squared — this is why Adjusted R-squared exists."},
-    {q:"What does a coefficient of 0.5 on years of experience mean?",options:["For every extra year the outcome increases by 0.5","For every extra year the outcome halves","The variable is not significant","The model is 50% accurate"],ans:0,exp:"Coefficients tell you the expected change in the outcome for a one-unit increase in the predictor holding everything else constant."},
-    {q:"What assumption does linear regression make about residuals?",options:["They must be positive","They must be normally distributed","They must be zero","They must be integers"],ans:1,exp:"One key assumption is that residuals are normally distributed with constant variance."},
+    {q:"What does a regression line minimise?",options:["Sum of squared errors","Sum of absolute values","R-squared","Mean of data"],ans:0,exp:"Linear regression minimises the sum of squared differences between actual and predicted values."},
+    {q:"What does R-squared measure?",options:["Prediction error","Proportion of variance explained","Number of variables","Slope of the line"],ans:1,exp:"R-squared tells you how much of the variation in the outcome is explained by the model."},
+    {q:"What happens when you add irrelevant variables?",options:["R-squared decreases","R-squared increases","Model crashes","Coefficients become zero"],ans:1,exp:"Adding any variable, even irrelevant ones, will never decrease R-squared."},
+    {q:"A coefficient of 0.5 on years of experience means?",options:["Outcome increases by 0.5 per year","Outcome halves","Variable is not significant","Model is 50% accurate"],ans:0,exp:"Coefficients show the expected change in the outcome for a one-unit increase in the predictor."},
+    {q:"What assumption does linear regression make about residuals?",options:["Must be positive","Must be normally distributed","Must be zero","Must be integers"],ans:1,exp:"Residuals should be normally distributed with constant variance."},
   ],
   "default":[
-    {q:"What is the first step when working with a new dataset?",options:["Build a model immediately","Explore and understand the data","Delete missing values","Scale all features"],ans:1,exp:"Exploratory Data Analysis always comes before modelling — you need to understand what you have."},
-    {q:"What does overfitting mean?",options:["The model is too simple","The model performs well on training data but poorly on new data","The model has too few parameters","The training data is too large"],ans:1,exp:"An overfitted model memorised the training data and fails to generalise to new unseen data."},
-    {q:"What is cross-validation used for?",options:["Speeding up training","Getting a reliable estimate of model performance","Cleaning the data","Selecting features"],ans:1,exp:"Cross-validation uses multiple train/test splits to give a more reliable estimate of how well your model will perform on unseen data."},
-    {q:"What does a confusion matrix show?",options:["How confused the model is","Counts of correct and incorrect predictions by class","The loss during training","Feature importance"],ans:1,exp:"A confusion matrix shows true positives, true negatives, false positives, and false negatives for a classification model."},
-    {q:"What is the purpose of normalising features?",options:["To make the data look nicer","To ensure all features contribute equally to distance-based models","To remove outliers","To increase accuracy"],ans:1,exp:"Normalisation prevents features with large values from dominating distance-based algorithms like KNN."},
+    {q:"What is the first step when working with a new dataset?",options:["Build a model","Explore the data","Delete missing values","Scale features"],ans:1,exp:"Exploratory Data Analysis always comes before modelling."},
+    {q:"What does overfitting mean?",options:["Model is too simple","Good on training, poor on new data","Too few parameters","Training data too large"],ans:1,exp:"An overfitted model memorised training data and fails to generalise."},
+    {q:"What is cross-validation used for?",options:["Speeding up training","Estimating model performance","Cleaning data","Selecting features"],ans:1,exp:"Cross-validation uses multiple train/test splits for a reliable performance estimate."},
+    {q:"What does a confusion matrix show?",options:["How confused the model is","Counts of correct/incorrect predictions","Loss during training","Feature importance"],ans:1,exp:"A confusion matrix shows true positives, true negatives, false positives, and false negatives."},
+    {q:"What is the purpose of normalising features?",options:["Make data look nicer","Ensure all features contribute equally","Remove outliers","Increase accuracy"],ans:1,exp:"Normalisation prevents large-valued features from dominating distance-based models."},
   ]
 };
 
-let selectedRole="",currentUser=null,currentPlan=null,quizAnswers={},quizTopic="";
+const VOICE_CHARACTERS = [
+  {id:"aria",   name:"Aria",   gender:"female", desc:"Calm & clear",     avatar:"👩",  pitch:1.1,  rate:0.95},
+  {id:"marcus", name:"Marcus", gender:"male",   desc:"Deep & confident", avatar:"👨",  pitch:0.85, rate:0.9},
+  {id:"zoe",    name:"Zoe",    gender:"female", desc:"Friendly & warm",  avatar:"👩‍🦰", pitch:1.2,  rate:1.0},
+  {id:"james",  name:"James",  gender:"male",   desc:"Professional",     avatar:"🧑‍💼", pitch:0.9,  rate:0.92},
+  {id:"luna",   name:"Luna",   gender:"female", desc:"Gentle & soft",    avatar:"👩‍🦳", pitch:1.15, rate:0.88},
+  {id:"alex",   name:"Alex",   gender:"neutral",desc:"Neutral & crisp",  avatar:"🧑",  pitch:1.0,  rate:0.95},
+];
 
-function pickRole(r){selectedRole=r;document.getElementById("roleTeacher").classList.toggle("selected",r==="teacher");document.getElementById("roleStudent").classList.toggle("selected",r==="student");document.getElementById("authForms").classList.remove("hidden");document.getElementById("studentFields").classList.toggle("hidden",r==="teacher");}
-function switchAuthTab(t){document.getElementById("tabLogin").classList.toggle("active",t==="login");document.getElementById("tabSignup").classList.toggle("active",t==="signup");document.getElementById("loginForm").classList.toggle("hidden",t!=="login");document.getElementById("signupForm").classList.toggle("hidden",t!=="signup");}
+const SEGMENTS=[
+  {name:"Introduction and Hook",icap:"Active",pct:0.12,desc:(t,s)=>`Open with a compelling real-world question related to "${t}". Use ${s} to immediately engage students.`},
+  {name:"Core Concept Explanation",icap:"Passive",pct:0.35,desc:(t,s)=>`Explain the foundational ideas of "${t}" using layered analogies. Present visual and formal representations.`},
+  {name:"Guided In-Class Activity",icap:"Constructive",pct:0.28,desc:(t,s)=>`Students apply "${t}" to a structured hands-on task. Pairs encouraged to explain reasoning aloud.`},
+  {name:"Peer Discussion and Debate",icap:"Interactive",pct:0.13,desc:(t,s)=>`Pose a conceptual challenge about "${t}". Groups compare answers and defend reasoning.`},
+  {name:"Wrap-Up and Reflection",icap:"Constructive",pct:0.12,desc:(t,s)=>`Summarise key takeaways. Students write a 2-sentence exit ticket about "${t}".`},
+];
+const ANALOGIES=[(t)=>`Beginner: Think of "${t}" like sorting a messy drawer — you create rules before touching anything.`,(t)=>`Visual: Imagine "${t}" as a flowchart where each arrow depends on real data.`,(t)=>`For non-technical students, "${t}" is like a recipe — ingredients, steps, and a quality check.`];
+const ACTIVITIES=[{title:"Think-Pair-Share",icap:"Interactive",prompt:(t)=>`Identify one place where "${t}" changes the result. Discuss with a partner.`},{title:"Error Spotting",icap:"Constructive",prompt:(t)=>`Find the mistake in this incorrect application of "${t}" and explain why it is wrong.`},{title:"Concept Map",icap:"Constructive",prompt:(t)=>`In 5 minutes, sketch how "${t}" connects to two ideas from previous lectures.`}];
+const REFLECTIONS=[(t)=>`What is the single most important idea you learned about "${t}" today?`,(t)=>`Where did you feel confused, and what would help clarify that?`,(t)=>`How might "${t}" appear in a real project you care about?`,(t)=>`What question would you still like to ask about "${t}"?`];
+const PRACTICE=[{diff:"Easy",q:(t)=>`In one sentence define "${t}" in your own words.`,hint:"Focus on what it does, not how it works."},{diff:"Easy",q:(t)=>`Give one real-life example where "${t}" would be useful.`,hint:"Think about patterns and decisions."},{diff:"Medium",q:(t)=>`Explain one advantage and one limitation of "${t}".`,hint:"Consider what assumptions it makes."},{diff:"Medium",q:(t)=>`How would you explain "${t}" to a friend who never studied this subject?`,hint:"Use an analogy from everyday life."},{diff:"Hard",q:(t)=>`Design a small experiment to test whether "${t}" performs well. What metrics would you use?`,hint:"Think about what success means."},{diff:"Hard",q:(t)=>`What ethical concerns might arise when applying "${t}" in a high-stakes setting?`,hint:"Consider bias, transparency, and accountability."}];
+const SRL=["Before studying: What do I already know about this topic?","During study: Am I understanding this, or just reading the words?","After practice: Can I explain this without looking at my notes?","Reflection: What is my study plan for the parts I found difficult?"];
+const RUBRIC_CRITERIA=[{name:"Relevance",desc:"Does output match the topic and stated learning objectives?"},{name:"Clarity",desc:"Is the language understandable for the target student level?"},{name:"Pedagogical Value",desc:"Does it support active / constructive / interactive engagement?"},{name:"Correctness",desc:"Are concepts and examples technically accurate?"},{name:"Usability",desc:"Is the workflow easy and intuitive for instructors?"}];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let selectedRole="", currentUser=null, currentPlan=null, quizAnswers={}, quizTopic="";
+let currentSlides=[], currentSlideIndex=0, autoPlayTimer=null, isAutoPlay=false, selectedVoiceChar=VOICE_CHARACTERS[0];
+let availableBrowserVoices=[], selectedBrowserVoice=null;
+let testQCount=0;
+
+// ── AUTH ─────────────────────────────────────────────────────────────────
+function pickRole(r){
+  selectedRole=r;
+  document.getElementById("roleTeacher").classList.toggle("selected",r==="teacher");
+  document.getElementById("roleStudent").classList.toggle("selected",r==="student");
+  document.getElementById("authForms").classList.remove("hidden");
+  document.getElementById("studentFields").classList.toggle("hidden",r==="teacher");
+}
+function switchAuthTab(t){
+  document.getElementById("tabLogin").classList.toggle("active",t==="login");
+  document.getElementById("tabSignup").classList.toggle("active",t==="signup");
+  document.getElementById("loginForm").classList.toggle("hidden",t!=="login");
+  document.getElementById("signupForm").classList.toggle("hidden",t!=="signup");
+}
 function getUsers(){return JSON.parse(localStorage.getItem("lai_users")||"[]");}
 function saveUsers(u){localStorage.setItem("lai_users",JSON.stringify(u));}
 function getReports(){return JSON.parse(localStorage.getItem("lai_reports")||"[]");}
@@ -469,10 +658,9 @@ function doLogin(){
   const email=document.getElementById("loginEmail").value.trim().toLowerCase();
   const pass=document.getElementById("loginPassword").value;
   const user=getUsers().find(u=>u.email===email&&u.password===pass&&u.role===selectedRole);
-  if(!user){document.getElementById("loginError").textContent="Email or password not found.";document.getElementById("loginError").style.display="block";return;}
+  if(!user){const el=document.getElementById("loginError");el.textContent="Email or password not found.";el.style.display="block";return;}
   loginSuccess(user);
 }
-
 function doSignup(){
   if(!selectedRole){alert("Select Teacher or Student first.");return;}
   const name=document.getElementById("suName").value.trim();
@@ -480,29 +668,29 @@ function doSignup(){
   const pass=document.getElementById("suPassword").value;
   if(!name||!email||!pass){showSignupErr("Please fill in all required fields.");return;}
   const users=getUsers();
-  if(users.find(u=>u.email===email)){showSignupErr("An account with this email already exists.");return;}
+  if(users.find(u=>u.email===email)){showSignupErr("Account already exists.");return;}
   const user={name,email,password:pass,role:selectedRole};
   if(selectedRole==="student"){user.age=document.getElementById("suAge").value;user.year=document.getElementById("suYear").value;user.background=document.getElementById("suBackground").value;}
   users.push(user);saveUsers(users);loginSuccess(user);
 }
-
-function showSignupErr(m){document.getElementById("signupError").textContent=m;document.getElementById("signupError").style.display="block";}
-
+function showSignupErr(m){const el=document.getElementById("signupError");el.textContent=m;el.style.display="block";}
 function loginSuccess(user){
   currentUser=user;localStorage.setItem("lai_session",JSON.stringify(user));
-  document.getElementById("authScreen").classList.add("hidden");document.getElementById("mainApp").classList.remove("hidden");
+  document.getElementById("authScreen").classList.add("hidden");
+  document.getElementById("mainApp").classList.remove("hidden");
   initApp();
 }
-
 function doLogout(){localStorage.removeItem("lai_session");currentUser=null;location.reload();}
 
 function initApp(){
   document.getElementById("userBadge").textContent=currentUser.name+(currentUser.role==="teacher"?" · Teacher":" · Student");
   if(currentUser.role==="teacher"){
-    document.getElementById("teacherTabs").classList.remove("hidden");document.getElementById("studentTabs").classList.add("hidden");
+    document.getElementById("teacherTabs").classList.remove("hidden");
+    document.getElementById("studentTabs").classList.add("hidden");
     loadOrCreateClassCode();loadReports();switchTab("builder");
   } else {
-    document.getElementById("teacherTabs").classList.add("hidden");document.getElementById("studentTabs").classList.remove("hidden");
+    document.getElementById("teacherTabs").classList.add("hidden");
+    document.getElementById("studentTabs").classList.remove("hidden");
     document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
     document.getElementById("studenthome").classList.add("active");
     document.getElementById("stuWelcome").textContent="Welcome back, "+currentUser.name+" 👋";
@@ -510,6 +698,7 @@ function initApp(){
   }
 }
 
+// ── CLASS CODES ───────────────────────────────────────────────────────────
 async function generateClassCode(){
   const code=Math.random().toString(36).substring(2,8).toUpperCase();
   const cls={code,teacherEmail:currentUser.email,teacherName:currentUser.name,topic:"",level:""};
@@ -517,16 +706,14 @@ async function generateClassCode(){
   document.getElementById("classCodeDisplay").textContent=code;
   try{await fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)});}catch(e){console.log(e);}
 }
-
 async function loadOrCreateClassCode(){
   const saved=localStorage.getItem("lai_teacher_code_"+currentUser.email);
   if(saved){
     const cls=JSON.parse(saved);
     document.getElementById("classCodeDisplay").textContent=cls.code;
-    try{await fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)});}catch(e){console.log(e);}
+    try{await fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)});}catch(e){}
   } else {generateClassCode();}
 }
-
 async function joinClass(){
   const code=document.getElementById("classCodeInput").value.trim().toUpperCase();
   if(code.length<4){showJoinErr("Enter a valid class code.");return;}
@@ -539,115 +726,63 @@ async function joinClass(){
     showConnectedClass(data.class);
   }catch(e){showJoinErr("Could not connect to server. Try again.");}
 }
-
-function showJoinErr(m){document.getElementById("joinError").textContent=m;document.getElementById("joinError").style.display="block";}
-
+function showJoinErr(m){const el=document.getElementById("joinError");el.textContent=m;el.style.display="block";}
 function disconnectClass(){
   localStorage.removeItem("lai_student_class_"+currentUser.email);
-  document.getElementById("connectBox").classList.remove("hidden");document.getElementById("connectedClassBox").classList.add("hidden");
-  document.getElementById("stuAskArea").classList.add("hidden");document.getElementById("stuNoClass").classList.remove("hidden");
+  document.getElementById("connectBox").classList.remove("hidden");
+  document.getElementById("connectedClassBox").classList.add("hidden");
+  document.getElementById("stuAskArea").classList.add("hidden");
+  document.getElementById("stuNoClass").classList.remove("hidden");
 }
-
 function checkStudentConnection(){
   const saved=localStorage.getItem("lai_student_class_"+currentUser.email);
-  if(saved){showConnectedClass(JSON.parse(saved));}
+  if(saved)showConnectedClass(JSON.parse(saved));
 }
-
 function showConnectedClass(cls){
-  document.getElementById("connectBox").classList.add("hidden");document.getElementById("connectedClassBox").classList.remove("hidden");
-  document.getElementById("stuAskArea").classList.remove("hidden");document.getElementById("stuNoClass").classList.add("hidden");
+  document.getElementById("connectBox").classList.add("hidden");
+  document.getElementById("connectedClassBox").classList.remove("hidden");
+  document.getElementById("stuAskArea").classList.remove("hidden");
+  document.getElementById("stuNoClass").classList.add("hidden");
   document.getElementById("connectedTopic").textContent=cls.topic||"Class in session";
   document.getElementById("connectedTeacher").textContent="Teacher: "+cls.teacherName;
   document.getElementById("joinError").style.display="none";
   buildStudentNotes(cls.topic||"this topic",cls.level||"Intermediate");
   quizTopic=cls.topic||"default";
+  loadStudentAssignments(cls.code);
+  loadStudentTests(cls.code);
 }
-
 function switchStuTab(id){
-  document.querySelectorAll(".stu-tab").forEach((t,i)=>t.classList.toggle("active",["ask","notes","quiz"][i]===id));
+  const tabs=["ask","notes","quiz","stuassign","stutests"];
+  document.querySelectorAll(".stu-tab").forEach((t,i)=>t.classList.toggle("active",tabs[i]===id));
+  tabs.forEach(t=>document.getElementById("stu"+t.charAt(0).toUpperCase()+t.slice(1)||document.getElementById(t)).classList.toggle("hidden",t!==id));
+  // fix IDs
   document.getElementById("stuAsk").classList.toggle("hidden",id!=="ask");
   document.getElementById("stuNotes").classList.toggle("hidden",id!=="notes");
   document.getElementById("stuQuiz").classList.toggle("hidden",id!=="quiz");
+  document.getElementById("stuassign").classList.toggle("hidden",id!=="stuassign");
+  document.getElementById("stutests").classList.toggle("hidden",id!=="stutests");
 }
 
-const SEGMENTS=[
-  {name:"Introduction and Hook",icap:"Active",pct:0.12,desc:(t,s)=>`Open with a compelling real-world question related to "${t}". Use ${s} to immediately engage students.`},
-  {name:"Core Concept Explanation",icap:"Passive",pct:0.35,desc:(t,s)=>`Explain the foundational ideas of "${t}" using layered analogies. Present visual and formal representations.`},
-  {name:"Guided In-Class Activity",icap:"Constructive",pct:0.28,desc:(t,s)=>`Students apply "${t}" to a structured hands-on task. Pairs encouraged to explain reasoning aloud.`},
-  {name:"Peer Discussion and Debate",icap:"Interactive",pct:0.13,desc:(t,s)=>`Pose a conceptual challenge about "${t}". Groups compare answers and defend reasoning.`},
-  {name:"Wrap-Up and Reflection",icap:"Constructive",pct:0.12,desc:(t,s)=>`Summarise key takeaways. Students write a 2-sentence exit ticket about "${t}".`},
-];
-const ANALOGIES=[(t)=>`Beginner: Think of "${t}" like sorting a messy drawer — you create rules before touching anything.`,(t)=>`Visual: Imagine "${t}" as a flowchart where each arrow depends on real data.`,(t)=>`For non-technical students, "${t}" is like a recipe — ingredients, steps, and a quality check.`];
-const ACTIVITIES=[{title:"Think-Pair-Share",icap:"Interactive",prompt:(t)=>`Identify one place where "${t}" would change the result. Discuss with a partner.`},{title:"Error Spotting",icap:"Constructive",prompt:(t)=>`Find the mistake in this incorrect application of "${t}" and explain why it is wrong.`},{title:"Concept Map",icap:"Constructive",prompt:(t)=>`In 5 minutes, sketch how "${t}" connects to two ideas from previous lectures.`}];
-const REFLECTIONS=[(t)=>`What is the single most important idea you learned about "${t}" today?`,(t)=>`Where did you feel confused, and what would help clarify that?`,(t)=>`How might "${t}" appear in a real project you care about?`,(t)=>`What question would you still like to ask about "${t}"?`];
-const PRACTICE=[{diff:"Easy",q:(t)=>`In one sentence define "${t}" in your own words.`,hint:"Focus on what it does, not how it works."},{diff:"Easy",q:(t)=>`Give one real-life example where "${t}" would be useful.`,hint:"Think about everyday decisions that rely on patterns."},{diff:"Medium",q:(t)=>`Explain one advantage and one limitation of "${t}".`,hint:"Consider what assumptions it makes about the data."},{diff:"Medium",q:(t)=>`How would you explain "${t}" to a friend who never studied data science?`,hint:"Use an analogy from everyday life."},{diff:"Hard",q:(t)=>`Design a small experiment to test whether "${t}" performs well. What metrics would you use?`,hint:"Think about what success means for your problem."},{diff:"Hard",q:(t)=>`What ethical concerns might arise when applying "${t}" in hiring or healthcare?`,hint:"Consider bias, transparency, and accountability."}];
-const SRL=["Before studying: What do I already know about this topic?","During study: Am I understanding this, or just reading the words?","After practice: Can I explain this without looking at my notes?","Reflection: What is my study plan for the parts I found difficult?"];
-const RUBRIC_CRITERIA=[{name:"Relevance",desc:"Does output match the topic and stated learning objectives?"},{name:"Clarity",desc:"Is the language understandable for the target student level?"},{name:"Pedagogical Value",desc:"Does it support active / constructive / interactive engagement?"},{name:"Correctness",desc:"Are concepts and examples technically accurate?"},{name:"Usability",desc:"Is the workflow easy and intuitive for instructors?"}];
-
-function badge(icap){const cls={Passive:"passive",Active:"active",Constructive:"constructive",Interactive:"interactive"}[icap]||"active";return `<span class="badge badge-${cls}">${icap}</span>`;}
-
-function buildStudentNotes(topic,level){
-  const lines=["LECTURE NOTES: "+topic,"Level: "+level,"Generated by LectureAI","","OVERVIEW",topic+" is a fundamental concept in data science. It provides a systematic method for analysing data and drawing meaningful conclusions.","","LECTURE STRUCTURE",...SEGMENTS.map((s,i)=>(i+1)+". "+s.name+"\n   "+s.desc(topic,"your approach")),"","ANALOGIES",...ANALOGIES.map(a=>a(topic)),"","REFLECTION QUESTIONS",...REFLECTIONS.map(r=>r(topic)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(topic)+"\n   Hint: "+p.hint),"","STUDY TIPS",...SRL];
-  document.getElementById("notesPreviewBox").textContent=lines.join("\n");
-}
-
-function downloadStudentNotes(){
-  const saved=localStorage.getItem("lai_student_class_"+currentUser.email);
-  if(!saved){alert("Connect to a class first.");return;}
-  const cls=JSON.parse(saved);
-  const text=document.getElementById("notesPreviewBox").textContent;
-  const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(text);a.download="LectureNotes_"+(cls.topic||"topic").replace(/\s+/g,"_")+".txt";a.click();
-  document.getElementById("notesStatus").textContent="Notes downloaded!";
-}
-
-function startQuiz(){
-  const questions=QUIZ_QUESTIONS[quizTopic]||QUIZ_QUESTIONS["default"];
-  quizAnswers={};
-  document.getElementById("quizScoreBox").classList.add("hidden");
-  document.getElementById("quizArea").innerHTML=questions.map((q,i)=>`
-    <div class="quiz-card" id="qcard${i}">
-      <p style="font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">${i+1}. ${q.q}</p>
-      ${q.options.map((o,j)=>`<button class="quiz-option" id="qopt${i}_${j}" onclick="answerQuiz(${i},${j})">${o}</button>`).join("")}
-      <div class="quiz-feedback hidden" id="qfb${i}"></div>
-    </div>`).join("");
-  document.getElementById("startQuizBtn").textContent="Restart Quiz";
-}
-
-function answerQuiz(qi,ai){
-  const questions=QUIZ_QUESTIONS[quizTopic]||QUIZ_QUESTIONS["default"];
-  const q=questions[qi];quizAnswers[qi]=ai;
-  for(let j=0;j<q.options.length;j++){
-    const btn=document.getElementById("qopt"+qi+"_"+j);btn.classList.add("disabled");
-    if(j===q.ans)btn.classList.add("correct");
-    else if(j===ai&&ai!==q.ans)btn.classList.add("wrong");
-  }
-  const fb=document.getElementById("qfb"+qi);fb.classList.remove("hidden");fb.classList.add(ai===q.ans?"pass":"fail");fb.textContent=(ai===q.ans?"Correct! ":"Incorrect. ")+q.exp;
-  if(Object.keys(quizAnswers).length===questions.length){
-    const score=questions.filter((q2,i)=>quizAnswers[i]===q2.ans).length;
-    const pct=Math.round(score/questions.length*100);
-    document.getElementById("quizScoreDisplay").textContent=score+"/"+questions.length;
-    document.getElementById("quizScoreMsg").textContent=pct+"% — "+(pct>=80?"Excellent work!":pct>=60?"Good effort! Review the ones you missed.":"Keep practising — review the explanations above.");
-    document.getElementById("quizScoreBox").classList.remove("hidden");
-  }
-}
-
+// ── TOPIC AUTOCOMPLETE ────────────────────────────────────────────────────
 function handleTopicInput(val){
   const list=document.getElementById("acList");
   if(!val||val.length<1){list.classList.remove("show");return;}
-  const filtered=TOPICS.filter(t=>t.t.toLowerCase().includes(val.toLowerCase())).slice(0,12);
+  const filtered=TOPICS.filter(t=>t.t.toLowerCase().includes(val.toLowerCase())).slice(0,14);
   if(!filtered.length){list.classList.remove("show");return;}
-  list.innerHTML=filtered.map(t=>`<div class="autocomplete-item" onmousedown="selectTopic('${t.t.replace(/'/g,"\\'")}')">${t.t} <span class="autocomplete-cat">${t.c}</span></div>`).join("");
+  list.innerHTML=filtered.map(t=>`<div class="autocomplete-item" onmousedown="selectTopic('${t.t.replace(/'/g,"\\'")}')">${t.t}<span class="autocomplete-cat">${t.c}</span></div>`).join("");
   list.classList.add("show");
 }
-
 function selectTopic(topic){
   document.getElementById("topic").value=topic;closeAC();
-  if(OBJECTIVES_MAP[topic]){document.getElementById("objSuggestions").innerHTML=`<div style="font-size:0.82rem;color:#2d6a4f;font-weight:600;margin-bottom:0.3rem">Suggested objectives for ${topic}:</div><button class="btn-outline" style="font-size:0.82rem;padding:0.4rem 0.8rem;margin-top:0" onclick="useObjectives('${topic.replace(/'/g,"\\'")}')">Use these objectives</button>`;}
-  else{document.getElementById("objSuggestions").innerHTML="";}
+  if(OBJECTIVES_MAP[topic]){
+    document.getElementById("objSuggestions").innerHTML=`<div style="font-size:0.82rem;color:#2d6a4f;font-weight:600;margin-bottom:0.3rem">Suggested objectives:</div><button class="btn-outline" style="font-size:0.82rem;padding:0.4rem 0.8rem;margin-top:0" onclick="useObjectives('${topic.replace(/'/g,"\\'")}')">Use these objectives ✓</button>`;
+  } else {document.getElementById("objSuggestions").innerHTML="";}
 }
-
 function useObjectives(topic){document.getElementById("objectives").value=OBJECTIVES_MAP[topic]||"";document.getElementById("objSuggestions").innerHTML="";}
 function closeAC(){document.getElementById("acList").classList.remove("show");}
+
+// ── LESSON GENERATOR ──────────────────────────────────────────────────────
+function badge(icap){const cls={Passive:"passive",Active:"active",Constructive:"constructive",Interactive:"interactive"}[icap]||"active";return `<span class="badge badge-${cls}">${icap}</span>`;}
 
 function generateLesson(){
   const topic=document.getElementById("topic").value.trim();
@@ -666,96 +801,579 @@ function generateLesson(){
   document.getElementById("mTopic").textContent=topic.length>12?topic.substring(0,12)+"...":topic;
   document.getElementById("mLevel").textContent=level;
   document.getElementById("mDur").textContent=duration+" min";
+  const counts={Passive:0,Active:0,Constructive:0,Interactive:0};
   const outlineEl=document.getElementById("outlineCards");outlineEl.innerHTML="";
-  let counts={Passive:0,Active:0,Constructive:0,Interactive:0};
   SEGMENTS.forEach((seg,i)=>{
-    counts[seg.icap]++;const mins=Math.max(5,Math.round(duration*seg.pct));
+    counts[seg.icap]++;
+    const mins=Math.max(5,Math.round(duration*seg.pct));
     outlineEl.innerHTML+=`<div class="card"><h3>${i+1}. ${seg.name} (${mins} min) ${badge(seg.icap)}</h3><p>${seg.desc(topic,style)}</p><div class="approve-row"><input type="checkbox" id="approve${i}" checked/><label for="approve${i}">Approve this segment</label></div><div class="form-group" style="margin-top:0.5rem"><input placeholder="Add instructor notes..." style="font-size:0.83rem"/></div></div>`;
   });
-  document.getElementById("icapP").textContent=counts.Passive;document.getElementById("icapA").textContent=counts.Active;document.getElementById("icapC").textContent=counts.Constructive;document.getElementById("icapI").textContent=counts.Interactive;
+  document.getElementById("icapP").textContent=counts.Passive;
+  document.getElementById("icapA").textContent=counts.Active;
+  document.getElementById("icapC").textContent=counts.Constructive;
+  document.getElementById("icapI").textContent=counts.Interactive;
   document.getElementById("analogyCards").innerHTML=ANALOGIES.map(a=>`<div class="card"><p>${a(topic)}</p></div>`).join("");
   document.getElementById("activityCards").innerHTML=ACTIVITIES.map(a=>`<div class="card"><h3>${a.title} ${badge(a.icap)}</h3><p>${a.prompt(topic)}</p></div>`).join("");
   document.getElementById("reflectionList").innerHTML="<div class='card'><ul style='padding-left:1.2rem'>"+REFLECTIONS.map(r=>`<li style='margin-bottom:0.4rem;font-size:0.88rem'>${r(topic)}</li>`).join("")+"</ul></div>";
-  document.getElementById("microExp").textContent=topic+" — Plain Language Summary: "+topic+" is the process of taking raw information and applying a systematic method to reach a useful conclusion. Think of it as a recipe: right ingredients (data), right steps (method), and a way to check the result (evaluation). For a "+level.toLowerCase()+"-level student, start with intuition before moving to formulas.";
+  document.getElementById("microExp").textContent=topic+" — Plain Language Summary: "+topic+" is the process of taking raw information and applying a systematic method to reach a useful conclusion. For a "+level.toLowerCase()+"-level student, start with intuition before moving to formulas.";
   document.getElementById("practiceQs").innerHTML=PRACTICE.map(p=>`<div class="q-card"><div class="diff ${p.diff.toLowerCase()}">[${p.diff}]</div><p style="font-size:0.88rem;font-weight:600">${p.q(topic)}</p><p style="font-size:0.8rem;color:#666;margin-top:0.3rem">Hint: ${p.hint}</p></div>`).join("");
   document.getElementById("srlCards").innerHTML=SRL.map(s=>`<div class="card"><p>${s}</p></div>`).join("");
   document.getElementById("rubricRows").innerHTML=RUBRIC_CRITERIA.map((c,i)=>`<div class="rubric-row"><label>${c.name}</label><p style="font-size:0.8rem;color:#777;margin-bottom:0.4rem">${c.desc}</p><input type="range" min="1" max="5" value="3" id="r${i}" oninput="updateScore()"/><small>Score: <b id="rv${i}">3</b>/5</small></div>`).join("");
   updateScore();buildExport();
-  ["planOutput","studentContent","rubricContent","exportContent","liveclassContent","videoContent"].forEach(id=>document.getElementById(id).classList.remove("hidden"));
-  ["noplan1","noplan2","noplan3","noplanLive","noplanVideo"].forEach(id=>document.getElementById(id).classList.add("hidden"));
+  ["planOutput","studentContent","rubricContent","exportContent","liveclassContent","videoContent","assignContent","testsContent"].forEach(id=>document.getElementById(id).classList.remove("hidden"));
+  ["noplan1","noplan2","noplan3","noplanLive","noplanVideo","noplanAssign","noplanTests"].forEach(id=>document.getElementById(id).classList.add("hidden"));
+  loadTeacherAssignments();loadTeacherTests();
 }
 
-async function generateSlides(){
+// ── AI NARRATED SLIDESHOW ─────────────────────────────────────────────────
+async function launchAISlideshow(){
+  if(!currentPlan){alert("Generate a lesson plan first.");return;}
+  document.getElementById("slideshowOverlay").classList.remove("hidden");
+  document.getElementById("slideshowTitle").textContent=currentPlan.topic;
+  document.getElementById("slideLoadingMsg").classList.remove("hidden");
+  document.getElementById("slideContent").classList.add("hidden");
+  document.getElementById("slideControls").style.display="none";
+  loadBrowserVoices();
+  try{
+    const res=await fetch("/generate_slide_content",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level,objectives:currentPlan.objectives,style:currentPlan.style})});
+    const data=await res.json();
+    if(!data.success||!data.slides){throw new Error("Failed");}
+    currentSlides=data.slides;currentSlideIndex=0;
+    document.getElementById("slideLoadingMsg").classList.add("hidden");
+    document.getElementById("slideContent").classList.remove("hidden");
+    document.getElementById("slideControls").style.display="flex";
+    renderSlide(0);
+  }catch(e){
+    document.getElementById("slideLoadingMsg").innerHTML='<div style="color:#e74c3c;font-size:1rem">❌ Could not generate slides. Check server connection.</div>';
+  }
+}
+function renderSlide(idx){
+  if(!currentSlides[idx])return;
+  const slide=currentSlides[idx];
+  document.getElementById("slideTitle").textContent=slide.title||"Slide "+(idx+1);
+  document.getElementById("slideNum").textContent="Slide "+(idx+1)+" of "+currentSlides.length;
+  document.getElementById("slideBullets").innerHTML=(slide.bullets||[]).map(b=>`<li>${b}</li>`).join("");
+  const pct=((idx+1)/currentSlides.length*100).toFixed(0);
+  document.getElementById("progressFill").style.width=pct+"%";
+  if(slide.speakerNote)speakSlideNote(slide.speakerNote);
+}
+function prevSlide(){
+  window.speechSynthesis.cancel();
+  currentSlideIndex=Math.max(0,currentSlideIndex-1);renderSlide(currentSlideIndex);
+}
+function nextSlide(){
+  window.speechSynthesis.cancel();
+  if(currentSlideIndex<currentSlides.length-1){currentSlideIndex++;renderSlide(currentSlideIndex);}
+  else{stopAutoPlay();document.getElementById("speakingBadge").textContent="✅ Done";document.getElementById("speakingBadge").className="speaking-badge idle";}
+}
+function toggleAutoPlay(){
+  if(isAutoPlay){stopAutoPlay();}else{startAutoPlay();}
+}
+function startAutoPlay(){
+  isAutoPlay=true;document.getElementById("autoPlayBtn").textContent="⏸ Pause";
+}
+function stopAutoPlay(){
+  isAutoPlay=false;document.getElementById("autoPlayBtn").textContent="▶ Auto-play";
+  if(autoPlayTimer){clearTimeout(autoPlayTimer);autoPlayTimer=null;}
+}
+function closeSlideshow(){
+  window.speechSynthesis.cancel();stopAutoPlay();
+  document.getElementById("slideshowOverlay").classList.add("hidden");
+}
+function speakSlideNote(text){
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  const badge=document.getElementById("speakingBadge");
+  badge.textContent="🔊 Speaking...";badge.className="speaking-badge";
+  const u=new SpeechSynthesisUtterance(text);
+  u.pitch=selectedVoiceChar.pitch;u.rate=selectedVoiceChar.rate;
+  if(selectedBrowserVoice)u.voice=selectedBrowserVoice;
+  u.onend=()=>{
+    badge.textContent="⏸ Done";badge.className="speaking-badge idle";
+    if(isAutoPlay){autoPlayTimer=setTimeout(()=>nextSlide(),1500);}
+  };
+  window.speechSynthesis.speak(u);
+}
+function loadBrowserVoices(){
+  const sel=document.getElementById("voiceSelect");
+  const populate=()=>{
+    availableBrowserVoices=window.speechSynthesis.getVoices();
+    sel.innerHTML=availableBrowserVoices.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join("");
+    sel.onchange=()=>{selectedBrowserVoice=availableBrowserVoices[parseInt(sel.value)]||null;};
+    // pick a default English voice
+    const defIdx=availableBrowserVoices.findIndex(v=>v.lang.startsWith("en"));
+    if(defIdx>=0){sel.value=defIdx;selectedBrowserVoice=availableBrowserVoices[defIdx];}
+  };
+  if(window.speechSynthesis.getVoices().length)populate();
+  else window.speechSynthesis.onvoiceschanged=populate;
+}
+
+async function generateSlides(withAI=false){
   if(!currentPlan){alert("Generate a lesson plan first.");return;}
   const btn=document.getElementById("slidesBtn");const status=document.getElementById("slidesStatus");
-  btn.disabled=true;btn.textContent="Generating...";status.textContent="About 10 seconds...";
+  btn.disabled=true;btn.textContent="Generating...";status.textContent="About 15 seconds...";
   try{
-    const res=await fetch("/generate_slides",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(currentPlan)});
+    let slidesData=[];
+    if(withAI){
+      const res2=await fetch("/generate_slide_content",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level,objectives:currentPlan.objectives,style:currentPlan.style})});
+      const d2=await res2.json();if(d2.success)slidesData=d2.slides;
+    }
+    const res=await fetch("/generate_slides",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...currentPlan,slidesData})});
     if(!res.ok)throw new Error("Server error");
     const blob=await res.blob();const url=URL.createObjectURL(blob);
     const a=document.createElement("a");a.href=url;a.download="LectureAI_"+currentPlan.topic.replace(/\s+/g,"_")+".pptx";a.click();
-    status.textContent="Slides downloaded!";
-  }catch(e){status.textContent="Could not generate slides.";}
-  finally{btn.disabled=false;btn.textContent="Download Slides (.pptx)";}
+    status.textContent="✅ Slides downloaded!";
+  }catch(e){status.textContent="❌ Could not generate slides.";}
+  finally{btn.disabled=false;btn.textContent="📊 Download PowerPoint";}
 }
 
+// ── ASSIGNMENTS (TEACHER) ────────────────────────────────────────────────
+function getClassCode(){
+  const saved=localStorage.getItem("lai_teacher_code_"+currentUser.email);
+  return saved?JSON.parse(saved).code:"";
+}
+async function createAssignment(){
+  const title=document.getElementById("assignTitle").value.trim();
+  const desc=document.getElementById("assignDesc").value.trim();
+  const due=document.getElementById("assignDue").value;
+  const max=document.getElementById("assignMax").value;
+  if(!title||!desc){alert("Fill in title and description.");return;}
+  const code=getClassCode();
+  try{
+    const res=await fetch("/create_assignment",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({classCode:code,teacherEmail:currentUser.email,title,description:desc,dueDate:due,maxScore:max})});
+    const data=await res.json();
+    if(data.success){
+      document.getElementById("assignTitle").value="";document.getElementById("assignDesc").value="";
+      document.getElementById("assignDue").value="";document.getElementById("assignMax").value="100";
+      loadTeacherAssignments();
+    }
+  }catch(e){alert("Could not save assignment.");}
+}
+async function loadTeacherAssignments(){
+  const code=getClassCode();if(!code)return;
+  try{
+    const res=await fetch("/get_assignments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:code})});
+    const data=await res.json();
+    const el=document.getElementById("assignList");
+    if(!data.assignments||!data.assignments.length){el.innerHTML='<div class="info-box">No assignments posted yet.</div>';return;}
+    el.innerHTML=data.assignments.map(a=>`
+      <div class="assign-card">
+        <h3>${a.title}</h3>
+        <div class="meta">Due: ${a.due_date||"No deadline"} · Max score: ${a.max_score}</div>
+        <p style="font-size:0.85rem;color:#444">${a.description}</p>
+        <div class="actions">
+          <button class="btn-sm" onclick="viewSubmissions('${a.id}','${a.title.replace(/'/g,"\\'")}','${a.max_score}')">📥 View Submissions</button>
+          <button class="btn-red" onclick="deleteAssignment('${a.id}')">🗑️ Delete</button>
+        </div>
+        <div id="subs_${a.id}" class="hidden" style="margin-top:0.8rem"></div>
+      </div>`).join("");
+  }catch(e){}
+}
+async function viewSubmissions(aid,title,maxScore){
+  const el=document.getElementById("subs_"+aid);
+  el.classList.toggle("hidden");
+  if(el.classList.contains("hidden"))return;
+  el.innerHTML='<div style="font-size:0.85rem;color:#888">Loading...</div>';
+  try{
+    const res=await fetch("/get_submissions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assignmentId:aid})});
+    const data=await res.json();
+    if(!data.submissions||!data.submissions.length){el.innerHTML='<div style="font-size:0.85rem;color:#888">No submissions yet.</div>';return;}
+    el.innerHTML=`<div style="font-weight:600;font-size:0.9rem;margin-bottom:0.5rem">Submissions for: ${title}</div>`+
+      data.submissions.map(s=>`
+        <div class="submission-card">
+          <div class="stu-name">${s.student_name} <span style="color:#888;font-weight:400;font-size:0.8rem">· ${s.submitted_at}</span></div>
+          <div class="stu-content">${s.content}</div>
+          <div class="grade-row">
+            <input type="number" id="score_${s.id}" placeholder="Score" min="0" max="${maxScore}" style="width:80px" value="${s.score>=0?s.score:''}"/>
+            <span style="font-size:0.85rem;color:#888">/ ${maxScore}</span>
+            <input placeholder="Feedback (optional)" id="feedback_${s.id}" style="flex:1"/>
+            <button class="btn-sm" onclick="gradeSubmission('${s.id}','${aid}')">Save Grade</button>
+          </div>
+          ${s.score>=0?`<div style="font-size:0.82rem;margin-top:0.3rem;color:#1a6640">✅ Graded: ${s.score}/${maxScore}</div>`:""}
+        </div>`).join("");
+  }catch(e){el.innerHTML='<div style="color:#e74c3c;font-size:0.85rem">Could not load submissions.</div>';}
+}
+async function gradeSubmission(subId,aid){
+  const score=document.getElementById("score_"+subId).value;
+  const feedback=document.getElementById("feedback_"+subId).value;
+  if(score===""){alert("Enter a score.");return;}
+  try{
+    await fetch("/grade_submission",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({submissionId:subId,score:parseInt(score),feedback})});
+    alert("Grade saved!");viewSubmissions(aid,"",100);
+  }catch(e){alert("Could not save grade.");}
+}
+async function deleteAssignment(aid){
+  if(!confirm("Delete this assignment and all submissions?"))return;
+  try{
+    await fetch("/delete_assignment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:aid})});
+    loadTeacherAssignments();
+  }catch(e){}
+}
+
+// ── TESTS (TEACHER) ────────────────────────────────────────────────────────
+function addTestQuestion(){
+  testQCount++;
+  const qid=testQCount;
+  const el=document.getElementById("testQuestions");
+  el.innerHTML+=`
+    <div class="q-item" id="tq_${qid}">
+      <div class="q-num">Question ${qid}</div>
+      <div class="form-group"><label>Question Text</label><input id="qtxt_${qid}" placeholder="e.g. What does R-squared measure?"/></div>
+      <div class="form-group"><label>Option A</label><input id="qopt_${qid}_0" placeholder="Option A"/></div>
+      <div class="form-group"><label>Option B</label><input id="qopt_${qid}_1" placeholder="Option B"/></div>
+      <div class="form-group"><label>Option C</label><input id="qopt_${qid}_2" placeholder="Option C"/></div>
+      <div class="form-group"><label>Option D</label><input id="qopt_${qid}_3" placeholder="Option D"/></div>
+      <div class="form-group"><label>Correct Answer</label>
+        <select id="qans_${qid}"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select>
+      </div>
+      <button class="btn-red" onclick="document.getElementById('tq_${qid}').remove()" style="width:auto">Remove</button>
+    </div>`;
+}
+async function publishTest(){
+  const title=document.getElementById("testTitle").value.trim();
+  const timeLimit=parseInt(document.getElementById("testTimeLimit").value)||0;
+  if(!title){alert("Enter a test title.");return;}
+  const questions=[];
+  document.querySelectorAll("[id^='qtxt_']").forEach(el=>{
+    const qid=el.id.split("_")[1];
+    const q=el.value.trim();if(!q)return;
+    const opts=[0,1,2,3].map(i=>document.getElementById(`qopt_${qid}_${i}`).value.trim());
+    const ans=parseInt(document.getElementById(`qans_${qid}`).value);
+    questions.push({q,options:opts,ans});
+  });
+  if(!questions.length){alert("Add at least one question.");return;}
+  const code=getClassCode();
+  try{
+    const res=await fetch("/create_test",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({classCode:code,teacherEmail:currentUser.email,title,questions,timeLimit})});
+    const data=await res.json();
+    if(data.success){
+      document.getElementById("testTitle").value="";document.getElementById("testQuestions").innerHTML="";testQCount=0;
+      loadTeacherTests();alert("Test published!");
+    }
+  }catch(e){alert("Could not publish test.");}
+}
+async function loadTeacherTests(){
+  const code=getClassCode();if(!code)return;
+  try{
+    const res=await fetch("/get_tests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:code})});
+    const data=await res.json();
+    const el=document.getElementById("testList");
+    if(!data.tests||!data.tests.length){el.innerHTML='<div class="info-box">No tests published yet.</div>';return;}
+    el.innerHTML=data.tests.map(t=>`
+      <div class="test-card">
+        <h3>${t.title}</h3>
+        <div class="meta">${t.questions.length} questions · ${t.time_limit?t.time_limit+" min limit":"No time limit"} · ${t.created_at}</div>
+        <div class="actions" style="display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap">
+          <button class="btn-sm" onclick="viewTestResults('${t.id}','${t.title.replace(/'/g,"\\'")}')">📊 View Results</button>
+          <button class="btn-red" onclick="deleteTest('${t.id}')">🗑️ Delete</button>
+        </div>
+        <div id="tres_${t.id}" class="hidden" style="margin-top:0.8rem"></div>
+      </div>`).join("");
+  }catch(e){}
+}
+async function viewTestResults(tid,title){
+  const el=document.getElementById("tres_"+tid);
+  el.classList.toggle("hidden");if(el.classList.contains("hidden"))return;
+  el.innerHTML='<div style="font-size:0.85rem;color:#888">Loading results...</div>';
+  try{
+    const res=await fetch("/get_test_results",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({testId:tid})});
+    const data=await res.json();
+    if(!data.results||!data.results.length){el.innerHTML='<div style="font-size:0.85rem;color:#888">No submissions yet.</div>';return;}
+    el.innerHTML=`<div style="font-weight:600;font-size:0.9rem;margin-bottom:0.5rem">Results: ${title}</div>
+      <table class="results-table">
+        <tr><th>Student</th><th>Score</th><th>%</th><th>Submitted</th></tr>
+        ${data.results.map(r=>`<tr><td>${r.student_name}</td><td>${r.score}/${r.total}</td><td>${Math.round(r.score/r.total*100)}%</td><td>${r.submitted_at}</td></tr>`).join("")}
+      </table>`;
+  }catch(e){el.innerHTML='<div style="color:#e74c3c;font-size:0.85rem">Could not load results.</div>';}
+}
+async function deleteTest(tid){
+  if(!confirm("Delete this test and all results?"))return;
+  try{
+    await fetch("/delete_test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:tid})});
+    loadTeacherTests();
+  }catch(e){}
+}
+
+// ── ASSIGNMENTS (STUDENT) ─────────────────────────────────────────────────
+async function loadStudentAssignments(classCode){
+  try{
+    const res=await fetch("/get_assignments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode})});
+    const data=await res.json();
+    const el=document.getElementById("stuAssignList");
+    if(!data.assignments||!data.assignments.length){el.innerHTML='<div class="info-box">No assignments posted yet.</div>';return;}
+    el.innerHTML=data.assignments.map(a=>`
+      <div class="assign-card">
+        <h3>${a.title}</h3>
+        <div class="meta">Due: ${a.due_date||"No deadline"} · Max score: ${a.max_score}</div>
+        <p style="font-size:0.85rem;color:#444;margin-bottom:0.7rem">${a.description}</p>
+        <div id="mysub_${a.id}"></div>
+        <textarea id="subContent_${a.id}" rows="4" placeholder="Type your answer or work here..."></textarea>
+        <button class="btn" onclick="submitAssignment('${a.id}','${classCode}')" style="margin-top:0.5rem">📤 Submit</button>
+        <div id="subStatus_${a.id}" style="font-size:0.85rem;margin-top:0.4rem"></div>
+      </div>`).join("");
+    // load existing submissions
+    data.assignments.forEach(a=>loadMySubmission(a.id));
+  }catch(e){document.getElementById("stuAssignList").innerHTML='<div class="info-box">Could not load assignments.</div>';}
+}
+async function loadMySubmission(aid){
+  try{
+    const res=await fetch("/get_my_submission",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({assignmentId:aid,studentEmail:currentUser.email})});
+    const data=await res.json();
+    if(data.submission){
+      const el=document.getElementById("mysub_"+aid);
+      const s=data.submission;
+      el.innerHTML=`<div style="background:#f0faf4;border:1px solid #74c69d;border-radius:8px;padding:0.7rem;margin-bottom:0.6rem;font-size:0.85rem">
+        ✅ Submitted · ${s.submitted_at}
+        ${s.score>=0?`<br>📊 Score: <strong>${s.score}</strong>${s.feedback?`<br>💬 Feedback: ${s.feedback}`:""}`:"<br>⏳ Awaiting grade"}
+      </div>`;
+      const ta=document.getElementById("subContent_"+aid);
+      if(ta)ta.value=s.content;
+    }
+  }catch(e){}
+}
+async function submitAssignment(aid,classCode){
+  const content=document.getElementById("subContent_"+aid).value.trim();
+  if(!content){alert("Write your answer first.");return;}
+  const status=document.getElementById("subStatus_"+aid);
+  status.textContent="Submitting...";
+  try{
+    const res=await fetch("/submit_assignment",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({assignmentId:aid,classCode,studentEmail:currentUser.email,studentName:currentUser.name,content})});
+    const data=await res.json();
+    if(data.success){status.textContent="✅ Submitted successfully!";status.style.color="#1a6640";loadMySubmission(aid);}
+    else{status.textContent="❌ "+data.error;status.style.color="#e74c3c";}
+  }catch(e){status.textContent="❌ Could not submit.";status.style.color="#e74c3c";}
+}
+
+// ── TESTS (STUDENT) ────────────────────────────────────────────────────────
+let activeTestData=null, activeTestAnswers={}, testTimer=null;
+async function loadStudentTests(classCode){
+  try{
+    const res=await fetch("/get_tests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode})});
+    const data=await res.json();
+    const el=document.getElementById("stuTestList");
+    if(!data.tests||!data.tests.length){el.innerHTML='<div class="info-box">No tests available yet.</div>';return;}
+    el.innerHTML=data.tests.map(t=>`
+      <div class="test-card">
+        <h3>${t.title}</h3>
+        <div class="meta">${t.questions.length} questions · ${t.time_limit?t.time_limit+" min limit":"No time limit"}</div>
+        <div id="myresult_${t.id}"></div>
+        <button class="btn" onclick="startStudentTest('${t.id}')" style="margin-top:0.6rem">▶ Start Test</button>
+      </div>
+      <div id="testArea_${t.id}" class="hidden"></div>`).join("");
+    data.tests.forEach(t=>loadMyTestResult(t.id));
+    // store tests data for later
+    window._stuTests=data.tests;
+  }catch(e){document.getElementById("stuTestList").innerHTML='<div class="info-box">Could not load tests.</div>';}
+}
+async function loadMyTestResult(tid){
+  try{
+    const res=await fetch("/get_my_test_result",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({testId:tid,studentEmail:currentUser.email})});
+    const data=await res.json();
+    if(data.result){
+      const el=document.getElementById("myresult_"+tid);
+      if(el)el.innerHTML=`<div style="background:#f0faf4;border:1px solid #74c69d;border-radius:8px;padding:0.7rem;font-size:0.85rem;margin:0.4rem 0">
+        ✅ Completed · Score: <strong>${data.result.score}/${data.result.total}</strong> · ${Math.round(data.result.score/data.result.total*100)}%</div>`;
+    }
+  }catch(e){}
+}
+async function startStudentTest(tid){
+  const test=window._stuTests&&window._stuTests.find(t=>t.id===tid);
+  if(!test)return;
+  const saved=localStorage.getItem("lai_student_class_"+currentUser.email);
+  const cls=saved?JSON.parse(saved):{code:""};
+  activeTestData={...test,classCode:cls.code};activeTestAnswers={};
+  const area=document.getElementById("testArea_"+tid);
+  area.classList.remove("hidden");
+  area.innerHTML=`
+    <div style="background:white;border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-top:-0.5rem;border-left:4px solid #8e44ad">
+      <div style="font-weight:700;font-size:1rem;margin-bottom:1rem;color:#8e44ad">${test.title}</div>
+      ${test.time_limit>0?`<div id="timerDisp_${tid}" style="font-size:0.88rem;color:#e74c3c;font-weight:600;margin-bottom:0.8rem">⏱ ${test.time_limit}:00 remaining</div>`:""}
+      ${test.questions.map((q,i)=>`
+        <div class="quiz-card" id="stq_${tid}_${i}">
+          <p style="font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">${i+1}. ${q.q}</p>
+          ${q.options.map((o,j)=>`<button class="quiz-option" id="stopt_${tid}_${i}_${j}" onclick="selectTestAnswer('${tid}',${i},${j})">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}
+        </div>`).join("")}
+      <button class="btn-purple" onclick="submitStudentTest('${tid}')" style="margin-top:0.5rem">📤 Submit Test</button>
+    </div>`;
+  if(test.time_limit>0)startTestTimer(tid,test.time_limit);
+}
+function selectTestAnswer(tid,qi,ai){
+  activeTestAnswers[qi]=ai;
+  const qs=activeTestData.questions;
+  for(let j=0;j<qs[qi].options.length;j++){
+    const btn=document.getElementById(`stopt_${tid}_${qi}_${j}`);
+    if(btn){btn.classList.remove("correct","wrong");btn.style.borderColor=j===ai?"#2d6a4f":"#ddd";btn.style.background=j===ai?"#f0faf4":"white";}
+  }
+}
+function startTestTimer(tid,minutes){
+  let seconds=minutes*60;
+  const disp=document.getElementById("timerDisp_"+tid);
+  testTimer=setInterval(()=>{
+    seconds--;
+    const m=Math.floor(seconds/60),s=seconds%60;
+    if(disp)disp.textContent=`⏱ ${m}:${s.toString().padStart(2,"0")} remaining`;
+    if(seconds<=0){clearInterval(testTimer);submitStudentTest(tid);}
+  },1000);
+}
+async function submitStudentTest(tid){
+  if(testTimer){clearInterval(testTimer);testTimer=null;}
+  const test=activeTestData;
+  if(!test)return;
+  const unanswered=test.questions.length-Object.keys(activeTestAnswers).length;
+  if(unanswered>0&&!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`))return;
+  const cls=localStorage.getItem("lai_student_class_"+currentUser.email);
+  const classCode=cls?JSON.parse(cls).code:"";
+  try{
+    const res=await fetch("/submit_test",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({testId:tid,classCode,studentEmail:currentUser.email,studentName:currentUser.name,answers:activeTestAnswers,questions:test.questions})});
+    const data=await res.json();
+    if(data.success){
+      const area=document.getElementById("testArea_"+tid);
+      const pct=Math.round(data.score/data.total*100);
+      area.innerHTML=`<div class="quiz-score" style="margin-top:0">
+        <div class="big">${data.score}/${data.total}</div>
+        <div style="font-size:1rem;color:#555;margin-top:0.3rem">${pct}% — ${pct>=80?"Excellent! 🌟":pct>=60?"Good effort! 👍":"Keep practising 📚"}</div>
+      </div>`;
+      loadMyTestResult(tid);
+    } else {alert(data.error||"Could not submit.");}
+  }catch(e){alert("Could not submit test.");}
+}
+
+// ── STUDENT QUIZ ──────────────────────────────────────────────────────────
+function startQuiz(){
+  const questions=QUIZ_QUESTIONS[quizTopic]||QUIZ_QUESTIONS["default"];
+  quizAnswers={};
+  document.getElementById("quizScoreBox").classList.add("hidden");
+  document.getElementById("quizArea").innerHTML=questions.map((q,i)=>`
+    <div class="quiz-card" id="qcard${i}">
+      <p style="font-weight:600;font-size:0.95rem;margin-bottom:0.8rem">${i+1}. ${q.q}</p>
+      ${q.options.map((o,j)=>`<button class="quiz-option" id="qopt${i}_${j}" onclick="answerQuiz(${i},${j})">${o}</button>`).join("")}
+      <div class="quiz-feedback hidden" id="qfb${i}"></div>
+    </div>`).join("");
+  document.getElementById("startQuizBtn").textContent="Restart Quiz";
+}
+function answerQuiz(qi,ai){
+  const questions=QUIZ_QUESTIONS[quizTopic]||QUIZ_QUESTIONS["default"];
+  const q=questions[qi];quizAnswers[qi]=ai;
+  for(let j=0;j<q.options.length;j++){
+    const btn=document.getElementById(`qopt${qi}_${j}`);btn.classList.add("disabled");
+    if(j===q.ans)btn.classList.add("correct");
+    else if(j===ai&&ai!==q.ans)btn.classList.add("wrong");
+  }
+  const fb=document.getElementById(`qfb${qi}`);fb.classList.remove("hidden");
+  fb.classList.add(ai===q.ans?"pass":"fail");
+  fb.textContent=(ai===q.ans?"✅ Correct! ":"❌ Incorrect. ")+q.exp;
+  if(Object.keys(quizAnswers).length===questions.length){
+    const score=questions.filter((q2,i)=>quizAnswers[i]===q2.ans).length;
+    const pct=Math.round(score/questions.length*100);
+    document.getElementById("quizScoreDisplay").textContent=score+"/"+questions.length;
+    document.getElementById("quizScoreMsg").textContent=pct+"% — "+(pct>=80?"Excellent work! 🌟":pct>=60?"Good effort! Review the ones you missed.":"Keep practising — review the explanations above.");
+    document.getElementById("quizScoreBox").classList.remove("hidden");
+  }
+}
+
+// ── NOTES ────────────────────────────────────────────────────────────────
+function buildStudentNotes(topic,level){
+  const lines=["LECTURE NOTES: "+topic,"Level: "+level,"Generated by LectureAI","","OVERVIEW",topic+" is a fundamental concept. It provides a systematic method for analysing information and drawing meaningful conclusions.","","LECTURE STRUCTURE",...SEGMENTS.map((s,i)=>(i+1)+". "+s.name+"\n   "+s.desc(topic,"your approach")),"","ANALOGIES",...ANALOGIES.map(a=>a(topic)),"","REFLECTION QUESTIONS",...REFLECTIONS.map(r=>r(topic)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(topic)+"\n   Hint: "+p.hint),"","STUDY TIPS",...SRL];
+  document.getElementById("notesPreviewBox").textContent=lines.join("\n");
+}
+function downloadStudentNotes(){
+  const saved=localStorage.getItem("lai_student_class_"+currentUser.email);
+  if(!saved){alert("Connect to a class first.");return;}
+  const cls=JSON.parse(saved);
+  const text=document.getElementById("notesPreviewBox").textContent;
+  const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(text);
+  a.download="LectureNotes_"+(cls.topic||"topic").replace(/\s+/g,"_")+".txt";a.click();
+  document.getElementById("notesStatus").textContent="✅ Notes downloaded!";
+}
+
+// ── LIVE TOOLS ────────────────────────────────────────────────────────────
+function setResult(id,text,speakId){document.getElementById(id).textContent=text;if(speakId)document.getElementById(speakId).classList.remove("hidden");}
+function setLoading(id){document.getElementById(id).innerHTML='<span class="loading">Thinking...</span>';}
+
+async function handleTeacherQuestion(){
+  const q=document.getElementById("teacherQ").value.trim();if(!q){alert("Type a question.");return;}
+  setLoading("teacherQResult");
+  try{const r=await fetch("/layer2/question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setResult("teacherQResult",d.result||d.error,"speakTeacherQ");}
+  catch(e){setResult("teacherQResult","Could not reach server.","speakTeacherQ");}
+}
+async function handleConfusion(){
+  const c=document.getElementById("confusionInput").value.trim();if(!c){alert("Describe the confusion.");return;}
+  setLoading("confusionResult");
+  try{const r=await fetch("/layer2/confusion",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({confusion:c,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setResult("confusionResult",d.result||d.error,"speakConfusion");}
+  catch(e){setResult("confusionResult","Could not reach server.","speakConfusion");}
+}
+async function handleConceptCheck(){
+  const q=document.getElementById("conceptQ").value.trim();const pct=document.getElementById("correctPct").value;
+  if(!q){alert("Type the question you asked.");return;}
+  setLoading("conceptResult");
+  try{const r=await fetch("/layer2/conceptcheck",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,correct_pct:pct,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setResult("conceptResult",d.result||d.error,"speakConcept");}
+  catch(e){setResult("conceptResult","Could not reach server.","speakConcept");}
+}
+async function handlePacing(){
+  const mins=document.getElementById("minsElapsed").value;const seg=document.getElementById("currentSeg").value.trim();
+  if(!mins||!seg){alert("Fill in both fields.");return;}
+  setLoading("pacingResult");
+  try{const r=await fetch("/layer2/pacing",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mins_elapsed:mins,current_segment:seg,topic:currentPlan.topic,level:currentPlan.level,total_duration:currentPlan.duration})});const d=await r.json();setResult("pacingResult",d.result||d.error,"speakPacing");}
+  catch(e){setResult("pacingResult","Could not reach server.","speakPacing");}
+}
+async function handleStudentQuestion(){
+  const question=document.getElementById("stuQuestion").value.trim();if(!question){alert("Type your question.");return;}
+  const saved=localStorage.getItem("lai_student_class_"+currentUser.email);if(!saved){alert("Connect to a class first.");return;}
+  const cls=JSON.parse(saved);setLoading("stuQuestionResult");
+  try{
+    const res=await fetch("/layer2/student_question",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({question,name:currentUser.name,age:currentUser.age||"unknown",year:currentUser.year||"unknown",background:currentUser.background||"unknown",topic:cls.topic||"the current topic",level:cls.level||"Intermediate"})});
+    const data=await res.json();const answer=data.result||data.error;
+    setResult("stuQuestionResult",answer,"speakStuQ");
+    const reports=getReports();reports.push({classCode:cls.code,teacherEmail:cls.teacherEmail,studentName:currentUser.name,question,answer,timestamp:new Date().toLocaleString()});
+    saveReports(reports);
+  }catch(e){setResult("stuQuestionResult","Could not reach server.","speakStuQ");}
+}
+
+// ── VOICE ─────────────────────────────────────────────────────────────────
+let activeRecognition=null;
+function startVoice(targetId){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert("Voice not supported. Try Chrome.");return;}
+  if(activeRecognition){activeRecognition.stop();activeRecognition=null;return;}
+  const r=new SR();r.lang="en-US";r.interimResults=false;r.maxAlternatives=1;activeRecognition=r;
+  document.querySelectorAll(".voice-btn").forEach(b=>{if(b.getAttribute("onclick")==="startVoice('"+targetId+"')"){b.classList.add("listening");b.textContent="🎤 Listening...";}});
+  r.onresult=(e)=>{document.getElementById(targetId).value=e.results[0][0].transcript;};
+  r.onend=()=>{document.querySelectorAll(".voice-btn").forEach(b=>{b.classList.remove("listening");if(b.getAttribute("onclick")==="startVoice('"+targetId+"')")b.textContent="🎤 Speak";});activeRecognition=null;};
+  r.start();
+}
+function speakText(id){
+  const text=document.getElementById(id).textContent;if(!text||!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.pitch=selectedVoiceChar.pitch;u.rate=selectedVoiceChar.rate;
+  if(selectedBrowserVoice)u.voice=selectedBrowserVoice;
+  window.speechSynthesis.speak(u);
+}
+
+// ── VIDEO SCRIPT ──────────────────────────────────────────────────────────
 async function generateVideoScript(){
   if(!currentPlan){alert("Generate a lesson plan first.");return;}
   const btn=document.getElementById("videoBtn");const status=document.getElementById("videoStatus");
   btn.disabled=true;btn.textContent="Writing script...";status.textContent="Generating...";
   try{
     const res=await fetch("/generate_video_script",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level})});
-    const data=await res.json();const box=document.getElementById("scriptBox");box.textContent=data.result||data.error;box.classList.remove("hidden");
-    document.getElementById("copyScriptBtn").classList.remove("hidden");status.textContent="Script ready!";
-  }catch(e){status.textContent="Could not generate script.";}
-  finally{btn.disabled=false;btn.textContent="Generate Video Script";}
+    const data=await res.json();
+    const box=document.getElementById("scriptBox");box.textContent=data.result||data.error;
+    box.classList.remove("hidden");document.getElementById("copyScriptBtn").classList.remove("hidden");status.textContent="✅ Script ready!";
+  }catch(e){status.textContent="❌ Could not generate script.";}
+  finally{btn.disabled=false;btn.textContent="🎬 Generate Video Script";}
 }
-
 function copyScript(){navigator.clipboard.writeText(document.getElementById("scriptBox").textContent).then(()=>alert("Script copied!"));}
 
-function setResult(id,text,speakId){document.getElementById(id).textContent=text;if(speakId)document.getElementById(speakId).classList.remove("hidden");}
-function setLoading(id){document.getElementById(id).innerHTML='<span class="loading">Thinking...</span>';}
-
-async function handleTeacherQuestion(){
-  if(!currentPlan){alert("Generate a lesson plan first.");return;}
-  const q=document.getElementById("teacherQ").value.trim();if(!q){alert("Type a question.");return;}
-  setLoading("teacherQResult");
-  try{const res=await fetch("/layer2/question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,topic:currentPlan.topic,level:currentPlan.level})});const data=await res.json();setResult("teacherQResult",data.result||data.error,"speakTeacherQ");}catch(e){setResult("teacherQResult","Could not reach server.","speakTeacherQ");}
-}
-
-async function handleConfusion(){
-  if(!currentPlan){alert("Generate a lesson plan first.");return;}
-  const c=document.getElementById("confusionInput").value.trim();if(!c){alert("Describe the confusion.");return;}
-  setLoading("confusionResult");
-  try{const res=await fetch("/layer2/confusion",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({confusion:c,topic:currentPlan.topic,level:currentPlan.level})});const data=await res.json();setResult("confusionResult",data.result||data.error,"speakConfusion");}catch(e){setResult("confusionResult","Could not reach server.","speakConfusion");}
-}
-
-async function handleConceptCheck(){
-  if(!currentPlan){alert("Generate a lesson plan first.");return;}
-  const q=document.getElementById("conceptQ").value.trim();const pct=document.getElementById("correctPct").value;if(!q){alert("Type the question you asked.");return;}
-  setLoading("conceptResult");
-  try{const res=await fetch("/layer2/conceptcheck",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,correct_pct:pct,topic:currentPlan.topic,level:currentPlan.level})});const data=await res.json();setResult("conceptResult",data.result||data.error,"speakConcept");}catch(e){setResult("conceptResult","Could not reach server.","speakConcept");}
-}
-
-async function handlePacing(){
-  if(!currentPlan){alert("Generate a lesson plan first.");return;}
-  const mins=document.getElementById("minsElapsed").value;const seg=document.getElementById("currentSeg").value.trim();if(!mins||!seg){alert("Fill in both fields.");return;}
-  setLoading("pacingResult");
-  try{const res=await fetch("/layer2/pacing",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mins_elapsed:mins,current_segment:seg,topic:currentPlan.topic,level:currentPlan.level,total_duration:currentPlan.duration})});const data=await res.json();setResult("pacingResult",data.result||data.error,"speakPacing");}catch(e){setResult("pacingResult","Could not reach server.","speakPacing");}
-}
-
-async function handleStudentQuestion(){
-  const question=document.getElementById("stuQuestion").value.trim();if(!question){alert("Type your question.");return;}
-  const saved=localStorage.getItem("lai_student_class_"+currentUser.email);if(!saved){alert("Connect to a class first.");return;}
-  const cls=JSON.parse(saved);setLoading("stuQuestionResult");
-  try{
-    const res=await fetch("/layer2/student_question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question,name:currentUser.name,age:currentUser.age||"unknown",year:currentUser.year||"unknown",background:currentUser.background||"unknown",topic:cls.topic||"the current topic",level:cls.level||"Intermediate"})});
-    const data=await res.json();const answer=data.result||data.error;
-    setResult("stuQuestionResult",answer,"speakStuQ");
-    const reports=getReports();reports.push({classCode:cls.code,teacherEmail:cls.teacherEmail,studentName:currentUser.name,question,answer,timestamp:new Date().toLocaleString()});saveReports(reports);
-  }catch(e){setResult("stuQuestionResult","Could not reach server.","speakStuQ");}
-}
-
+// ── REPORTS ───────────────────────────────────────────────────────────────
 function loadReports(){
   const saved=localStorage.getItem("lai_teacher_code_"+currentUser.email);if(!saved)return;
   const code=JSON.parse(saved).code;
@@ -765,50 +1383,38 @@ function loadReports(){
   empty.classList.add("hidden");
   list.innerHTML=reports.map(r=>`<div class="report-card"><div class="who">${r.studentName} · ${r.timestamp}</div><div class="what">"${r.question}"</div><div style="font-size:0.82rem;color:#555;margin-top:0.4rem;line-height:1.5">${r.answer.substring(0,200)}${r.answer.length>200?"...":""}</div></div>`).join("");
 }
-
 function clearReports(){
   if(!confirm("Clear all student reports?"))return;
   const saved=localStorage.getItem("lai_teacher_code_"+currentUser.email);if(!saved)return;
   saveReports(getReports().filter(r=>r.classCode!==JSON.parse(saved).code));loadReports();
 }
 
-let activeRecognition=null;
-function startVoice(targetId){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert("Voice not supported. Try Chrome.");return;}
-  if(activeRecognition){activeRecognition.stop();activeRecognition=null;return;}
-  const r=new SR();r.lang="en-US";r.interimResults=false;r.maxAlternatives=1;activeRecognition=r;
-  document.querySelectorAll(".voice-btn").forEach(b=>{if(b.getAttribute("onclick")==="startVoice('"+targetId+"')"){b.classList.add("listening");b.textContent="Listening...";}});
-  r.onresult=(e)=>{document.getElementById(targetId).value=e.results[0][0].transcript;};
-  r.onend=()=>{document.querySelectorAll(".voice-btn").forEach(b=>{b.classList.remove("listening");if(b.getAttribute("onclick")==="startVoice('"+targetId+"')")b.textContent="Speak";});activeRecognition=null;};
-  r.start();
-}
-
-function speakText(id){const text=document.getElementById(id).textContent;if(!text||!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=0.95;window.speechSynthesis.speak(u);}
-
+// ── RUBRIC ────────────────────────────────────────────────────────────────
 function updateScore(){
   let total=0;RUBRIC_CRITERIA.forEach((_,i)=>{const v=parseInt(document.getElementById("r"+i).value);document.getElementById("rv"+i).textContent=v;total+=v;});
   const pct=Math.round(total/(RUBRIC_CRITERIA.length*5)*100);
   document.getElementById("totalScore").textContent=total+"/"+(RUBRIC_CRITERIA.length*5);
   document.getElementById("totalPct").textContent=pct+"%";
-  document.getElementById("rating").textContent=pct>=80?"Excellent":pct>=60?"Good":"Needs Work";
+  document.getElementById("rating").textContent=pct>=80?"Excellent ⭐":pct>=60?"Good 👍":"Needs Work ⚠️";
 }
-
 function saveRubric(){alert("Scores saved!");}
 
+// ── EXPORT ────────────────────────────────────────────────────────────────
 function buildExport(){
   if(!currentPlan)return;
   const t=currentPlan.topic;
-  const lines=["LESSON PLAN: "+t,"Generated: "+currentPlan.generatedAt,"Level: "+currentPlan.level+" | Duration: "+currentPlan.duration+" min | Style: "+currentPlan.style,"","LEARNING OBJECTIVES",currentPlan.objectives,"","LECTURE OUTLINE",...SEGMENTS.map((s,i)=>(i+1)+". "+s.name+" ["+s.icap+"]\n   "+s.desc(t,currentPlan.style)),"","ANALOGIES",...ANALOGIES.map(a=>a(t)),"","ACTIVITIES",...ACTIVITIES.map(a=>"["+a.icap+"] "+a.title+": "+a.prompt(t)),"","REFLECTION QUESTIONS",...REFLECTIONS.map(r=>r(t)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(t)+"\n  Hint: "+p.hint),"","SRL PROMPTS",...SRL];
+  const lines=["LESSON PLAN: "+t,"Generated: "+currentPlan.generatedAt,"Level: "+currentPlan.level+" | Duration: "+currentPlan.duration+" min | Style: "+currentPlan.style,"","LEARNING OBJECTIVES",currentPlan.objectives,"","LECTURE OUTLINE",...SEGMENTS.map((s,i)=>(i+1)+". "+s.name+" ["+s.icap+"]\n   "+s.desc(t,currentPlan.style)),"","ANALOGIES",...ANALOGIES.map(a=>a(t)),"","ACTIVITIES",...ACTIVITIES.map(a=>"["+a.icap+"] "+a.title+": "+a.prompt(t)),"","REFLECTIONS",...REFLECTIONS.map(r=>r(t)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(t)+"\n  Hint: "+p.hint),"","SRL PROMPTS",...SRL];
   document.getElementById("exportPreview").textContent=lines.join("\n");
 }
-
 function downloadTxt(){
   if(!currentPlan)return;
-  const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(document.getElementById("exportPreview").textContent);a.download="LessonPlan_"+currentPlan.topic.replace(/\s+/g,"_")+".txt";a.click();
+  const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(document.getElementById("exportPreview").textContent);
+  a.download="LessonPlan_"+currentPlan.topic.replace(/\s+/g,"_")+".txt";a.click();
 }
 
+// ── TABS ─────────────────────────────────────────────────────────────────
 function switchTab(id){
-  const teacherIds=["builder","liveclass","studsupport","reports","video","rubric","export"];
+  const teacherIds=["builder","liveclass","studsupport","assignments","tests","reports","video","rubric","export"];
   document.querySelectorAll("#teacherTabs .tab").forEach((t,i)=>t.classList.toggle("active",teacherIds[i]===id));
   document.querySelectorAll("#studentTabs .tab").forEach((t,i)=>t.classList.toggle("active",["studenthome"][i]===id));
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
@@ -816,6 +1422,7 @@ function switchTab(id){
   if(id==="reports")loadReports();
 }
 
+// ── INIT ─────────────────────────────────────────────────────────────────
 window.onload=function(){
   const saved=localStorage.getItem("lai_session");
   if(saved){currentUser=JSON.parse(saved);document.getElementById("authScreen").classList.add("hidden");document.getElementById("mainApp").classList.remove("hidden");initApp();}
