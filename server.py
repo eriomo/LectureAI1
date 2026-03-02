@@ -16,7 +16,7 @@ CORS(app)
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lectureai.db")
+DB_PATH = "/tmp/lectureai.db"
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -24,19 +24,22 @@ def get_db():
     return conn
 
 def init_db():
-    conn = get_db()
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS classes (
-            code TEXT PRIMARY KEY,
-            teacher_email TEXT,
-            teacher_name TEXT,
-            topic TEXT,
-            level TEXT,
-            data TEXT
-        )
-    """)
-    conn.commit()
-    conn.close()
+    try:
+        conn = get_db()
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS classes (
+                code TEXT PRIMARY KEY,
+                teacher_email TEXT,
+                teacher_name TEXT,
+                topic TEXT,
+                level TEXT,
+                data TEXT
+            )
+        """)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print("DB init error: " + str(e))
 
 init_db()
 
@@ -72,39 +75,62 @@ def index():
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates", "index.html")
     return open(path).read()
 
+@app.route("/ping")
+def ping():
+    try:
+        conn = get_db()
+        rows = conn.execute("SELECT code, teacher_name, topic FROM classes").fetchall()
+        conn.close()
+        result = [{"code": r["code"], "teacher": r["teacher_name"], "topic": r["topic"]} for r in rows]
+        return jsonify({"status": "ok", "saved_classes": result})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
 @app.route("/save_class", methods=["POST"])
 def save_class():
-    d = request.json
-    code = d.get("code", "").upper()
-    teacher_email = d.get("teacherEmail", "")
-    teacher_name = d.get("teacherName", "")
-    topic = d.get("topic", "")
-    level = d.get("level", "")
-    conn = get_db()
-    conn.execute("""
-        INSERT INTO classes (code, teacher_email, teacher_name, topic, level, data)
-        VALUES (?, ?, ?, ?, ?, ?)
-        ON CONFLICT(code) DO UPDATE SET
-            teacher_email=excluded.teacher_email,
-            teacher_name=excluded.teacher_name,
-            topic=excluded.topic,
-            level=excluded.level,
-            data=excluded.data
-    """, (code, teacher_email, teacher_name, topic, level, json.dumps(d)))
-    conn.commit()
-    conn.close()
-    return jsonify({"success": True})
+    try:
+        d = request.json
+        code = d.get("code", "").upper().strip()
+        teacher_email = d.get("teacherEmail", "")
+        teacher_name = d.get("teacherName", "")
+        topic = d.get("topic", "")
+        level = d.get("level", "")
+        if not code:
+            return jsonify({"success": False, "error": "No code provided"})
+        init_db()
+        conn = get_db()
+        conn.execute("""
+            INSERT INTO classes (code, teacher_email, teacher_name, topic, level, data)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(code) DO UPDATE SET
+                teacher_email=excluded.teacher_email,
+                teacher_name=excluded.teacher_name,
+                topic=excluded.topic,
+                level=excluded.level,
+                data=excluded.data
+        """, (code, teacher_email, teacher_name, topic, level, json.dumps(d)))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True, "saved_code": code})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
 
 @app.route("/get_class", methods=["POST"])
 def get_class():
-    d = request.json
-    code = d.get("code", "").upper()
-    conn = get_db()
-    row = conn.execute("SELECT data FROM classes WHERE code = ?", (code,)).fetchone()
-    conn.close()
-    if row:
-        return jsonify({"success": True, "class": json.loads(row["data"])})
-    return jsonify({"success": False})
+    try:
+        d = request.json
+        code = d.get("code", "").upper().strip()
+        if not code:
+            return jsonify({"success": False, "error": "No code provided"})
+        init_db()
+        conn = get_db()
+        row = conn.execute("SELECT data FROM classes WHERE code = ?", (code,)).fetchone()
+        conn.close()
+        if row:
+            return jsonify({"success": True, "class": json.loads(row["data"])})
+        return jsonify({"success": False, "error": "Code not found: " + code})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
 
 @app.route("/generate", methods=["POST"])
 def generate():
