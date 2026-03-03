@@ -702,12 +702,16 @@ function showConnected(cls){
 function switchStuTab(id){
   const all=["ask","notes","quiz","stuassign","stutests"];
   document.querySelectorAll(".stab").forEach((t,i)=>t.classList.toggle("active",all[i]===id));
-  all.forEach(n=>{document.getElementById("stu"+n.charAt(0).toUpperCase()+n.slice(1)||"stu"+n).style.display="none";});
-  document.getElementById("stuAsk").style.display=id==="ask"?"block":"none";
-  document.getElementById("stuNotes").style.display=id==="notes"?"block":"none";
-  document.getElementById("stuQuiz").style.display=id==="quiz"?"block":"none";
-  document.getElementById("stuassign").style.display=id==="stuassign"?"block":"none";
-  document.getElementById("stutests").style.display=id==="stutests"?"block":"none";
+  document.getElementById("stuAsk").style.display="none";
+  document.getElementById("stuNotes").style.display="none";
+  document.getElementById("stuQuiz").style.display="none";
+  document.getElementById("stuassign").style.display="none";
+  document.getElementById("stutests").style.display="none";
+  if(id==="ask") document.getElementById("stuAsk").style.display="block";
+  else if(id==="notes") document.getElementById("stuNotes").style.display="block";
+  else if(id==="quiz") document.getElementById("stuQuiz").style.display="block";
+  else if(id==="stuassign") document.getElementById("stuassign").style.display="block";
+  else if(id==="stutests") document.getElementById("stutests").style.display="block";
 }
 
 // ── AUTOCOMPLETE ──────────────────────────────────────────────────────────
