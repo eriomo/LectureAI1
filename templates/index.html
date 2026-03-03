@@ -124,7 +124,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
 .rtable th{background:#2d6a4f;color:white;padding:0.6rem;text-align:left;font-size:0.85rem}
 .rtable td{padding:0.6rem;border-bottom:1px solid #eee;font-size:0.85rem}
 .rtable tr:nth-child(even){background:#f9f9f9}
-/* SLIDESHOW */
+.notesbox{background:white;border-radius:12px;padding:1.2rem;white-space:pre-wrap;font-size:0.85rem;line-height:1.8;max-height:500px;overflow-y:auto;color:#333;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-top:1rem}
 .ss-topbar{width:100%;max-width:860px;display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;flex-wrap:wrap;gap:0.5rem}
 .ss-left{display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap}
 .ss-topic{color:white;font-size:0.95rem;font-weight:600}
@@ -149,17 +149,12 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
 <div id="authScreen">
   <div class="auth-box">
     <div class="auth-logo"><h1>🎓 LectureAI</h1><p>Human-AI Co-Orchestration in Education</p></div>
     <div class="role-pick">
-      <div class="role-btn" id="roleTeacher" onclick="pickRole('teacher')">
-        <div class="ri">👩‍🏫</div><div class="rl">Teacher</div><div class="rs">Create lessons</div>
-      </div>
-      <div class="role-btn" id="roleStudent" onclick="pickRole('student')">
-        <div class="ri">🙋</div><div class="rl">Student</div><div class="rs">Join a class</div>
-      </div>
+      <div class="role-btn" id="roleTeacher" onclick="pickRole('teacher')"><div class="ri">👩‍🏫</div><div class="rl">Teacher</div><div class="rs">Create lessons</div></div>
+      <div class="role-btn" id="roleStudent" onclick="pickRole('student')"><div class="ri">🙋</div><div class="rl">Student</div><div class="rs">Join a class</div></div>
     </div>
     <div id="authForms" style="display:none">
       <div class="auth-tabs">
@@ -192,7 +187,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="mainApp">
   <header>
     <h1>🎓 LectureAI</h1>
@@ -201,7 +195,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       <button class="lbtn" onclick="doLogout()">Log Out</button>
     </div>
   </header>
-
   <div class="tabs" id="teacherTabs" style="display:none">
     <div class="tab active" onclick="switchTab('builder')">📋 Lesson</div>
     <div class="tab" onclick="switchTab('liveclass')">🔴 Live</div>
@@ -219,7 +212,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
 
   <div class="content">
 
-    <!-- BUILDER -->
     <div id="builder" class="section active">
       <div class="card">
         <h3>🔑 Your Class Code</h3>
@@ -234,7 +226,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
       <div class="fg">
         <label>Learning Objectives *</label>
-        <textarea id="objectives" placeholder="Type your objectives, or select a topic above to auto-fill..."></textarea>
+        <textarea id="objectives" placeholder="Type your objectives or select a topic above to auto-fill..."></textarea>
         <div id="objSug" style="margin-top:0.4rem"></div>
       </div>
       <div class="fg"><label>Class Level</label>
@@ -266,7 +258,22 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
         <div class="stitle">💡 Analogies</div><div id="analogyCards"></div>
         <div class="stitle">🎯 Activities</div><div id="activityCards"></div>
         <div class="stitle">🪞 Reflections</div><div id="reflectionList"></div>
-        <div class="stitle">🎙️ Slideshow & Slides</div>
+
+        <div class="stitle">📄 AI Lecture Notes</div>
+        <div class="card">
+          <p style="font-size:0.88rem;color:#555;margin-bottom:0.8rem">Generate full lecture notes from your lesson plan. Students can download them instantly from their Notes tab.</p>
+          <button class="btn" id="genNotesBtn" onclick="generateAINotes()">📝 Generate Full Notes</button>
+          <div id="notesGenStatus" style="margin-top:0.5rem;font-size:0.85rem;color:#888"></div>
+          <div id="teacherNotesBox" style="display:none;margin-top:1rem">
+            <div class="notesbox" id="teacherNotesContent"></div>
+            <div style="display:flex;gap:0.7rem;margin-top:0.8rem;flex-wrap:wrap">
+              <button class="btn" onclick="downloadTeacherNotes()" style="width:auto">⬇️ Download Notes</button>
+              <button class="bout" onclick="generateAINotes()" style="margin-top:0">🔄 Regenerate</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stitle">🎙️ Slideshow and Slides</div>
         <div class="card">
           <p style="font-size:0.88rem;color:#555;margin-bottom:0.8rem">Launch a voice-narrated slideshow or download PowerPoint.</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem">
@@ -278,29 +285,25 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- LIVE CLASS -->
     <div id="liveclass" class="section">
       <div id="noplanLive" class="info">⚠️ Generate a lesson plan first.</div>
       <div id="liveclassContent" style="display:none">
         <div class="ltgrid">
-          <div class="tcrd">
-            <h3>💬 Question Handler</h3>
+          <div class="tcrd"><h3>💬 Question Handler</h3>
             <textarea id="teacherQ" rows="2" placeholder="Student question..."></textarea>
             <button class="vbtn" onclick="startVoice('teacherQ')">🎤 Speak</button>
             <button class="btn" onclick="handleTeacherQuestion()">Get Response</button>
             <div class="rbox" id="teacherQResult"></div>
             <button class="spkbtn" id="speakTQ" style="display:none" onclick="speakText('teacherQResult')">🔊 Read</button>
           </div>
-          <div class="tcrd">
-            <h3>😕 Confusion Detector</h3>
+          <div class="tcrd"><h3>😕 Confusion Detector</h3>
             <textarea id="confusionInput" rows="2" placeholder="Describe the confusion..."></textarea>
             <button class="vbtn" onclick="startVoice('confusionInput')">🎤 Speak</button>
             <button class="bor" onclick="handleConfusion()">Rescue Strategy</button>
             <div class="rbox or" id="confusionResult"></div>
             <button class="spkbtn" id="speakCon" style="display:none" onclick="speakText('confusionResult')">🔊 Read</button>
           </div>
-          <div class="tcrd">
-            <h3>✅ Concept Check</h3>
+          <div class="tcrd"><h3>✅ Concept Check</h3>
             <input id="conceptQ" placeholder="Question you asked the class"/>
             <label style="margin-top:0.6rem">% correct: <span id="pctLabel">50</span>%</label>
             <input type="range" min="0" max="100" value="50" id="correctPct" oninput="document.getElementById('pctLabel').textContent=this.value"/>
@@ -308,8 +311,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
             <div class="rbox bl" id="conceptResult"></div>
             <button class="spkbtn" id="speakCC" style="display:none" onclick="speakText('conceptResult')">🔊 Read</button>
           </div>
-          <div class="tcrd">
-            <h3>⏱️ Pacing</h3>
+          <div class="tcrd"><h3>⏱️ Pacing</h3>
             <input type="number" id="minsElapsed" placeholder="Minutes elapsed"/>
             <input id="currentSeg" placeholder="Current segment" style="margin-top:0.5rem"/>
             <button class="bpu" onclick="handlePacing()">Pacing Advice</button>
@@ -320,7 +322,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- STUDENT SUPPORT -->
     <div id="studsupport" class="section">
       <div id="noplan1" class="info">⚠️ Generate a lesson plan first.</div>
       <div id="studentContent" style="display:none">
@@ -331,13 +332,11 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- ASSIGNMENTS -->
     <div id="assignments" class="section">
       <div class="stitle">📝 Assignments</div>
       <div id="noplanAssign" class="info">⚠️ Generate a lesson plan first.</div>
       <div id="assignContent" style="display:none">
-        <div class="card">
-          <h3>➕ Create Assignment</h3>
+        <div class="card"><h3>➕ Create Assignment</h3>
           <div class="fg"><label>Title</label><input id="assignTitle" placeholder="Assignment title"/></div>
           <div class="fg"><label>Instructions</label><textarea id="assignDesc" placeholder="What should students do?"></textarea></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem">
@@ -351,13 +350,11 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- TESTS -->
     <div id="tests" class="section">
       <div class="stitle">📋 Tests</div>
       <div id="noplanTests" class="info">⚠️ Generate a lesson plan first.</div>
       <div id="testsContent" style="display:none">
-        <div class="card">
-          <h3>🔨 Build a Test</h3>
+        <div class="card"><h3>🔨 Build a Test</h3>
           <div class="fg"><label>Test Title</label><input id="testTitle" placeholder="e.g. Week 3 Quiz"/></div>
           <div class="fg"><label>Time Limit (minutes, 0 = none)</label><input id="testTimeLimit" type="number" value="0"/></div>
           <div id="testQuestions"></div>
@@ -369,7 +366,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- REPORTS -->
     <div id="reports" class="section">
       <div class="stitle">📨 Student Reports</div>
       <div id="reportsEmpty" class="info">No reports yet.</div>
@@ -377,7 +373,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       <button class="bout" onclick="clearReports()" style="margin-top:0.5rem;width:auto">🗑️ Clear All</button>
     </div>
 
-    <!-- VIDEO -->
     <div id="video" class="section">
       <div id="noplanVideo" class="info">⚠️ Generate a lesson plan first.</div>
       <div id="videoContent" style="display:none">
@@ -392,7 +387,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- RUBRIC -->
     <div id="rubric" class="section">
       <div id="noplan2" class="info">⚠️ Generate a lesson plan first.</div>
       <div id="rubricContent" style="display:none">
@@ -406,7 +400,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- EXPORT -->
     <div id="export" class="section">
       <div id="noplan3" class="info">⚠️ Generate a lesson plan first.</div>
       <div id="exportContent" style="display:none">
@@ -416,7 +409,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
       </div>
     </div>
 
-    <!-- STUDENT HOME -->
     <div id="studenthome" class="section">
       <div class="shero">
         <h2 id="stuWelcome">Welcome 👋</h2>
@@ -446,8 +438,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
           <div class="stab" onclick="switchStuTab('stutests')">📋 Tests</div>
         </div>
         <div id="stuAsk">
-          <div class="card cbl">
-            <h3>🙋 Ask a Question</h3>
+          <div class="card cbl"><h3>🙋 Ask a Question</h3>
             <textarea id="stuQuestion" rows="3" placeholder="Type anything you did not understand..."></textarea>
             <button class="vbtn" onclick="startVoice('stuQuestion')">🎤 Speak</button>
             <button class="bbl" onclick="handleStudentQuestion()">Get Answer</button>
@@ -456,10 +447,17 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
           </div>
         </div>
         <div id="stuNotes" style="display:none">
-          <div class="card"><h3>📄 Lecture Notes</h3>
-            <button class="btn" onclick="downloadStudentNotes()">⬇️ Download Notes</button>
+          <div class="card">
+            <h3>📄 Lecture Notes</h3>
+            <div id="aiNotesBanner" style="display:none;background:#f0faf4;border:1px solid #74c69d;border-radius:8px;padding:0.7rem;font-size:0.85rem;color:#1a6640;margin-bottom:0.8rem">✅ Your teacher has published AI-generated notes for this class.</div>
+            <div id="aiNotesStatus" style="font-size:0.85rem;color:#888;margin-bottom:0.5rem"></div>
+            <div style="display:flex;gap:0.7rem;flex-wrap:wrap">
+              <button class="btn" onclick="downloadStudentNotes()" style="width:auto">⬇️ Download Template Notes</button>
+              <button class="bbl" id="downloadAINotesBtn" style="display:none;width:auto;margin-top:0" onclick="downloadAINotes()">⬇️ Download AI Notes</button>
+            </div>
           </div>
-          <div class="ebox" id="notesPreviewBox"></div>
+          <div class="notesbox" id="aiNotesPreview" style="display:none"></div>
+          <div class="ebox" id="notesPreviewBox" style="margin-top:1rem"></div>
         </div>
         <div id="stuQuiz" style="display:none">
           <div class="card"><h3>🧠 Practice Quiz</h3>
@@ -487,7 +485,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
   </div>
 </div>
 
-<!-- SLIDESHOW OVERLAY -->
 <div id="slideshowOverlay">
   <div class="ss-topbar">
     <div class="ss-left">
@@ -500,10 +497,7 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
     </div>
   </div>
   <div class="ss-card">
-    <div class="ss-header">
-      <h2 id="slideTitle">-</h2>
-      <div class="ss-num" id="slideNum">-</div>
-    </div>
+    <div class="ss-header"><h2 id="slideTitle">-</h2><div class="ss-num" id="slideNum">-</div></div>
     <ul class="ss-bullets" id="slideBullets"></ul>
   </div>
   <div class="ss-controls">
@@ -516,7 +510,6 @@ input[type=range]{accent-color:#2d6a4f;width:100%}
 </div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
 const TOPICS=[
   {t:"Linear Regression",c:"Data Science"},{t:"Logistic Regression",c:"Data Science"},{t:"Decision Trees",c:"Data Science"},{t:"Random Forests",c:"Data Science"},{t:"Neural Networks",c:"Data Science"},{t:"Deep Learning",c:"Data Science"},{t:"Natural Language Processing",c:"Data Science"},{t:"Computer Vision",c:"Data Science"},{t:"Reinforcement Learning",c:"Data Science"},{t:"Clustering Algorithms",c:"Data Science"},{t:"Feature Engineering",c:"Data Science"},{t:"Model Evaluation Metrics",c:"Data Science"},{t:"Overfitting and Underfitting",c:"Data Science"},{t:"Cross-Validation",c:"Data Science"},{t:"Gradient Boosting",c:"Data Science"},{t:"Support Vector Machines",c:"Data Science"},{t:"Time Series Analysis",c:"Data Science"},{t:"Transfer Learning",c:"Data Science"},{t:"Transformers and Attention",c:"Data Science"},{t:"Generative AI",c:"Data Science"},{t:"Explainable AI",c:"Data Science"},{t:"A/B Testing",c:"Data Science"},
   {t:"Hypothesis Testing",c:"Statistics"},{t:"Probability Theory",c:"Statistics"},{t:"Bayesian Statistics",c:"Statistics"},{t:"Descriptive Statistics",c:"Statistics"},{t:"ANOVA",c:"Statistics"},{t:"Confidence Intervals",c:"Statistics"},{t:"Central Limit Theorem",c:"Statistics"},{t:"Normal Distribution",c:"Statistics"},{t:"Correlation vs Causation",c:"Statistics"},{t:"Sampling Methods",c:"Statistics"},{t:"Experimental Design",c:"Statistics"},
@@ -529,73 +522,24 @@ const TOPICS=[
   {t:"AI Ethics",c:"Ethics"},{t:"Algorithmic Bias",c:"Ethics"},{t:"Fairness in AI",c:"Ethics"},{t:"Data Privacy",c:"Ethics"},
   {t:"Data Visualisation",c:"Visualisation"},{t:"Tableau",c:"Visualisation"},{t:"Power BI",c:"Visualisation"},{t:"Storytelling with Data",c:"Visualisation"},{t:"Matplotlib and Seaborn",c:"Visualisation"},
 ];
-
-const OBJ_MAP={
-  "Linear Regression":"1. Understand what linear regression is and when to use it\n2. Interpret coefficients and the regression equation\n3. Evaluate model fit using R-squared and RMSE\n4. Identify assumptions and when they are violated",
-  "Neural Networks":"1. Understand the structure of a neural network\n2. Explain how backpropagation works\n3. Identify appropriate activation functions\n4. Build a simple neural network in Python",
-  "Decision Trees":"1. Understand how a decision tree splits data\n2. Interpret a decision tree visually\n3. Identify overfitting and apply pruning\n4. Compare decision trees to other classifiers",
-  "SQL Fundamentals":"1. Write basic SELECT WHERE and JOIN queries\n2. Understand primary keys and foreign keys\n3. Use aggregate functions like COUNT SUM and AVG\n4. Filter and sort query results effectively",
-  "Python for Data Science":"1. Write Python code using variables loops and functions\n2. Load and manipulate data using Pandas\n3. Create basic visualisations with Matplotlib\n4. Understand list comprehensions and lambda functions",
-  "Hypothesis Testing":"1. Understand the null and alternative hypothesis\n2. Choose the right statistical test\n3. Interpret p-values and confidence intervals\n4. Avoid common mistakes like p-hacking",
-  "AI Ethics":"1. Identify common sources of bias in AI systems\n2. Explain fairness metrics and their limitations\n3. Understand legal and ethical frameworks\n4. Critically evaluate the societal impact of AI",
-  "Contract Law":"1. Define a valid contract and its essential elements\n2. Identify offer acceptance and consideration\n3. Understand breach of contract and remedies\n4. Apply contract principles to case studies",
-  "Thermodynamics":"1. Understand the laws of thermodynamics\n2. Apply energy conservation principles\n3. Analyse heat engines and refrigeration cycles\n4. Solve thermodynamic problems",
-  "Microeconomics":"1. Understand supply and demand principles\n2. Analyse market equilibrium and price elasticity\n3. Explain consumer and producer surplus\n4. Evaluate market failures",
-  "Psychology":"1. Understand the major schools of psychological thought\n2. Explain key psychological theories\n3. Critically evaluate research methods\n4. Apply psychological concepts to real-world scenarios",
-  "Epidemiology":"1. Define key epidemiological measures\n2. Understand study designs including cohort and case-control\n3. Interpret risk ratios and odds ratios\n4. Evaluate public health interventions",
-};
-
-const QUIZ_Q={
-  "Linear Regression":[
-    {q:"What does a regression line minimise?",opts:["Sum of squared errors","Sum of absolute values","R-squared","Mean"],ans:0,exp:"Linear regression minimises the sum of squared differences between actual and predicted values."},
-    {q:"What does R-squared measure?",opts:["Prediction error","Proportion of variance explained","Number of variables","Slope"],ans:1,exp:"R-squared tells you how much variation in the outcome is explained by the model."},
-    {q:"What happens when you add irrelevant variables?",opts:["R-squared decreases","R-squared increases","Model crashes","Coefficients become zero"],ans:1,exp:"Adding any variable even irrelevant ones will never decrease R-squared."},
-    {q:"A coefficient of 0.5 on years of experience means?",opts:["Outcome increases 0.5 per year","Outcome halves","Not significant","Model is 50% accurate"],ans:0,exp:"Coefficients show the expected change in outcome for a one-unit increase in the predictor."},
-    {q:"What assumption does linear regression make about residuals?",opts:["Must be positive","Must be normally distributed","Must be zero","Must be integers"],ans:1,exp:"Residuals should be normally distributed with constant variance."},
-  ],
-  "default":[
-    {q:"What is the first step when working with a new dataset?",opts:["Build a model","Explore the data","Delete missing values","Scale features"],ans:1,exp:"Exploratory Data Analysis always comes before modelling."},
-    {q:"What does overfitting mean?",opts:["Model is too simple","Good on training poor on new data","Too few parameters","Too much data"],ans:1,exp:"An overfitted model memorised training data and fails to generalise."},
-    {q:"What is cross-validation used for?",opts:["Speeding up training","Estimating model performance","Cleaning data","Selecting features"],ans:1,exp:"Cross-validation uses multiple train/test splits for a reliable performance estimate."},
-    {q:"What does a confusion matrix show?",opts:["How confused the model is","Counts of correct and incorrect predictions","Training loss","Feature importance"],ans:1,exp:"A confusion matrix shows true positives false positives true negatives and false negatives."},
-    {q:"Why do we normalise features?",opts:["Make data look nicer","Ensure all features contribute equally","Remove outliers","Increase accuracy"],ans:1,exp:"Normalisation prevents large-valued features dominating distance-based models."},
-  ]
-};
-
-const SEGS=[
-  {name:"Introduction and Hook",icap:"Active",pct:0.12,desc:(t,s)=>`Open with a compelling real-world question about "${t}". Use ${s} to engage students immediately.`},
-  {name:"Core Concept Explanation",icap:"Passive",pct:0.35,desc:(t,s)=>`Explain the foundational ideas of "${t}" using layered analogies and visual representations.`},
-  {name:"Guided In-Class Activity",icap:"Constructive",pct:0.28,desc:(t,s)=>`Students apply "${t}" to a structured task. Pairs encouraged to explain reasoning aloud.`},
-  {name:"Peer Discussion and Debate",icap:"Interactive",pct:0.13,desc:(t,s)=>`Groups debate a conceptual challenge about "${t}" and defend their reasoning.`},
-  {name:"Wrap-Up and Reflection",icap:"Constructive",pct:0.12,desc:(t,s)=>`Summarise key takeaways. Students write a 2-sentence exit ticket about "${t}".`},
-];
-const ANALOGIES=[(t)=>`Beginner: Think of "${t}" like sorting a messy drawer — you create rules before touching anything.`,(t)=>`Visual: Imagine "${t}" as a flowchart where each arrow depends on real data.`,(t)=>`Non-technical: "${t}" is like a recipe — right ingredients, right steps, then check the result.`];
+const OBJ_MAP={"Linear Regression":"1. Understand what linear regression is and when to use it\n2. Interpret coefficients and the regression equation\n3. Evaluate model fit using R-squared and RMSE\n4. Identify assumptions and when they are violated","Neural Networks":"1. Understand the structure of a neural network\n2. Explain how backpropagation works\n3. Identify appropriate activation functions\n4. Build a simple neural network in Python","Decision Trees":"1. Understand how a decision tree splits data\n2. Interpret a decision tree visually\n3. Identify overfitting and apply pruning\n4. Compare decision trees to other classifiers","SQL Fundamentals":"1. Write basic SELECT WHERE and JOIN queries\n2. Understand primary keys and foreign keys\n3. Use aggregate functions like COUNT SUM and AVG\n4. Filter and sort results effectively","Python for Data Science":"1. Write Python code using variables loops and functions\n2. Load and manipulate data using Pandas\n3. Create basic visualisations with Matplotlib\n4. Understand list comprehensions and lambda functions","Hypothesis Testing":"1. Understand the null and alternative hypothesis\n2. Choose the right statistical test\n3. Interpret p-values and confidence intervals\n4. Avoid common mistakes like p-hacking","AI Ethics":"1. Identify common sources of bias in AI systems\n2. Explain fairness metrics and their limitations\n3. Understand legal and ethical frameworks\n4. Critically evaluate the societal impact of AI","Contract Law":"1. Define a valid contract and its essential elements\n2. Identify offer acceptance and consideration\n3. Understand breach of contract and remedies\n4. Apply contract principles to case studies","Thermodynamics":"1. Understand the laws of thermodynamics\n2. Apply energy conservation principles\n3. Analyse heat engines and refrigeration cycles\n4. Solve thermodynamic problems","Microeconomics":"1. Understand supply and demand principles\n2. Analyse market equilibrium and price elasticity\n3. Explain consumer and producer surplus\n4. Evaluate market failures","Psychology":"1. Understand the major schools of psychological thought\n2. Explain key psychological theories\n3. Critically evaluate research methods\n4. Apply psychological concepts to real-world scenarios","Epidemiology":"1. Define key epidemiological measures\n2. Understand study designs including cohort and case-control\n3. Interpret risk ratios and odds ratios\n4. Evaluate public health interventions"};
+const QUIZ_Q={"Linear Regression":[{q:"What does a regression line minimise?",opts:["Sum of squared errors","Sum of absolute values","R-squared","Mean"],ans:0,exp:"Linear regression minimises the sum of squared differences between actual and predicted values."},{q:"What does R-squared measure?",opts:["Prediction error","Proportion of variance explained","Number of variables","Slope"],ans:1,exp:"R-squared tells you how much variation in the outcome is explained by the model."},{q:"What happens when you add irrelevant variables?",opts:["R-squared decreases","R-squared increases","Model crashes","Coefficients become zero"],ans:1,exp:"Adding any variable even irrelevant ones will never decrease R-squared."},{q:"A coefficient of 0.5 on years of experience means?",opts:["Outcome increases 0.5 per year","Outcome halves","Not significant","Model is 50% accurate"],ans:0,exp:"Coefficients show the expected change in outcome for a one-unit increase in the predictor."},{q:"What assumption does linear regression make about residuals?",opts:["Must be positive","Must be normally distributed","Must be zero","Must be integers"],ans:1,exp:"Residuals should be normally distributed with constant variance."}],"default":[{q:"What is the first step when working with a new dataset?",opts:["Build a model","Explore the data","Delete missing values","Scale features"],ans:1,exp:"Exploratory Data Analysis always comes before modelling."},{q:"What does overfitting mean?",opts:["Model is too simple","Good on training poor on new data","Too few parameters","Too much data"],ans:1,exp:"An overfitted model memorised training data and fails to generalise."},{q:"What is cross-validation used for?",opts:["Speeding up training","Estimating model performance","Cleaning data","Selecting features"],ans:1,exp:"Cross-validation uses multiple train/test splits for a reliable performance estimate."},{q:"What does a confusion matrix show?",opts:["How confused the model is","Counts of correct and incorrect predictions","Training loss","Feature importance"],ans:1,exp:"A confusion matrix shows true positives false positives true negatives and false negatives."},{q:"Why do we normalise features?",opts:["Make data look nicer","Ensure all features contribute equally","Remove outliers","Increase accuracy"],ans:1,exp:"Normalisation prevents large-valued features dominating distance-based models."}]};
+const SEGS=[{name:"Introduction and Hook",icap:"Active",pct:0.12,desc:(t,s)=>`Open with a compelling real-world question about "${t}". Use ${s} to engage immediately.`},{name:"Core Concept Explanation",icap:"Passive",pct:0.35,desc:(t,s)=>`Explain the foundational ideas of "${t}" using layered analogies and visual representations.`},{name:"Guided In-Class Activity",icap:"Constructive",pct:0.28,desc:(t,s)=>`Students apply "${t}" to a structured task. Pairs encouraged to explain reasoning aloud.`},{name:"Peer Discussion and Debate",icap:"Interactive",pct:0.13,desc:(t,s)=>`Groups debate a conceptual challenge about "${t}" and defend their reasoning.`},{name:"Wrap-Up and Reflection",icap:"Constructive",pct:0.12,desc:(t,s)=>`Summarise key takeaways. Students write a 2-sentence exit ticket about "${t}".`}];
+const ANALOGIES=[(t)=>`Beginner: Think of "${t}" like sorting a messy drawer — you create rules before touching anything.`,(t)=>`Visual: Imagine "${t}" as a flowchart where each arrow depends on real data.`,(t)=>`Non-technical: "${t}" is like a recipe — right ingredients right steps then check the result.`];
 const ACTIVITIES=[{title:"Think-Pair-Share",icap:"Interactive",p:(t)=>`Identify one place where "${t}" changes the result. Discuss with a partner.`},{title:"Error Spotting",icap:"Constructive",p:(t)=>`Find the mistake in this incorrect application of "${t}" and explain why it is wrong.`},{title:"Concept Map",icap:"Constructive",p:(t)=>`In 5 minutes sketch how "${t}" connects to two ideas from previous lectures.`}];
 const REFLECTIONS=[(t)=>`What is the single most important idea you learned about "${t}" today?`,(t)=>`Where did you feel confused and what would help?`,(t)=>`How might "${t}" appear in a real project you care about?`,(t)=>`What question would you still like to ask about "${t}"?`];
-const PRACTICE=[{diff:"Easy",q:(t)=>`Define "${t}" in one sentence in your own words.`,hint:"Focus on what it does not how it works."},{diff:"Easy",q:(t)=>`Give one real-life example where "${t}" is useful.`,hint:"Think about everyday patterns and decisions."},{diff:"Medium",q:(t)=>`Explain one advantage and one limitation of "${t}".`,hint:"Consider what assumptions it makes."},{diff:"Medium",q:(t)=>`How would you explain "${t}" to a friend with no technical background?`,hint:"Use a simple analogy."},{diff:"Hard",q:(t)=>`Design an experiment to test whether "${t}" performs well. What metrics would you use?`,hint:"Think about what success means for your problem."},{diff:"Hard",q:(t)=>`What ethical concerns arise when applying "${t}" in a high-stakes setting?`,hint:"Consider bias transparency and accountability."}];
+const PRACTICE=[{diff:"Easy",q:(t)=>`Define "${t}" in one sentence in your own words.`,hint:"Focus on what it does not how it works."},{diff:"Easy",q:(t)=>`Give one real-life example where "${t}" is useful.`,hint:"Think about everyday patterns and decisions."},{diff:"Medium",q:(t)=>`Explain one advantage and one limitation of "${t}".`,hint:"Consider what assumptions it makes."},{diff:"Medium",q:(t)=>`How would you explain "${t}" to a friend with no technical background?`,hint:"Use a simple analogy."},{diff:"Hard",q:(t)=>`Design an experiment to test whether "${t}" performs well. What metrics would you use?`,hint:"Think about what success means."},{diff:"Hard",q:(t)=>`What ethical concerns arise when applying "${t}" in a high-stakes setting?`,hint:"Consider bias transparency and accountability."}];
 const SRL=["Before studying: What do I already know about this topic?","During study: Am I understanding this or just reading the words?","After practice: Can I explain this without looking at my notes?","Reflection: What is my study plan for the parts I found difficult?"];
 const RUBRIC=[{name:"Relevance",d:"Does output match topic and learning objectives?"},{name:"Clarity",d:"Is language appropriate for the target level?"},{name:"Pedagogical Value",d:"Does it support active constructive interactive engagement?"},{name:"Correctness",d:"Are concepts technically accurate?"},{name:"Usability",d:"Is the workflow easy for instructors?"}];
 
-// ── STATE ─────────────────────────────────────────────────────────────────
 let role="",currentUser=null,currentPlan=null,quizAnswers={},quizTopic="default";
 let slides=[],slideIdx=0,autoTimer=null,isAuto=false;
 let voices=[],selectedVoice=null,activeRec=null;
 let testQCount=0,activeTestData=null,activeTestAnswers={},testTimer=null;
+let aiNotesContent="";
 
-// ── AUTH ──────────────────────────────────────────────────────────────────
-function pickRole(r){
-  role=r;
-  document.getElementById("roleTeacher").classList.toggle("selected",r==="teacher");
-  document.getElementById("roleStudent").classList.toggle("selected",r==="student");
-  document.getElementById("authForms").style.display="block";
-  document.getElementById("studentFields").style.display=r==="student"?"block":"none";
-}
-function switchAuthTab(t){
-  document.getElementById("tabLogin").classList.toggle("active",t==="login");
-  document.getElementById("tabSignup").classList.toggle("active",t==="signup");
-  document.getElementById("loginForm").style.display=t==="login"?"block":"none";
-  document.getElementById("signupForm").style.display=t==="signup"?"block":"none";
-}
+function pickRole(r){role=r;document.getElementById("roleTeacher").classList.toggle("selected",r==="teacher");document.getElementById("roleStudent").classList.toggle("selected",r==="student");document.getElementById("authForms").style.display="block";document.getElementById("studentFields").style.display=r==="student"?"block":"none";}
+function switchAuthTab(t){document.getElementById("tabLogin").classList.toggle("active",t==="login");document.getElementById("tabSignup").classList.toggle("active",t==="signup");document.getElementById("loginForm").style.display=t==="login"?"block":"none";document.getElementById("signupForm").style.display=t==="signup"?"block":"none";}
 function getUsers(){return JSON.parse(localStorage.getItem("lai_users")||"[]");}
 function saveUsers(u){localStorage.setItem("lai_users",JSON.stringify(u));}
 function getReports(){return JSON.parse(localStorage.getItem("lai_reports")||"[]");}
@@ -606,7 +550,7 @@ function doLogin(){
   const email=document.getElementById("loginEmail").value.trim().toLowerCase();
   const pass=document.getElementById("loginPassword").value;
   const user=getUsers().find(u=>u.email===email&&u.password===pass&&u.role===role);
-  if(!user){show("loginError","Email or password not found.");return;}
+  if(!user){showErr("loginError","Email or password not found.");return;}
   loginSuccess(user);
 }
 function doSignup(){
@@ -614,91 +558,32 @@ function doSignup(){
   const name=document.getElementById("suName").value.trim();
   const email=document.getElementById("suEmail").value.trim().toLowerCase();
   const pass=document.getElementById("suPassword").value;
-  if(!name||!email||!pass){show("signupError","Fill in all fields.");return;}
+  if(!name||!email||!pass){showErr("signupError","Fill in all fields.");return;}
   const users=getUsers();
-  if(users.find(u=>u.email===email)){show("signupError","Account already exists.");return;}
+  if(users.find(u=>u.email===email)){showErr("signupError","Account already exists.");return;}
   const user={name,email,password:pass,role};
   if(role==="student"){user.age=document.getElementById("suAge").value;user.year=document.getElementById("suYear").value;user.background=document.getElementById("suBackground").value;}
   users.push(user);saveUsers(users);loginSuccess(user);
 }
-function show(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display="block";}
-function loginSuccess(user){
-  currentUser=user;
-  localStorage.setItem("lai_session",JSON.stringify(user));
-  document.getElementById("authScreen").style.display="none";
-  document.getElementById("mainApp").style.display="block";
-  initApp();
-}
+function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display="block";}
+function loginSuccess(user){currentUser=user;localStorage.setItem("lai_session",JSON.stringify(user));document.getElementById("authScreen").style.display="none";document.getElementById("mainApp").style.display="block";initApp();}
 function doLogout(){localStorage.removeItem("lai_session");location.reload();}
 
 function initApp(){
   document.getElementById("userBadge").textContent=currentUser.name+(currentUser.role==="teacher"?" · Teacher":" · Student");
-  if(currentUser.role==="teacher"){
-    document.getElementById("teacherTabs").style.display="flex";
-    loadOrCreateCode();loadReports();switchTab("builder");
-  } else {
-    document.getElementById("studentTabs").style.display="flex";
-    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-    document.getElementById("studenthome").classList.add("active");
-    document.getElementById("stuWelcome").textContent="Welcome back, "+currentUser.name+" 👋";
-    checkStudentConnection();
-  }
+  if(currentUser.role==="teacher"){document.getElementById("teacherTabs").style.display="flex";loadOrCreateCode();loadReports();switchTab("builder");}
+  else{document.getElementById("studentTabs").style.display="flex";document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById("studenthome").classList.add("active");document.getElementById("stuWelcome").textContent="Welcome back, "+currentUser.name+" 👋";checkStudentConnection();}
 }
 
-// ── CLASS CODES ───────────────────────────────────────────────────────────
 function getCode(){const s=localStorage.getItem("lai_code_"+currentUser.email);return s?JSON.parse(s).code:"";}
-async function generateClassCode(){
-  const code=Math.random().toString(36).substring(2,8).toUpperCase();
-  const cls={code,teacherEmail:currentUser.email,teacherName:currentUser.name,topic:"",level:""};
-  localStorage.setItem("lai_code_"+currentUser.email,JSON.stringify(cls));
-  document.getElementById("classCodeDisplay").textContent=code;
-  try{await fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)});}catch(e){}
-}
-async function loadOrCreateCode(){
-  const saved=localStorage.getItem("lai_code_"+currentUser.email);
-  if(saved){
-    const cls=JSON.parse(saved);
-    document.getElementById("classCodeDisplay").textContent=cls.code;
-    try{await fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)});}catch(e){}
-  } else {generateClassCode();}
-}
-async function joinClass(){
-  const code=document.getElementById("classCodeInput").value.trim().toUpperCase();
-  if(code.length<4){showJE("Enter a valid code.");return;}
-  document.getElementById("joinError").style.display="none";
-  try{
-    const res=await fetch("/get_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});
-    const data=await res.json();
-    if(!data.success){showJE("Code not found. Ask your teacher.");return;}
-    localStorage.setItem("lai_stuclass_"+currentUser.email,JSON.stringify(data.class));
-    showConnected(data.class);
-  }catch(e){showJE("Could not connect. Check your internet.");}
-}
+async function generateClassCode(){const code=Math.random().toString(36).substring(2,8).toUpperCase();const cls={code,teacherEmail:currentUser.email,teacherName:currentUser.name,topic:"",level:""};localStorage.setItem("lai_code_"+currentUser.email,JSON.stringify(cls));document.getElementById("classCodeDisplay").textContent=code;try{await fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)});}catch(e){}}
+async function loadOrCreateCode(){const saved=localStorage.getItem("lai_code_"+currentUser.email);if(saved){const cls=JSON.parse(saved);document.getElementById("classCodeDisplay").textContent=cls.code;try{await fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)});}catch(e){}}else{generateClassCode();}}
+async function joinClass(){const code=document.getElementById("classCodeInput").value.trim().toUpperCase();if(code.length<4){showJE("Enter a valid code.");return;}document.getElementById("joinError").style.display="none";try{const res=await fetch("/get_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});const data=await res.json();if(!data.success){showJE("Code not found. Ask your teacher.");return;}localStorage.setItem("lai_stuclass_"+currentUser.email,JSON.stringify(data.class));showConnected(data.class);}catch(e){showJE("Could not connect. Check your internet.");}}
 function showJE(m){const el=document.getElementById("joinError");el.textContent=m;el.style.display="block";}
-function disconnectClass(){
-  localStorage.removeItem("lai_stuclass_"+currentUser.email);
-  document.getElementById("connectBox").style.display="block";
-  document.getElementById("connectedClassBox").style.display="none";
-  document.getElementById("stuAskArea").style.display="none";
-  document.getElementById("stuNoClass").style.display="block";
-}
-function checkStudentConnection(){
-  const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);
-  if(saved)showConnected(JSON.parse(saved));
-}
-function showConnected(cls){
-  document.getElementById("connectBox").style.display="none";
-  document.getElementById("connectedClassBox").style.display="block";
-  document.getElementById("stuAskArea").style.display="block";
-  document.getElementById("stuNoClass").style.display="none";
-  document.getElementById("connectedTopic").textContent=cls.topic||"Class in session";
-  document.getElementById("connectedTeacher").textContent="Teacher: "+cls.teacherName;
-  document.getElementById("joinError").style.display="none";
-  buildStudentNotes(cls.topic||"this topic",cls.level||"Intermediate");
-  quizTopic=cls.topic||"default";
-  loadStudentAssignments(cls.code);
-  loadStudentTests(cls.code);
-}
+function disconnectClass(){localStorage.removeItem("lai_stuclass_"+currentUser.email);document.getElementById("connectBox").style.display="block";document.getElementById("connectedClassBox").style.display="none";document.getElementById("stuAskArea").style.display="none";document.getElementById("stuNoClass").style.display="block";}
+function checkStudentConnection(){const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);if(saved)showConnected(JSON.parse(saved));}
+function showConnected(cls){document.getElementById("connectBox").style.display="none";document.getElementById("connectedClassBox").style.display="block";document.getElementById("stuAskArea").style.display="block";document.getElementById("stuNoClass").style.display="none";document.getElementById("connectedTopic").textContent=cls.topic||"Class in session";document.getElementById("connectedTeacher").textContent="Teacher: "+cls.teacherName;document.getElementById("joinError").style.display="none";buildStudentNotes(cls.topic||"this topic",cls.level||"Intermediate");quizTopic=cls.topic||"default";loadStudentAssignments(cls.code);loadStudentTests(cls.code);}
+
 function switchStuTab(id){
   const all=["ask","notes","quiz","stuassign","stutests"];
   document.querySelectorAll(".stab").forEach((t,i)=>t.classList.toggle("active",all[i]===id));
@@ -707,56 +592,32 @@ function switchStuTab(id){
   document.getElementById("stuQuiz").style.display="none";
   document.getElementById("stuassign").style.display="none";
   document.getElementById("stutests").style.display="none";
-  if(id==="ask") document.getElementById("stuAsk").style.display="block";
-  else if(id==="notes") document.getElementById("stuNotes").style.display="block";
-  else if(id==="quiz") document.getElementById("stuQuiz").style.display="block";
-  else if(id==="stuassign") document.getElementById("stuassign").style.display="block";
-  else if(id==="stutests") document.getElementById("stutests").style.display="block";
+  if(id==="ask")document.getElementById("stuAsk").style.display="block";
+  else if(id==="notes"){document.getElementById("stuNotes").style.display="block";loadAINotes();}
+  else if(id==="quiz")document.getElementById("stuQuiz").style.display="block";
+  else if(id==="stuassign")document.getElementById("stuassign").style.display="block";
+  else if(id==="stutests")document.getElementById("stutests").style.display="block";
 }
 
-// ── AUTOCOMPLETE ──────────────────────────────────────────────────────────
-function handleTopicInput(val){
-  const list=document.getElementById("acList");
-  if(!val){list.classList.remove("show");return;}
-  const filtered=TOPICS.filter(t=>t.t.toLowerCase().includes(val.toLowerCase())).slice(0,12);
-  if(!filtered.length){list.classList.remove("show");return;}
-  list.innerHTML=filtered.map(t=>`<div class="acitem" onmousedown="selectTopic('${t.t.replace(/'/g,"\\'")}')">${t.t}<span class="accat">${t.c}</span></div>`).join("");
-  list.classList.add("show");
-}
-function selectTopic(topic){
-  document.getElementById("topic").value=topic;closeAC();
-  if(OBJ_MAP[topic]){document.getElementById("objSug").innerHTML=`<span style="font-size:0.82rem;color:#2d6a4f;font-weight:600">Suggested objectives: </span><button class="bout" style="font-size:0.82rem;padding:0.3rem 0.7rem;margin-top:0" onclick="useObj('${topic.replace(/'/g,"\\'")}')">Use ✓</button>`;}
-  else document.getElementById("objSug").innerHTML="";
-}
+function handleTopicInput(val){const list=document.getElementById("acList");if(!val){list.classList.remove("show");return;}const filtered=TOPICS.filter(t=>t.t.toLowerCase().includes(val.toLowerCase())).slice(0,12);if(!filtered.length){list.classList.remove("show");return;}list.innerHTML=filtered.map(t=>`<div class="acitem" onmousedown="selectTopic('${t.t.replace(/'/g,"\\'")}')">${t.t}<span class="accat">${t.c}</span></div>`).join("");list.classList.add("show");}
+function selectTopic(topic){document.getElementById("topic").value=topic;closeAC();if(OBJ_MAP[topic]){document.getElementById("objSug").innerHTML=`<span style="font-size:0.82rem;color:#2d6a4f;font-weight:600">Suggested objectives: </span><button class="bout" style="font-size:0.82rem;padding:0.3rem 0.7rem;margin-top:0" onclick="useObj('${topic.replace(/'/g,"\\'")}')">Use ✓</button>`;}else document.getElementById("objSug").innerHTML="";}
 function useObj(t){document.getElementById("objectives").value=OBJ_MAP[t]||"";document.getElementById("objSug").innerHTML="";}
 function closeAC(){document.getElementById("acList").classList.remove("show");}
-
-// ── LESSON PLAN ───────────────────────────────────────────────────────────
 function bdg(icap){const m={Passive:"bp",Active:"ba",Constructive:"bc",Interactive:"bi"};return`<span class="badge ${m[icap]||"ba"}">${icap}</span>`;}
 
 function generateLesson(){
-  const topic=document.getElementById("topic").value.trim();
-  const objectives=document.getElementById("objectives").value.trim();
+  const topic=document.getElementById("topic").value.trim();const objectives=document.getElementById("objectives").value.trim();
   if(!topic||!objectives){alert("Fill in Topic and Learning Objectives.");return;}
-  const level=document.getElementById("level").value;
-  const duration=parseInt(document.getElementById("duration").value);
-  const style=document.getElementById("style").value;
+  const level=document.getElementById("level").value;const duration=parseInt(document.getElementById("duration").value);const style=document.getElementById("style").value;
   currentPlan={topic,objectives,level,duration,style,generatedAt:new Date().toLocaleString()};
   const saved=localStorage.getItem("lai_code_"+currentUser.email);
   if(saved){const cls=JSON.parse(saved);cls.topic=topic;cls.level=level;localStorage.setItem("lai_code_"+currentUser.email,JSON.stringify(cls));fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)}).catch(()=>{});}
   document.getElementById("mTopic").textContent=topic.length>12?topic.substring(0,12)+"...":topic;
-  document.getElementById("mLevel").textContent=level;
-  document.getElementById("mDur").textContent=duration+" min";
+  document.getElementById("mLevel").textContent=level;document.getElementById("mDur").textContent=duration+" min";
   const counts={Passive:0,Active:0,Constructive:0,Interactive:0};
   const outEl=document.getElementById("outlineCards");outEl.innerHTML="";
-  SEGS.forEach((seg,i)=>{
-    counts[seg.icap]++;const mins=Math.max(5,Math.round(duration*seg.pct));
-    outEl.innerHTML+=`<div class="card"><h3>${i+1}. ${seg.name} (${mins} min) ${bdg(seg.icap)}</h3><p>${seg.desc(topic,style)}</p><div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.7rem"><input type="checkbox" checked/><label style="margin:0;font-weight:400;font-size:0.85rem">Approve</label></div><input placeholder="Instructor notes..." style="margin-top:0.5rem;font-size:0.83rem"/></div>`;
-  });
-  document.getElementById("icapP").textContent=counts.Passive;
-  document.getElementById("icapA").textContent=counts.Active;
-  document.getElementById("icapC").textContent=counts.Constructive;
-  document.getElementById("icapI").textContent=counts.Interactive;
+  SEGS.forEach((seg,i)=>{counts[seg.icap]++;const mins=Math.max(5,Math.round(duration*seg.pct));outEl.innerHTML+=`<div class="card"><h3>${i+1}. ${seg.name} (${mins} min) ${bdg(seg.icap)}</h3><p>${seg.desc(topic,style)}</p><div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.7rem"><input type="checkbox" checked/><label style="margin:0;font-weight:400;font-size:0.85rem">Approve</label></div><input placeholder="Instructor notes..." style="margin-top:0.5rem;font-size:0.83rem"/></div>`;});
+  document.getElementById("icapP").textContent=counts.Passive;document.getElementById("icapA").textContent=counts.Active;document.getElementById("icapC").textContent=counts.Constructive;document.getElementById("icapI").textContent=counts.Interactive;
   document.getElementById("analogyCards").innerHTML=ANALOGIES.map(a=>`<div class="card"><p>${a(topic)}</p></div>`).join("");
   document.getElementById("activityCards").innerHTML=ACTIVITIES.map(a=>`<div class="card"><h3>${a.title} ${bdg(a.icap)}</h3><p>${a.p(topic)}</p></div>`).join("");
   document.getElementById("reflectionList").innerHTML="<div class='card'><ul style='padding-left:1.2rem'>"+REFLECTIONS.map(r=>`<li style='margin-bottom:0.4rem;font-size:0.88rem'>${r(topic)}</li>`).join("")+"</ul></div>";
@@ -771,490 +632,107 @@ function generateLesson(){
   loadTeacherAssignments();loadTeacherTests();
 }
 
-// ── SLIDESHOW ─────────────────────────────────────────────────────────────
+async function generateAINotes(){
+  if(!currentPlan){alert("Generate a lesson plan first.");return;}
+  const btn=document.getElementById("genNotesBtn");const st=document.getElementById("notesGenStatus");
+  btn.disabled=true;btn.textContent="✍️ Writing notes...";st.textContent="AI is writing your full lecture notes. This takes about 15 seconds...";
+  try{
+    const res=await fetch("/generate_notes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...currentPlan,classCode:getCode()})});
+    const data=await res.json();
+    if(data.success){aiNotesContent=data.notes;document.getElementById("teacherNotesContent").textContent=data.notes;document.getElementById("teacherNotesBox").style.display="block";st.textContent="✅ Notes generated and shared with students!";}
+    else st.textContent="❌ Error: "+data.error;
+  }catch(e){st.textContent="❌ Could not generate. Try again.";}
+  finally{btn.disabled=false;btn.textContent="📝 Generate Full Notes";}
+}
+function downloadTeacherNotes(){if(!aiNotesContent){alert("Generate notes first.");return;}const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(aiNotesContent);a.download="LectureNotes_"+currentPlan.topic.replace(/\s+/g,"_")+".txt";a.click();}
+async function loadAINotes(){
+  const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);if(!saved)return;
+  const cls=JSON.parse(saved);const st=document.getElementById("aiNotesStatus");
+  st.textContent="Checking for teacher notes...";
+  try{
+    const res=await fetch("/get_notes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:cls.code})});
+    const data=await res.json();
+    if(data.success&&data.notes){aiNotesContent=data.notes;document.getElementById("aiNotesBanner").style.display="block";document.getElementById("downloadAINotesBtn").style.display="inline-block";document.getElementById("aiNotesPreview").style.display="block";document.getElementById("aiNotesPreview").textContent=data.notes;st.textContent="";}
+    else st.textContent="No AI notes from your teacher yet.";
+  }catch(e){st.textContent="Could not load notes.";}
+}
+function downloadAINotes(){if(!aiNotesContent){alert("No AI notes available.");return;}const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);const topic=saved?JSON.parse(saved).topic||"topic":"topic";const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(aiNotesContent);a.download="AILectureNotes_"+topic.replace(/\s+/g,"_")+".txt";a.click();}
+
 function launchSlideshow(){
   if(!currentPlan){alert("Generate a lesson plan first.");return;}
   const t=currentPlan.topic,level=currentPlan.level,dur=currentPlan.duration,style=currentPlan.style;
   const objs=currentPlan.objectives.split("\n").filter(Boolean);
-  slides=[
-    {title:t,bullets:["Level: "+level,"Duration: "+dur+" min","Style: "+style,"Welcome — let us begin"],note:"Welcome to today's lesson on "+t+". By the end of this session you will have a solid understanding of the core concepts. Let us get started."},
-    {title:"Learning Objectives",bullets:objs.length?objs:["Understand core concepts","Apply the methods","Evaluate your understanding"],note:"Here are the learning objectives for today. These are the outcomes we are working towards by the end of class."},
-    {title:"Why Does It Matter?",bullets:["Why is "+t+" important in the real world?","Where is it applied today?","What problem does it solve?","Think of a real decision that depends on "+t],note:"Let us start by asking why "+t+" matters. Think about where you encounter this in everyday life. The answer might surprise you."},
-    {title:"Core Concepts",bullets:["The fundamental principles behind "+t,"Key terminology you need to know","How the different parts connect","The underlying logic not just the steps"],note:"Now let us break down the core concepts of "+t+". Focus on understanding the logic before worrying about formulas."},
-    {title:"Examples and Analogies",bullets:["Beginner: Think of "+t+" like sorting a drawer — rules first then action","Visual: A flowchart where each decision depends on real data","Applied: How "+t+" shows up in a professional setting","Common sense: Does the output match your intuition?"],note:"The best way to understand "+t+" is through a concrete example. Here is a simple analogy followed by a real-world scenario."},
-    {title:"Guided Activity",bullets:["Apply what you just learned to a small problem","Work in pairs and talk through your reasoning","It is fine to be wrong — focus on thinking","Be ready to explain your approach"],note:"Now it is your turn. Apply the concepts we just covered. Do not rush. Talk through your thinking with a partner."},
-    {title:"Common Mistakes",bullets:["Skipping the assumptions — always check them first","Confusing correlation with causation","Over-complicating when simpler is better","Not validating results against common sense"],note:"Let us talk about the most common mistakes people make with "+t+". Knowing what can go wrong is just as important as knowing what to do right."},
-    {title:"Summary",bullets:["Core idea: take data apply a method interpret the result","Start with intuition before moving to formulas","Next: practise with a real dataset","Exit ticket: write one thing you learned today"],note:"That is the end of today's lesson on "+t+". Write down one thing you learned in your own words before you leave."},
-  ];
-  slideIdx=0;
-  document.getElementById("ssTitle").textContent=t;
-  document.getElementById("slideshowOverlay").classList.add("open");
-  loadVoices();
-  renderSlide(0);
+  slides=[{title:t,bullets:["Level: "+level,"Duration: "+dur+" min","Style: "+style,"Welcome — let us begin"],note:"Welcome to today's lesson on "+t+". By the end of this session you will have a solid understanding of the core concepts. Let us get started."},{title:"Learning Objectives",bullets:objs.length?objs:["Understand core concepts","Apply the methods","Evaluate your understanding"],note:"Here are the learning objectives for today. These are the outcomes we are working towards by the end of class."},{title:"Why Does It Matter?",bullets:["Why is "+t+" important in the real world?","Where is it applied today?","What problem does it solve?","Think of a real decision that depends on "+t],note:"Let us start by asking why "+t+" matters. Think about where you encounter this in everyday life."},{title:"Core Concepts",bullets:["The fundamental principles behind "+t,"Key terminology you need to know","How the different parts connect","The underlying logic not just the steps"],note:"Now let us break down the core concepts of "+t+". Focus on understanding the logic before worrying about formulas."},{title:"Examples and Analogies",bullets:["Beginner: Think of "+t+" like sorting a drawer — rules first then action","Visual: A flowchart where each decision depends on real data","Applied: How "+t+" shows up in a professional setting","Common sense: Does the output match your intuition?"],note:"The best way to understand "+t+" is through a concrete example. Here is a simple analogy followed by a real-world scenario."},{title:"Guided Activity",bullets:["Apply what you just learned to a small problem","Work in pairs and talk through your reasoning","It is fine to be wrong — focus on thinking","Be ready to explain your approach"],note:"Now it is your turn. Apply the concepts we just covered. Do not rush. Talk through your thinking with a partner."},{title:"Common Mistakes",bullets:["Skipping the assumptions — always check them first","Confusing correlation with causation","Over-complicating when simpler is better","Not validating results against common sense"],note:"Let us talk about the most common mistakes people make with "+t+". Knowing what can go wrong is just as important as knowing what to do right."},{title:"Summary",bullets:["Core idea: take data apply a method interpret the result","Start with intuition before moving to formulas","Next: practise with a real dataset","Exit ticket: write one thing you learned today"],note:"That is the end of today's lesson on "+t+". Write down one thing you learned in your own words before you leave."}];
+  slideIdx=0;document.getElementById("ssTitle").textContent=t;document.getElementById("slideshowOverlay").classList.add("open");loadVoices();renderSlide(0);
 }
-
-function renderSlide(idx){
-  if(!slides[idx])return;
-  const s=slides[idx];
-  document.getElementById("slideTitle").textContent=s.title;
-  document.getElementById("slideNum").textContent="Slide "+(idx+1)+" of "+slides.length;
-  document.getElementById("slideBullets").innerHTML=s.bullets.map(b=>`<li>${b}</li>`).join("");
-  document.getElementById("progressFill").style.width=(((idx+1)/slides.length)*100)+"%";
-  speak(s.note);
-}
+function renderSlide(idx){if(!slides[idx])return;const s=slides[idx];document.getElementById("slideTitle").textContent=s.title;document.getElementById("slideNum").textContent="Slide "+(idx+1)+" of "+slides.length;document.getElementById("slideBullets").innerHTML=s.bullets.map(b=>`<li>${b}</li>`).join("");document.getElementById("progressFill").style.width=(((idx+1)/slides.length)*100)+"%";speak(s.note);}
 function prevSlide(){window.speechSynthesis&&window.speechSynthesis.cancel();stopAuto();slideIdx=Math.max(0,slideIdx-1);renderSlide(slideIdx);}
-function nextSlide(){
-  window.speechSynthesis&&window.speechSynthesis.cancel();
-  if(slideIdx<slides.length-1){slideIdx++;renderSlide(slideIdx);}
-  else{stopAuto();setBadge("✅ Done",true);}
-}
+function nextSlide(){window.speechSynthesis&&window.speechSynthesis.cancel();if(slideIdx<slides.length-1){slideIdx++;renderSlide(slideIdx);}else{stopAuto();setBadge("✅ Done",true);}}
 function replaySlide(){window.speechSynthesis&&window.speechSynthesis.cancel();speak(slides[slideIdx].note);}
 function toggleAuto(){if(isAuto)stopAuto();else{isAuto=true;document.getElementById("autoBtn").textContent="⏸ Pause";}}
 function stopAuto(){isAuto=false;document.getElementById("autoBtn").textContent="▶ Auto";if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}}
-function closeSlideshow(){
-  if(window.speechSynthesis)window.speechSynthesis.cancel();
-  stopAuto();
-  document.getElementById("slideshowOverlay").classList.remove("open");
-}
+function closeSlideshow(){if(window.speechSynthesis)window.speechSynthesis.cancel();stopAuto();document.getElementById("slideshowOverlay").classList.remove("open");}
 function setBadge(text,idle){const b=document.getElementById("ssBadge");b.textContent=text;b.className="ss-badge"+(idle?" idle":"");}
-function speak(text){
-  if(!window.speechSynthesis||!text)return;
-  window.speechSynthesis.cancel();
-  setBadge("🔊 Speaking...",false);
-  const u=new SpeechSynthesisUtterance(text);
-  u.rate=0.93;u.pitch=1.0;
-  if(selectedVoice)u.voice=selectedVoice;
-  u.onend=()=>{setBadge("⏸ Done",true);if(isAuto){autoTimer=setTimeout(nextSlide,1800);}};
-  u.onerror=()=>{setBadge("⏸ Done",true);};
-  window.speechSynthesis.speak(u);
-}
-function loadVoices(){
-  if(!window.speechSynthesis){document.getElementById("voiceSelect").innerHTML="<option>Not supported</option>";return;}
-  const populate=()=>{
-    voices=window.speechSynthesis.getVoices();
-    const sel=document.getElementById("voiceSelect");
-    if(!voices.length){sel.innerHTML="<option>Loading...</option>";return;}
-    sel.innerHTML=voices.map((v,i)=>`<option value="${i}">${v.name}</option>`).join("");
-    const eng=voices.findIndex(v=>v.lang&&v.lang.startsWith("en"));
-    if(eng>=0){sel.value=eng;selectedVoice=voices[eng];}
-  };
-  if(window.speechSynthesis.getVoices().length)populate();
-  else{window.speechSynthesis.onvoiceschanged=populate;populate();}
-}
+function speak(text){if(!window.speechSynthesis||!text)return;window.speechSynthesis.cancel();setBadge("🔊 Speaking...",false);const u=new SpeechSynthesisUtterance(text);u.rate=0.93;u.pitch=1.0;if(selectedVoice)u.voice=selectedVoice;u.onend=()=>{setBadge("⏸ Done",true);if(isAuto){autoTimer=setTimeout(nextSlide,1800);}};u.onerror=()=>{setBadge("⏸ Done",true);};window.speechSynthesis.speak(u);}
+function loadVoices(){if(!window.speechSynthesis){document.getElementById("voiceSelect").innerHTML="<option>Not supported</option>";return;}const populate=()=>{voices=window.speechSynthesis.getVoices();const sel=document.getElementById("voiceSelect");if(!voices.length){sel.innerHTML="<option>Loading...</option>";return;}sel.innerHTML=voices.map((v,i)=>`<option value="${i}">${v.name}</option>`).join("");const eng=voices.findIndex(v=>v.lang&&v.lang.startsWith("en"));if(eng>=0){sel.value=eng;selectedVoice=voices[eng];}};if(window.speechSynthesis.getVoices().length)populate();else{window.speechSynthesis.onvoiceschanged=populate;populate();}}
 function changeVoice(idx){selectedVoice=voices[parseInt(idx)]||null;}
 
-// ── DOWNLOAD PPTX ─────────────────────────────────────────────────────────
-async function generateSlides(){
-  if(!currentPlan){alert("Generate a lesson plan first.");return;}
-  const btn=document.getElementById("slidesBtn");const st=document.getElementById("slidesStatus");
-  btn.disabled=true;btn.textContent="Generating...";st.textContent="Please wait...";
-  try{
-    const res=await fetch("/generate_slides",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(currentPlan)});
-    if(!res.ok)throw new Error("Server error");
-    const blob=await res.blob();const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");a.href=url;a.download="LectureAI_"+currentPlan.topic.replace(/\s+/g,"_")+".pptx";a.click();
-    st.textContent="✅ Downloaded!";
-  }catch(e){st.textContent="❌ Could not generate. Try again.";}
-  finally{btn.disabled=false;btn.textContent="📊 PowerPoint";}
-}
+async function generateSlides(){if(!currentPlan){alert("Generate a lesson plan first.");return;}const btn=document.getElementById("slidesBtn");const st=document.getElementById("slidesStatus");btn.disabled=true;btn.textContent="Generating...";st.textContent="Please wait...";try{const res=await fetch("/generate_slides",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(currentPlan)});if(!res.ok)throw new Error("Server error");const blob=await res.blob();const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="LectureAI_"+currentPlan.topic.replace(/\s+/g,"_")+".pptx";a.click();st.textContent="✅ Downloaded!";}catch(e){st.textContent="❌ Could not generate. Try again.";}finally{btn.disabled=false;btn.textContent="📊 PowerPoint";}}
 
-// ── ASSIGNMENTS TEACHER ───────────────────────────────────────────────────
-async function createAssignment(){
-  const title=document.getElementById("assignTitle").value.trim();
-  const desc=document.getElementById("assignDesc").value.trim();
-  const due=document.getElementById("assignDue").value;
-  const max=document.getElementById("assignMax").value;
-  if(!title||!desc){alert("Fill in title and description.");return;}
-  try{
-    const res=await fetch("/create_assignment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:getCode(),teacherEmail:currentUser.email,title,description:desc,dueDate:due,maxScore:max})});
-    const data=await res.json();
-    if(data.success){document.getElementById("assignTitle").value="";document.getElementById("assignDesc").value="";loadTeacherAssignments();}
-    else alert("Error: "+data.error);
-  }catch(e){alert("Could not save.");}
-}
-async function loadTeacherAssignments(){
-  const code=getCode();if(!code)return;
-  try{
-    const res=await fetch("/get_assignments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:code})});
-    const data=await res.json();const el=document.getElementById("assignList");
-    if(!data.assignments||!data.assignments.length){el.innerHTML='<div class="info">No assignments posted yet.</div>';return;}
-    el.innerHTML=data.assignments.map(a=>`
-      <div class="acard"><h3>${a.title}</h3><div class="meta">Due: ${a.due_date||"No deadline"} · Max: ${a.max_score}</div>
-      <p style="font-size:0.85rem;color:#444">${a.description}</p>
-      <div style="display:flex;gap:0.5rem;margin-top:0.7rem;flex-wrap:wrap">
-        <button class="bsm" onclick="viewSubs('${a.id}','${a.title.replace(/'/g,"\\'")}',${a.max_score})">📥 Submissions</button>
-        <button class="bred" onclick="deleteAssignment('${a.id}')">🗑️ Delete</button>
-      </div>
-      <div id="subs_${a.id}" style="display:none;margin-top:0.8rem"></div></div>`).join("");
-  }catch(e){}
-}
-async function viewSubs(aid,title,maxScore){
-  const el=document.getElementById("subs_"+aid);
-  el.style.display=el.style.display==="none"?"block":"none";
-  if(el.style.display==="none")return;
-  el.innerHTML='<p style="font-size:0.85rem;color:#888">Loading...</p>';
-  try{
-    const res=await fetch("/get_submissions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assignmentId:aid})});
-    const data=await res.json();
-    if(!data.submissions||!data.submissions.length){el.innerHTML='<p style="font-size:0.85rem;color:#888">No submissions yet.</p>';return;}
-    el.innerHTML=`<b style="font-size:0.9rem">${title}</b>`+data.submissions.map(s=>`
-      <div class="subcrd"><div class="sn">${s.student_name} <span style="color:#888;font-size:0.78rem">· ${s.submitted_at}</span></div>
-      <div class="sc">${s.content}</div>
-      <div class="grow"><input type="number" id="sc_${s.id}" value="${s.score>=0?s.score:''}" placeholder="Score" style="width:70px"/><span style="font-size:0.85rem;color:#888">/${maxScore}</span>
-      <input id="fb_${s.id}" placeholder="Feedback" style="flex:1"/>
-      <button class="bsm" onclick="gradeSub('${s.id}','${aid}')">Save</button></div>
-      ${s.score>=0?`<div style="font-size:0.82rem;margin-top:0.3rem;color:#1a6640">✅ Graded: ${s.score}/${maxScore}${s.feedback?" · "+s.feedback:""}</div>`:""}</div>`).join("");
-  }catch(e){el.innerHTML='<p style="color:#e74c3c;font-size:0.85rem">Could not load.</p>';}
-}
-async function gradeSub(subId,aid){
-  const score=document.getElementById("sc_"+subId).value;
-  const feedback=document.getElementById("fb_"+subId).value;
-  if(score===""){alert("Enter a score.");return;}
-  try{await fetch("/grade_submission",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({submissionId:subId,score:parseInt(score),feedback})});viewSubs(aid,"",100);}
-  catch(e){alert("Could not save.");}
-}
-async function deleteAssignment(aid){
-  if(!confirm("Delete this assignment?"))return;
-  try{await fetch("/delete_assignment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:aid})});loadTeacherAssignments();}catch(e){}
-}
+async function createAssignment(){const title=document.getElementById("assignTitle").value.trim();const desc=document.getElementById("assignDesc").value.trim();const due=document.getElementById("assignDue").value;const max=document.getElementById("assignMax").value;if(!title||!desc){alert("Fill in title and description.");return;}try{const res=await fetch("/create_assignment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:getCode(),teacherEmail:currentUser.email,title,description:desc,dueDate:due,maxScore:max})});const data=await res.json();if(data.success){document.getElementById("assignTitle").value="";document.getElementById("assignDesc").value="";loadTeacherAssignments();}else alert("Error: "+data.error);}catch(e){alert("Could not save.");}}
+async function loadTeacherAssignments(){const code=getCode();if(!code)return;try{const res=await fetch("/get_assignments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:code})});const data=await res.json();const el=document.getElementById("assignList");if(!data.assignments||!data.assignments.length){el.innerHTML='<div class="info">No assignments posted yet.</div>';return;}el.innerHTML=data.assignments.map(a=>`<div class="acard"><h3>${a.title}</h3><div class="meta">Due: ${a.due_date||"No deadline"} · Max: ${a.max_score}</div><p style="font-size:0.85rem;color:#444">${a.description}</p><div style="display:flex;gap:0.5rem;margin-top:0.7rem;flex-wrap:wrap"><button class="bsm" onclick="viewSubs('${a.id}','${a.title.replace(/'/g,"\\'")}',${a.max_score})">📥 Submissions</button><button class="bred" onclick="deleteAssignment('${a.id}')">🗑️ Delete</button></div><div id="subs_${a.id}" style="display:none;margin-top:0.8rem"></div></div>`).join("");}catch(e){}}
+async function viewSubs(aid,title,maxScore){const el=document.getElementById("subs_"+aid);el.style.display=el.style.display==="none"?"block":"none";if(el.style.display==="none")return;el.innerHTML='<p style="font-size:0.85rem;color:#888">Loading...</p>';try{const res=await fetch("/get_submissions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assignmentId:aid})});const data=await res.json();if(!data.submissions||!data.submissions.length){el.innerHTML='<p style="font-size:0.85rem;color:#888">No submissions yet.</p>';return;}el.innerHTML=`<b style="font-size:0.9rem">${title}</b>`+data.submissions.map(s=>`<div class="subcrd"><div class="sn">${s.student_name} <span style="color:#888;font-size:0.78rem">· ${s.submitted_at}</span></div><div class="sc">${s.content}</div><div class="grow"><input type="number" id="sc_${s.id}" value="${s.score>=0?s.score:''}" placeholder="Score" style="width:70px"/><span style="font-size:0.85rem;color:#888">/${maxScore}</span><input id="fb_${s.id}" placeholder="Feedback" style="flex:1"/><button class="bsm" onclick="gradeSub('${s.id}','${aid}')">Save</button></div>${s.score>=0?`<div style="font-size:0.82rem;margin-top:0.3rem;color:#1a6640">✅ Graded: ${s.score}/${maxScore}${s.feedback?" · "+s.feedback:""}</div>`:""}</div>`).join("");}catch(e){el.innerHTML='<p style="color:#e74c3c;font-size:0.85rem">Could not load.</p>';}}
+async function gradeSub(subId,aid){const score=document.getElementById("sc_"+subId).value;const feedback=document.getElementById("fb_"+subId).value;if(score===""){alert("Enter a score.");return;}try{await fetch("/grade_submission",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({submissionId:subId,score:parseInt(score),feedback})});viewSubs(aid,"",100);}catch(e){alert("Could not save.");}}
+async function deleteAssignment(aid){if(!confirm("Delete this assignment?"))return;try{await fetch("/delete_assignment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:aid})});loadTeacherAssignments();}catch(e){}}
 
-// ── TESTS TEACHER ─────────────────────────────────────────────────────────
-function addTestQuestion(){
-  testQCount++;const qid=testQCount;
-  document.getElementById("testQuestions").innerHTML+=`
-    <div class="qitem" id="tq_${qid}">
-      <div class="qnum">Question ${qid}</div>
-      <div class="fg"><label>Question</label><input id="qtxt_${qid}" placeholder="Type the question"/></div>
-      <div class="fg"><label>Option A</label><input id="qopt_${qid}_0"/></div>
-      <div class="fg"><label>Option B</label><input id="qopt_${qid}_1"/></div>
-      <div class="fg"><label>Option C</label><input id="qopt_${qid}_2"/></div>
-      <div class="fg"><label>Option D</label><input id="qopt_${qid}_3"/></div>
-      <div class="fg"><label>Correct Answer</label>
-        <select id="qans_${qid}"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select>
-      </div>
-      <button class="bred" onclick="document.getElementById('tq_${qid}').remove()" style="margin-top:0.3rem">Remove</button>
-    </div>`;
-}
-async function publishTest(){
-  const title=document.getElementById("testTitle").value.trim();
-  const timeLimit=parseInt(document.getElementById("testTimeLimit").value)||0;
-  if(!title){alert("Enter a test title.");return;}
-  const questions=[];
-  document.querySelectorAll("[id^='qtxt_']").forEach(el=>{
-    const qid=el.id.split("_")[1];const q=el.value.trim();if(!q)return;
-    const opts=[0,1,2,3].map(i=>(document.getElementById(`qopt_${qid}_${i}`)||{value:""}).value.trim());
-    const ans=parseInt((document.getElementById(`qans_${qid}`)||{value:"0"}).value);
-    questions.push({q,options:opts,ans});
-  });
-  if(!questions.length){alert("Add at least one question.");return;}
-  try{
-    const res=await fetch("/create_test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:getCode(),teacherEmail:currentUser.email,title,questions,timeLimit})});
-    const data=await res.json();
-    if(data.success){document.getElementById("testTitle").value="";document.getElementById("testQuestions").innerHTML="";testQCount=0;loadTeacherTests();alert("Test published!");}
-  }catch(e){alert("Could not publish.");}
-}
-async function loadTeacherTests(){
-  const code=getCode();if(!code)return;
-  try{
-    const res=await fetch("/get_tests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:code})});
-    const data=await res.json();const el=document.getElementById("testList");
-    if(!data.tests||!data.tests.length){el.innerHTML='<div class="info">No tests yet.</div>';return;}
-    window._tests=data.tests;
-    el.innerHTML=data.tests.map(t=>`
-      <div class="tscard"><h3>${t.title}</h3><div class="meta">${t.questions.length} questions · ${t.time_limit?t.time_limit+" min":"No limit"}</div>
-      <div style="display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap">
-        <button class="bsm" onclick="viewTestResults('${t.id}')">📊 Results</button>
-        <button class="bred" onclick="deleteTest('${t.id}')">🗑️ Delete</button>
-      </div>
-      <div id="tres_${t.id}" style="display:none;margin-top:0.8rem"></div></div>`).join("");
-  }catch(e){}
-}
-async function viewTestResults(tid){
-  const el=document.getElementById("tres_"+tid);
-  el.style.display=el.style.display==="none"?"block":"none";
-  if(el.style.display==="none")return;
-  el.innerHTML='<p style="font-size:0.85rem;color:#888">Loading...</p>';
-  try{
-    const res=await fetch("/get_test_results",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({testId:tid})});
-    const data=await res.json();
-    if(!data.results||!data.results.length){el.innerHTML='<p style="font-size:0.85rem;color:#888">No submissions yet.</p>';return;}
-    el.innerHTML=`<table class="rtable"><tr><th>Student</th><th>Score</th><th>%</th><th>Date</th></tr>${data.results.map(r=>`<tr><td>${r.student_name}</td><td>${r.score}/${r.total}</td><td>${Math.round(r.score/r.total*100)}%</td><td>${r.submitted_at}</td></tr>`).join("")}</table>`;
-  }catch(e){el.innerHTML='<p style="color:#e74c3c;font-size:0.85rem">Could not load.</p>';}
-}
-async function deleteTest(tid){
-  if(!confirm("Delete this test?"))return;
-  try{await fetch("/delete_test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:tid})});loadTeacherTests();}catch(e){}
-}
+function addTestQuestion(){testQCount++;const qid=testQCount;document.getElementById("testQuestions").innerHTML+=`<div class="qitem" id="tq_${qid}"><div class="qnum">Question ${qid}</div><div class="fg"><label>Question</label><input id="qtxt_${qid}" placeholder="Type the question"/></div><div class="fg"><label>Option A</label><input id="qopt_${qid}_0"/></div><div class="fg"><label>Option B</label><input id="qopt_${qid}_1"/></div><div class="fg"><label>Option C</label><input id="qopt_${qid}_2"/></div><div class="fg"><label>Option D</label><input id="qopt_${qid}_3"/></div><div class="fg"><label>Correct Answer</label><select id="qans_${qid}"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select></div><button class="bred" onclick="document.getElementById('tq_${qid}').remove()" style="margin-top:0.3rem">Remove</button></div>`;}
+async function publishTest(){const title=document.getElementById("testTitle").value.trim();const timeLimit=parseInt(document.getElementById("testTimeLimit").value)||0;if(!title){alert("Enter a test title.");return;}const questions=[];document.querySelectorAll("[id^='qtxt_']").forEach(el=>{const qid=el.id.split("_")[1];const q=el.value.trim();if(!q)return;const opts=[0,1,2,3].map(i=>(document.getElementById(`qopt_${qid}_${i}`)||{value:""}).value.trim());const ans=parseInt((document.getElementById(`qans_${qid}`)||{value:"0"}).value);questions.push({q,options:opts,ans});});if(!questions.length){alert("Add at least one question.");return;}try{const res=await fetch("/create_test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:getCode(),teacherEmail:currentUser.email,title,questions,timeLimit})});const data=await res.json();if(data.success){document.getElementById("testTitle").value="";document.getElementById("testQuestions").innerHTML="";testQCount=0;loadTeacherTests();alert("Test published!");}  }catch(e){alert("Could not publish.");}}
+async function loadTeacherTests(){const code=getCode();if(!code)return;try{const res=await fetch("/get_tests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:code})});const data=await res.json();const el=document.getElementById("testList");if(!data.tests||!data.tests.length){el.innerHTML='<div class="info">No tests yet.</div>';return;}window._tests=data.tests;el.innerHTML=data.tests.map(t=>`<div class="tscard"><h3>${t.title}</h3><div class="meta">${t.questions.length} questions · ${t.time_limit?t.time_limit+" min":"No limit"}</div><div style="display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap"><button class="bsm" onclick="viewTestResults('${t.id}')">📊 Results</button><button class="bred" onclick="deleteTest('${t.id}')">🗑️ Delete</button></div><div id="tres_${t.id}" style="display:none;margin-top:0.8rem"></div></div>`).join("");}catch(e){}}
+async function viewTestResults(tid){const el=document.getElementById("tres_"+tid);el.style.display=el.style.display==="none"?"block":"none";if(el.style.display==="none")return;el.innerHTML='<p style="font-size:0.85rem;color:#888">Loading...</p>';try{const res=await fetch("/get_test_results",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({testId:tid})});const data=await res.json();if(!data.results||!data.results.length){el.innerHTML='<p style="font-size:0.85rem;color:#888">No submissions yet.</p>';return;}el.innerHTML=`<table class="rtable"><tr><th>Student</th><th>Score</th><th>%</th><th>Date</th></tr>${data.results.map(r=>`<tr><td>${r.student_name}</td><td>${r.score}/${r.total}</td><td>${Math.round(r.score/r.total*100)}%</td><td>${r.submitted_at}</td></tr>`).join("")}</table>`;}catch(e){el.innerHTML='<p style="color:#e74c3c;font-size:0.85rem">Could not load.</p>';}}
+async function deleteTest(tid){if(!confirm("Delete this test?"))return;try{await fetch("/delete_test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:tid})});loadTeacherTests();}catch(e){}}
 
-// ── ASSIGNMENTS STUDENT ───────────────────────────────────────────────────
-async function loadStudentAssignments(classCode){
-  try{
-    const res=await fetch("/get_assignments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode})});
-    const data=await res.json();const el=document.getElementById("stuAssignList");
-    if(!data.assignments||!data.assignments.length){el.innerHTML='<div class="info">No assignments yet.</div>';return;}
-    el.innerHTML=data.assignments.map(a=>`
-      <div class="acard"><h3>${a.title}</h3><div class="meta">Due: ${a.due_date||"No deadline"} · Max: ${a.max_score}</div>
-      <p style="font-size:0.85rem;color:#444;margin-bottom:0.7rem">${a.description}</p>
-      <div id="mysub_${a.id}"></div>
-      <textarea id="subContent_${a.id}" rows="4" placeholder="Type your answer..."></textarea>
-      <button class="btn" onclick="submitAssignment('${a.id}','${classCode}')">📤 Submit</button>
-      <div id="subSt_${a.id}" style="font-size:0.85rem;margin-top:0.4rem"></div></div>`).join("");
-    data.assignments.forEach(a=>loadMySub(a.id));
-  }catch(e){document.getElementById("stuAssignList").innerHTML='<div class="info">Could not load assignments.</div>';}
-}
-async function loadMySub(aid){
-  try{
-    const res=await fetch("/get_my_submission",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assignmentId:aid,studentEmail:currentUser.email})});
-    const data=await res.json();
-    if(data.submission){
-      const s=data.submission;
-      document.getElementById("mysub_"+aid).innerHTML=`<div style="background:#f0faf4;border:1px solid #74c69d;border-radius:8px;padding:0.7rem;margin-bottom:0.6rem;font-size:0.85rem">✅ Submitted${s.score>=0?` · Score: <strong>${s.score}</strong>${s.feedback?" · "+s.feedback:""}`:""}</div>`;
-      const ta=document.getElementById("subContent_"+aid);if(ta)ta.value=s.content;
-    }
-  }catch(e){}
-}
-async function submitAssignment(aid,classCode){
-  const content=document.getElementById("subContent_"+aid).value.trim();if(!content){alert("Write your answer first.");return;}
-  const st=document.getElementById("subSt_"+aid);st.textContent="Submitting...";
-  try{
-    const res=await fetch("/submit_assignment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assignmentId:aid,classCode,studentEmail:currentUser.email,studentName:currentUser.name,content})});
-    const data=await res.json();
-    if(data.success){st.textContent="✅ Submitted!";st.style.color="#1a6640";loadMySub(aid);}
-    else{st.textContent="❌ "+data.error;st.style.color="#e74c3c";}
-  }catch(e){st.textContent="❌ Could not submit.";st.style.color="#e74c3c";}
-}
+async function loadStudentAssignments(classCode){try{const res=await fetch("/get_assignments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode})});const data=await res.json();const el=document.getElementById("stuAssignList");if(!data.assignments||!data.assignments.length){el.innerHTML='<div class="info">No assignments yet.</div>';return;}el.innerHTML=data.assignments.map(a=>`<div class="acard"><h3>${a.title}</h3><div class="meta">Due: ${a.due_date||"No deadline"} · Max: ${a.max_score}</div><p style="font-size:0.85rem;color:#444;margin-bottom:0.7rem">${a.description}</p><div id="mysub_${a.id}"></div><textarea id="subContent_${a.id}" rows="4" placeholder="Type your answer..."></textarea><button class="btn" onclick="submitAssignment('${a.id}','${classCode}')">📤 Submit</button><div id="subSt_${a.id}" style="font-size:0.85rem;margin-top:0.4rem"></div></div>`).join("");data.assignments.forEach(a=>loadMySub(a.id));}catch(e){document.getElementById("stuAssignList").innerHTML='<div class="info">Could not load assignments.</div>';}}
+async function loadMySub(aid){try{const res=await fetch("/get_my_submission",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assignmentId:aid,studentEmail:currentUser.email})});const data=await res.json();if(data.submission){const s=data.submission;document.getElementById("mysub_"+aid).innerHTML=`<div style="background:#f0faf4;border:1px solid #74c69d;border-radius:8px;padding:0.7rem;margin-bottom:0.6rem;font-size:0.85rem">✅ Submitted${s.score>=0?` · Score: <strong>${s.score}</strong>${s.feedback?" · "+s.feedback:""}`:""}</div>`;const ta=document.getElementById("subContent_"+aid);if(ta)ta.value=s.content;}}catch(e){}}
+async function submitAssignment(aid,classCode){const content=document.getElementById("subContent_"+aid).value.trim();if(!content){alert("Write your answer first.");return;}const st=document.getElementById("subSt_"+aid);st.textContent="Submitting...";try{const res=await fetch("/submit_assignment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assignmentId:aid,classCode,studentEmail:currentUser.email,studentName:currentUser.name,content})});const data=await res.json();if(data.success){st.textContent="✅ Submitted!";st.style.color="#1a6640";loadMySub(aid);}else{st.textContent="❌ "+data.error;st.style.color="#e74c3c";}}catch(e){st.textContent="❌ Could not submit.";st.style.color="#e74c3c";}}
 
-// ── TESTS STUDENT ─────────────────────────────────────────────────────────
-async function loadStudentTests(classCode){
-  try{
-    const res=await fetch("/get_tests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode})});
-    const data=await res.json();const el=document.getElementById("stuTestList");
-    if(!data.tests||!data.tests.length){el.innerHTML='<div class="info">No tests yet.</div>';return;}
-    window._tests=data.tests;
-    el.innerHTML=data.tests.map(t=>`
-      <div class="tscard"><h3>${t.title}</h3><div class="meta">${t.questions.length} questions · ${t.time_limit?t.time_limit+" min":"No limit"}</div>
-      <div id="mytr_${t.id}"></div>
-      <button class="btn" onclick="startStudentTest('${t.id}')">▶ Start</button></div>
-      <div id="testArea_${t.id}" style="display:none"></div>`).join("");
-    data.tests.forEach(t=>loadMyTestResult(t.id));
-  }catch(e){document.getElementById("stuTestList").innerHTML='<div class="info">Could not load tests.</div>';}
-}
-async function loadMyTestResult(tid){
-  try{
-    const res=await fetch("/get_my_test_result",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({testId:tid,studentEmail:currentUser.email})});
-    const data=await res.json();
-    if(data.result){const el=document.getElementById("mytr_"+tid);if(el)el.innerHTML=`<div style="background:#f0faf4;border:1px solid #74c69d;border-radius:8px;padding:0.6rem;font-size:0.85rem;margin:0.4rem 0">✅ Score: <strong>${data.result.score}/${data.result.total}</strong> (${Math.round(data.result.score/data.result.total*100)}%)</div>`;}
-  }catch(e){}
-}
-function startStudentTest(tid){
-  const test=window._tests&&window._tests.find(t=>t.id===tid);if(!test)return;
-  activeTestData=test;activeTestAnswers={};
-  const area=document.getElementById("testArea_"+tid);area.style.display="block";
-  area.innerHTML=`<div class="card cpu"><b style="color:#8e44ad">${test.title}</b><br>
-    ${test.time_limit>0?`<div id="tdisp_${tid}" style="font-size:0.88rem;color:#e74c3c;font-weight:600;margin:0.5rem 0">⏱ ${test.time_limit}:00</div>`:""}
-    ${test.questions.map((q,i)=>`<div class="qzcard"><p style="font-weight:600;font-size:0.95rem;margin-bottom:0.7rem">${i+1}. ${q.q}</p>${q.options.map((o,j)=>`<button class="qzopt" id="sto_${tid}_${i}_${j}" onclick="selTA('${tid}',${i},${j})">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`).join("")}
-    <button class="bpu" onclick="submitStuTest('${tid}')" style="margin-top:0.5rem">📤 Submit Test</button>
-  </div>`;
-  if(test.time_limit>0)startTTimer(tid,test.time_limit);
-}
-function selTA(tid,qi,ai){
-  activeTestAnswers[qi]=ai;
-  const q=activeTestData.questions[qi];
-  for(let j=0;j<q.options.length;j++){const b=document.getElementById(`sto_${tid}_${qi}_${j}`);if(b){b.style.borderColor=j===ai?"#2d6a4f":"#ddd";b.style.background=j===ai?"#f0faf4":"white";}}
-}
-function startTTimer(tid,mins){
-  let secs=mins*60;const disp=document.getElementById("tdisp_"+tid);
-  testTimer=setInterval(()=>{secs--;const m=Math.floor(secs/60),s=secs%60;if(disp)disp.textContent=`⏱ ${m}:${s.toString().padStart(2,"0")}`;if(secs<=0){clearInterval(testTimer);submitStuTest(tid);}},1000);
-}
-async function submitStuTest(tid){
-  if(testTimer){clearInterval(testTimer);testTimer=null;}
-  const test=activeTestData;if(!test)return;
-  const ua=test.questions.length-Object.keys(activeTestAnswers).length;
-  if(ua>0&&!confirm(`${ua} unanswered. Submit anyway?`))return;
-  const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);
-  try{
-    const res=await fetch("/submit_test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({testId:tid,classCode:saved?JSON.parse(saved).code:"",studentEmail:currentUser.email,studentName:currentUser.name,answers:activeTestAnswers,questions:test.questions})});
-    const data=await res.json();
-    if(data.success){
-      const pct=Math.round(data.score/data.total*100);
-      document.getElementById("testArea_"+tid).innerHTML=`<div class="qzscore"><div class="big">${data.score}/${data.total}</div><div style="font-size:1rem;color:#555;margin-top:0.3rem">${pct}% — ${pct>=80?"Excellent! 🌟":pct>=60?"Good effort! 👍":"Keep practising 📚"}</div></div>`;
-      loadMyTestResult(tid);
-    }else alert(data.error||"Could not submit.");
-  }catch(e){alert("Could not submit.");}
-}
+async function loadStudentTests(classCode){try{const res=await fetch("/get_tests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode})});const data=await res.json();const el=document.getElementById("stuTestList");if(!data.tests||!data.tests.length){el.innerHTML='<div class="info">No tests yet.</div>';return;}window._tests=data.tests;el.innerHTML=data.tests.map(t=>`<div class="tscard"><h3>${t.title}</h3><div class="meta">${t.questions.length} questions · ${t.time_limit?t.time_limit+" min":"No limit"}</div><div id="mytr_${t.id}"></div><button class="btn" onclick="startStudentTest('${t.id}')">▶ Start</button></div><div id="testArea_${t.id}" style="display:none"></div>`).join("");data.tests.forEach(t=>loadMyTestResult(t.id));}catch(e){document.getElementById("stuTestList").innerHTML='<div class="info">Could not load tests.</div>';}}
+async function loadMyTestResult(tid){try{const res=await fetch("/get_my_test_result",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({testId:tid,studentEmail:currentUser.email})});const data=await res.json();if(data.result){const el=document.getElementById("mytr_"+tid);if(el)el.innerHTML=`<div style="background:#f0faf4;border:1px solid #74c69d;border-radius:8px;padding:0.6rem;font-size:0.85rem;margin:0.4rem 0">✅ Score: <strong>${data.result.score}/${data.result.total}</strong> (${Math.round(data.result.score/data.result.total*100)}%)</div>`;}}catch(e){}}
+function startStudentTest(tid){const test=window._tests&&window._tests.find(t=>t.id===tid);if(!test)return;activeTestData=test;activeTestAnswers={};const area=document.getElementById("testArea_"+tid);area.style.display="block";area.innerHTML=`<div class="card cpu"><b style="color:#8e44ad">${test.title}</b><br>${test.time_limit>0?`<div id="tdisp_${tid}" style="font-size:0.88rem;color:#e74c3c;font-weight:600;margin:0.5rem 0">⏱ ${test.time_limit}:00</div>`:""}${test.questions.map((q,i)=>`<div class="qzcard"><p style="font-weight:600;font-size:0.95rem;margin-bottom:0.7rem">${i+1}. ${q.q}</p>${q.options.map((o,j)=>`<button class="qzopt" id="sto_${tid}_${i}_${j}" onclick="selTA('${tid}',${i},${j})">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`).join("")}<button class="bpu" onclick="submitStuTest('${tid}')" style="margin-top:0.5rem">📤 Submit Test</button></div>`;if(test.time_limit>0)startTTimer(tid,test.time_limit);}
+function selTA(tid,qi,ai){activeTestAnswers[qi]=ai;const q=activeTestData.questions[qi];for(let j=0;j<q.options.length;j++){const b=document.getElementById(`sto_${tid}_${qi}_${j}`);if(b){b.style.borderColor=j===ai?"#2d6a4f":"#ddd";b.style.background=j===ai?"#f0faf4":"white";}}}
+function startTTimer(tid,mins){let secs=mins*60;const disp=document.getElementById("tdisp_"+tid);testTimer=setInterval(()=>{secs--;const m=Math.floor(secs/60),s=secs%60;if(disp)disp.textContent=`⏱ ${m}:${s.toString().padStart(2,"0")}`;if(secs<=0){clearInterval(testTimer);submitStuTest(tid);}},1000);}
+async function submitStuTest(tid){if(testTimer){clearInterval(testTimer);testTimer=null;}const test=activeTestData;if(!test)return;const ua=test.questions.length-Object.keys(activeTestAnswers).length;if(ua>0&&!confirm(`${ua} unanswered. Submit anyway?`))return;const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);try{const res=await fetch("/submit_test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({testId:tid,classCode:saved?JSON.parse(saved).code:"",studentEmail:currentUser.email,studentName:currentUser.name,answers:activeTestAnswers,questions:test.questions})});const data=await res.json();if(data.success){const pct=Math.round(data.score/data.total*100);document.getElementById("testArea_"+tid).innerHTML=`<div class="qzscore"><div class="big">${data.score}/${data.total}</div><div style="font-size:1rem;color:#555;margin-top:0.3rem">${pct}% — ${pct>=80?"Excellent! 🌟":pct>=60?"Good effort! 👍":"Keep practising 📚"}</div></div>`;loadMyTestResult(tid);}else alert(data.error||"Could not submit.");}catch(e){alert("Could not submit.");}}
 
-// ── QUIZ ──────────────────────────────────────────────────────────────────
-function startQuiz(){
-  const qs=QUIZ_Q[quizTopic]||QUIZ_Q["default"];quizAnswers={};
-  document.getElementById("quizScoreBox").style.display="none";
-  document.getElementById("quizArea").innerHTML=qs.map((q,i)=>`
-    <div class="qzcard"><p style="font-weight:600;font-size:0.95rem;margin-bottom:0.7rem">${i+1}. ${q.q}</p>
-    ${q.opts.map((o,j)=>`<button class="qzopt" id="qo${i}_${j}" onclick="answerQuiz(${i},${j})">${o}</button>`).join("")}
-    <div class="qzfb" id="qfb${i}" style="display:none"></div></div>`).join("");
-  document.getElementById("startQuizBtn").textContent="Restart";
-}
-function answerQuiz(qi,ai){
-  const qs=QUIZ_Q[quizTopic]||QUIZ_Q["default"];const q=qs[qi];quizAnswers[qi]=ai;
-  for(let j=0;j<q.opts.length;j++){const b=document.getElementById(`qo${qi}_${j}`);b.classList.add("disabled");if(j===q.ans)b.classList.add("correct");else if(j===ai)b.classList.add("wrong");}
-  const fb=document.getElementById(`qfb${qi}`);fb.style.display="block";fb.className="qzfb "+(ai===q.ans?"pass":"fail");fb.textContent=(ai===q.ans?"✅ Correct! ":"❌ Incorrect. ")+q.exp;
-  if(Object.keys(quizAnswers).length===qs.length){
-    const score=qs.filter((q2,i)=>quizAnswers[i]===q2.ans).length;const pct=Math.round(score/qs.length*100);
-    document.getElementById("quizScoreDisplay").textContent=score+"/"+qs.length;
-    document.getElementById("quizScoreMsg").textContent=pct+"% — "+(pct>=80?"Excellent! 🌟":pct>=60?"Good effort!":"Keep practising 📚");
-    document.getElementById("quizScoreBox").style.display="block";
-  }
-}
+function startQuiz(){const qs=QUIZ_Q[quizTopic]||QUIZ_Q["default"];quizAnswers={};document.getElementById("quizScoreBox").style.display="none";document.getElementById("quizArea").innerHTML=qs.map((q,i)=>`<div class="qzcard"><p style="font-weight:600;font-size:0.95rem;margin-bottom:0.7rem">${i+1}. ${q.q}</p>${q.opts.map((o,j)=>`<button class="qzopt" id="qo${i}_${j}" onclick="answerQuiz(${i},${j})">${o}</button>`).join("")}<div class="qzfb" id="qfb${i}" style="display:none"></div></div>`).join("");document.getElementById("startQuizBtn").textContent="Restart";}
+function answerQuiz(qi,ai){const qs=QUIZ_Q[quizTopic]||QUIZ_Q["default"];const q=qs[qi];quizAnswers[qi]=ai;for(let j=0;j<q.opts.length;j++){const b=document.getElementById(`qo${qi}_${j}`);b.classList.add("disabled");if(j===q.ans)b.classList.add("correct");else if(j===ai)b.classList.add("wrong");}const fb=document.getElementById(`qfb${qi}`);fb.style.display="block";fb.className="qzfb "+(ai===q.ans?"pass":"fail");fb.textContent=(ai===q.ans?"✅ Correct! ":"❌ Incorrect. ")+q.exp;if(Object.keys(quizAnswers).length===qs.length){const score=qs.filter((q2,i)=>quizAnswers[i]===q2.ans).length;const pct=Math.round(score/qs.length*100);document.getElementById("quizScoreDisplay").textContent=score+"/"+qs.length;document.getElementById("quizScoreMsg").textContent=pct+"% — "+(pct>=80?"Excellent! 🌟":pct>=60?"Good effort!":"Keep practising 📚");document.getElementById("quizScoreBox").style.display="block";}}
 
-// ── NOTES ─────────────────────────────────────────────────────────────────
-function buildStudentNotes(topic,level){
-  const lines=["LECTURE NOTES: "+topic,"Level: "+level,"","OVERVIEW",topic+" is a fundamental concept providing a systematic method for analysing information.","","LECTURE STRUCTURE",...SEGS.map((s,i)=>(i+1)+". "+s.name+"\n   "+s.desc(topic,"your approach")),"","ANALOGIES",...ANALOGIES.map(a=>a(topic)),"","REFLECTION QUESTIONS",...REFLECTIONS.map(r=>r(topic)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(topic)+"\n   Hint: "+p.hint),"","STUDY TIPS",...SRL];
-  document.getElementById("notesPreviewBox").textContent=lines.join("\n");
-}
-function downloadStudentNotes(){
-  const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);
-  const topic=saved?JSON.parse(saved).topic||"topic":"topic";
-  const a=document.createElement("a");
-  a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(document.getElementById("notesPreviewBox").textContent);
-  a.download="Notes_"+topic.replace(/\s+/g,"_")+".txt";a.click();
-}
+function buildStudentNotes(topic,level){const lines=["LECTURE NOTES: "+topic,"Level: "+level,"","OVERVIEW",topic+" is a fundamental concept providing a systematic method for analysing information.","","LECTURE STRUCTURE",...SEGS.map((s,i)=>(i+1)+". "+s.name+"\n   "+s.desc(topic,"your approach")),"","ANALOGIES",...ANALOGIES.map(a=>a(topic)),"","REFLECTION QUESTIONS",...REFLECTIONS.map(r=>r(topic)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(topic)+"\n   Hint: "+p.hint),"","STUDY TIPS",...SRL];document.getElementById("notesPreviewBox").textContent=lines.join("\n");}
+function downloadStudentNotes(){const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);const topic=saved?JSON.parse(saved).topic||"topic":"topic";const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(document.getElementById("notesPreviewBox").textContent);a.download="Notes_"+topic.replace(/\s+/g,"_")+".txt";a.click();}
 
-// ── LIVE CLASS ────────────────────────────────────────────────────────────
 function setRes(id,text,spkId){document.getElementById(id).textContent=text;if(spkId){const el=document.getElementById(spkId);if(el)el.style.display="inline-block";}}
 function setLoad(id){document.getElementById(id).innerHTML='<span class="loading">Thinking...</span>';}
+async function handleTeacherQuestion(){const q=document.getElementById("teacherQ").value.trim();if(!q){alert("Type a question.");return;}setLoad("teacherQResult");try{const r=await fetch("/layer2/question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setRes("teacherQResult",d.result||d.error,"speakTQ");}catch(e){setRes("teacherQResult","Could not reach server.","speakTQ");}}
+async function handleConfusion(){const c=document.getElementById("confusionInput").value.trim();if(!c){alert("Describe the confusion.");return;}setLoad("confusionResult");try{const r=await fetch("/layer2/confusion",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({confusion:c,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setRes("confusionResult",d.result||d.error,"speakCon");}catch(e){setRes("confusionResult","Could not reach server.","speakCon");}}
+async function handleConceptCheck(){const q=document.getElementById("conceptQ").value.trim();const pct=document.getElementById("correctPct").value;if(!q){alert("Type the question.");return;}setLoad("conceptResult");try{const r=await fetch("/layer2/conceptcheck",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,correct_pct:pct,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setRes("conceptResult",d.result||d.error,"speakCC");}catch(e){setRes("conceptResult","Could not reach server.","speakCC");}}
+async function handlePacing(){const mins=document.getElementById("minsElapsed").value;const seg=document.getElementById("currentSeg").value.trim();if(!mins||!seg){alert("Fill in both fields.");return;}setLoad("pacingResult");try{const r=await fetch("/layer2/pacing",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mins_elapsed:mins,current_segment:seg,topic:currentPlan.topic,level:currentPlan.level,total_duration:currentPlan.duration})});const d=await r.json();setRes("pacingResult",d.result||d.error,"speakPac");}catch(e){setRes("pacingResult","Could not reach server.","speakPac");}}
+async function handleStudentQuestion(){const question=document.getElementById("stuQuestion").value.trim();if(!question){alert("Type your question.");return;}const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);if(!saved){alert("Connect to a class first.");return;}const cls=JSON.parse(saved);setLoad("stuQuestionResult");try{const res=await fetch("/layer2/student_question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question,name:currentUser.name,age:currentUser.age||"unknown",year:currentUser.year||"unknown",background:currentUser.background||"unknown",topic:cls.topic||"the current topic",level:cls.level||"Intermediate"})});const data=await res.json();const answer=data.result||data.error;setRes("stuQuestionResult",answer,"speakStuQ");const reports=getReports();reports.push({classCode:cls.code,teacherEmail:cls.teacherEmail,studentName:currentUser.name,question,answer,timestamp:new Date().toLocaleString()});saveReports(reports);}catch(e){setRes("stuQuestionResult","Could not reach server.","speakStuQ");}}
 
-async function handleTeacherQuestion(){
-  const q=document.getElementById("teacherQ").value.trim();if(!q){alert("Type a question.");return;}
-  setLoad("teacherQResult");
-  try{const r=await fetch("/layer2/question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setRes("teacherQResult",d.result||d.error,"speakTQ");}
-  catch(e){setRes("teacherQResult","Could not reach server.","speakTQ");}
-}
-async function handleConfusion(){
-  const c=document.getElementById("confusionInput").value.trim();if(!c){alert("Describe the confusion.");return;}
-  setLoad("confusionResult");
-  try{const r=await fetch("/layer2/confusion",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({confusion:c,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setRes("confusionResult",d.result||d.error,"speakCon");}
-  catch(e){setRes("confusionResult","Could not reach server.","speakCon");}
-}
-async function handleConceptCheck(){
-  const q=document.getElementById("conceptQ").value.trim();const pct=document.getElementById("correctPct").value;if(!q){alert("Type the question.");return;}
-  setLoad("conceptResult");
-  try{const r=await fetch("/layer2/conceptcheck",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,correct_pct:pct,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setRes("conceptResult",d.result||d.error,"speakCC");}
-  catch(e){setRes("conceptResult","Could not reach server.","speakCC");}
-}
-async function handlePacing(){
-  const mins=document.getElementById("minsElapsed").value;const seg=document.getElementById("currentSeg").value.trim();if(!mins||!seg){alert("Fill in both fields.");return;}
-  setLoad("pacingResult");
-  try{const r=await fetch("/layer2/pacing",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mins_elapsed:mins,current_segment:seg,topic:currentPlan.topic,level:currentPlan.level,total_duration:currentPlan.duration})});const d=await r.json();setRes("pacingResult",d.result||d.error,"speakPac");}
-  catch(e){setRes("pacingResult","Could not reach server.","speakPac");}
-}
-async function handleStudentQuestion(){
-  const question=document.getElementById("stuQuestion").value.trim();if(!question){alert("Type your question.");return;}
-  const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);if(!saved){alert("Connect to a class first.");return;}
-  const cls=JSON.parse(saved);setLoad("stuQuestionResult");
-  try{
-    const res=await fetch("/layer2/student_question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question,name:currentUser.name,age:currentUser.age||"unknown",year:currentUser.year||"unknown",background:currentUser.background||"unknown",topic:cls.topic||"the current topic",level:cls.level||"Intermediate"})});
-    const data=await res.json();const answer=data.result||data.error;
-    setRes("stuQuestionResult",answer,"speakStuQ");
-    const reports=getReports();reports.push({classCode:cls.code,teacherEmail:cls.teacherEmail,studentName:currentUser.name,question,answer,timestamp:new Date().toLocaleString()});
-    saveReports(reports);
-  }catch(e){setRes("stuQuestionResult","Could not reach server.","speakStuQ");}
-}
+function startVoice(targetId){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert("Voice input not supported. Use Chrome.");return;}if(activeRec){activeRec.stop();activeRec=null;return;}const r=new SR();r.lang="en-US";r.interimResults=false;activeRec=r;document.querySelectorAll(".vbtn").forEach(b=>{if(b.getAttribute("onclick")==="startVoice('"+targetId+"')"){b.classList.add("listening");b.textContent="🎤 Listening...";}});r.onresult=e=>{document.getElementById(targetId).value=e.results[0][0].transcript;};r.onend=()=>{document.querySelectorAll(".vbtn").forEach(b=>{b.classList.remove("listening");if(b.getAttribute("onclick")==="startVoice('"+targetId+"')")b.textContent="🎤 Speak";});activeRec=null;};r.start();}
+function speakText(id){const text=document.getElementById(id).textContent;if(!text||!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=0.93;u.pitch=1.0;if(selectedVoice)u.voice=selectedVoice;window.speechSynthesis.speak(u);}
 
-// ── VOICE INPUT ───────────────────────────────────────────────────────────
-function startVoice(targetId){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){alert("Voice input not supported. Use Chrome.");return;}
-  if(activeRec){activeRec.stop();activeRec=null;return;}
-  const r=new SR();r.lang="en-US";r.interimResults=false;activeRec=r;
-  document.querySelectorAll(".vbtn").forEach(b=>{if(b.getAttribute("onclick")==="startVoice('"+targetId+"')"){b.classList.add("listening");b.textContent="🎤 Listening...";}});
-  r.onresult=e=>{document.getElementById(targetId).value=e.results[0][0].transcript;};
-  r.onend=()=>{document.querySelectorAll(".vbtn").forEach(b=>{b.classList.remove("listening");if(b.getAttribute("onclick")==="startVoice('"+targetId+"')")b.textContent="🎤 Speak";});activeRec=null;};
-  r.start();
-}
-function speakText(id){
-  const text=document.getElementById(id).textContent;if(!text||!window.speechSynthesis)return;
-  window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);u.rate=0.93;u.pitch=1.0;
-  if(selectedVoice)u.voice=selectedVoice;
-  window.speechSynthesis.speak(u);
-}
-
-// ── VIDEO SCRIPT ──────────────────────────────────────────────────────────
-async function generateVideoScript(){
-  if(!currentPlan){alert("Generate a lesson plan first.");return;}
-  const btn=document.getElementById("videoBtn");const st=document.getElementById("videoStatus");
-  btn.disabled=true;btn.textContent="Writing...";st.textContent="Generating...";
-  try{
-    const res=await fetch("/generate_video_script",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level})});
-    const data=await res.json();
-    document.getElementById("scriptBox").textContent=data.result||data.error;
-    document.getElementById("scriptBox").style.display="block";
-    document.getElementById("copyScriptBtn").style.display="inline-block";
-    st.textContent="✅ Done!";
-  }catch(e){st.textContent="❌ Could not generate.";}
-  finally{btn.disabled=false;btn.textContent="🎬 Generate Script";}
-}
+async function generateVideoScript(){if(!currentPlan){alert("Generate a lesson plan first.");return;}const btn=document.getElementById("videoBtn");const st=document.getElementById("videoStatus");btn.disabled=true;btn.textContent="Writing...";st.textContent="Generating...";try{const res=await fetch("/generate_video_script",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level})});const data=await res.json();document.getElementById("scriptBox").textContent=data.result||data.error;document.getElementById("scriptBox").style.display="block";document.getElementById("copyScriptBtn").style.display="inline-block";st.textContent="✅ Done!";}catch(e){st.textContent="❌ Could not generate.";}finally{btn.disabled=false;btn.textContent="🎬 Generate Script";}}
 function copyScript(){navigator.clipboard&&navigator.clipboard.writeText(document.getElementById("scriptBox").textContent).then(()=>alert("Copied!"));}
 
-// ── REPORTS ───────────────────────────────────────────────────────────────
-function loadReports(){
-  const saved=localStorage.getItem("lai_code_"+currentUser.email);if(!saved)return;
-  const code=JSON.parse(saved).code;
-  const reports=getReports().filter(r=>r.classCode===code);
-  const empty=document.getElementById("reportsEmpty");const list=document.getElementById("reportsList");
-  if(!reports.length){empty.style.display="block";list.innerHTML="";return;}
-  empty.style.display="none";
-  list.innerHTML=reports.map(r=>`<div class="rcrd"><div style="font-size:0.8rem;color:#888">${r.studentName} · ${r.timestamp}</div><div style="font-weight:600;font-size:0.9rem;margin:0.3rem 0">"${r.question}"</div><div style="font-size:0.82rem;color:#555;line-height:1.5">${r.answer.substring(0,200)}${r.answer.length>200?"...":""}</div></div>`).join("");
-}
-function clearReports(){
-  if(!confirm("Clear all reports?"))return;
-  const saved=localStorage.getItem("lai_code_"+currentUser.email);if(!saved)return;
-  saveReports(getReports().filter(r=>r.classCode!==JSON.parse(saved).code));loadReports();
-}
+function loadReports(){const saved=localStorage.getItem("lai_code_"+currentUser.email);if(!saved)return;const code=JSON.parse(saved).code;const reports=getReports().filter(r=>r.classCode===code);const empty=document.getElementById("reportsEmpty");const list=document.getElementById("reportsList");if(!reports.length){empty.style.display="block";list.innerHTML="";return;}empty.style.display="none";list.innerHTML=reports.map(r=>`<div class="rcrd"><div style="font-size:0.8rem;color:#888">${r.studentName} · ${r.timestamp}</div><div style="font-weight:600;font-size:0.9rem;margin:0.3rem 0">"${r.question}"</div><div style="font-size:0.82rem;color:#555;line-height:1.5">${r.answer.substring(0,200)}${r.answer.length>200?"...":""}</div></div>`).join("");}
+function clearReports(){if(!confirm("Clear all reports?"))return;const saved=localStorage.getItem("lai_code_"+currentUser.email);if(!saved)return;saveReports(getReports().filter(r=>r.classCode!==JSON.parse(saved).code));loadReports();}
 
-// ── RUBRIC ────────────────────────────────────────────────────────────────
-function updateScore(){
-  let total=0;
-  RUBRIC.forEach((_,i)=>{const v=parseInt(document.getElementById("r"+i).value);document.getElementById("rv"+i).textContent=v;total+=v;});
-  const pct=Math.round(total/(RUBRIC.length*5)*100);
-  document.getElementById("totalScore").textContent=total+"/"+(RUBRIC.length*5);
-  document.getElementById("totalPct").textContent=pct+"%";
-  document.getElementById("rating").textContent=pct>=80?"Excellent ⭐":pct>=60?"Good 👍":"Needs Work ⚠️";
-}
+function updateScore(){let total=0;RUBRIC.forEach((_,i)=>{const v=parseInt(document.getElementById("r"+i).value);document.getElementById("rv"+i).textContent=v;total+=v;});const pct=Math.round(total/(RUBRIC.length*5)*100);document.getElementById("totalScore").textContent=total+"/"+(RUBRIC.length*5);document.getElementById("totalPct").textContent=pct+"%";document.getElementById("rating").textContent=pct>=80?"Excellent ⭐":pct>=60?"Good 👍":"Needs Work ⚠️";}
 
-// ── EXPORT ────────────────────────────────────────────────────────────────
-function buildExport(){
-  if(!currentPlan)return;
-  const t=currentPlan.topic;
-  const lines=["LESSON PLAN: "+t,"Generated: "+currentPlan.generatedAt,"Level: "+currentPlan.level+" | Duration: "+currentPlan.duration+" min | Style: "+currentPlan.style,"","LEARNING OBJECTIVES",currentPlan.objectives,"","OUTLINE",...SEGS.map((s,i)=>(i+1)+". "+s.name+" ["+s.icap+"]\n   "+s.desc(t,currentPlan.style)),"","ANALOGIES",...ANALOGIES.map(a=>a(t)),"","ACTIVITIES",...ACTIVITIES.map(a=>"["+a.icap+"] "+a.title+": "+a.p(t)),"","REFLECTIONS",...REFLECTIONS.map(r=>r(t)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(t)+"\n   Hint: "+p.hint),"","SRL PROMPTS",...SRL];
-  document.getElementById("exportPreview").textContent=lines.join("\n");
-}
-function downloadTxt(){
-  if(!currentPlan)return;
-  const a=document.createElement("a");
-  a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(document.getElementById("exportPreview").textContent);
-  a.download="LessonPlan_"+currentPlan.topic.replace(/\s+/g,"_")+".txt";a.click();
-}
+function buildExport(){if(!currentPlan)return;const t=currentPlan.topic;const lines=["LESSON PLAN: "+t,"Generated: "+currentPlan.generatedAt,"Level: "+currentPlan.level+" | Duration: "+currentPlan.duration+" min | Style: "+currentPlan.style,"","LEARNING OBJECTIVES",currentPlan.objectives,"","OUTLINE",...SEGS.map((s,i)=>(i+1)+". "+s.name+" ["+s.icap+"]\n   "+s.desc(t,currentPlan.style)),"","ANALOGIES",...ANALOGIES.map(a=>a(t)),"","ACTIVITIES",...ACTIVITIES.map(a=>"["+a.icap+"] "+a.title+": "+a.p(t)),"","REFLECTIONS",...REFLECTIONS.map(r=>r(t)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(t)+"\n   Hint: "+p.hint),"","SRL PROMPTS",...SRL];document.getElementById("exportPreview").textContent=lines.join("\n");}
+function downloadTxt(){if(!currentPlan)return;const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(document.getElementById("exportPreview").textContent);a.download="LessonPlan_"+currentPlan.topic.replace(/\s+/g,"_")+".txt";a.click();}
 
-// ── TAB SWITCHING ─────────────────────────────────────────────────────────
-function switchTab(id){
-  const tIds=["builder","liveclass","studsupport","assignments","tests","reports","video","rubric","export"];
-  document.querySelectorAll("#teacherTabs .tab").forEach((t,i)=>t.classList.toggle("active",tIds[i]===id));
-  document.querySelectorAll("#studentTabs .tab").forEach(t=>t.classList.toggle("active",id==="studenthome"));
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  const el=document.getElementById(id);if(el)el.classList.add("active");
-  if(id==="reports")loadReports();
-}
+function switchTab(id){const tIds=["builder","liveclass","studsupport","assignments","tests","reports","video","rubric","export"];document.querySelectorAll("#teacherTabs .tab").forEach((t,i)=>t.classList.toggle("active",tIds[i]===id));document.querySelectorAll("#studentTabs .tab").forEach(t=>t.classList.toggle("active",id==="studenthome"));document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));const el=document.getElementById(id);if(el)el.classList.add("active");if(id==="reports")loadReports();}
 
-// ── INIT ──────────────────────────────────────────────────────────────────
-window.onload=function(){
-  const saved=localStorage.getItem("lai_session");
-  if(saved){
-    currentUser=JSON.parse(saved);
-    document.getElementById("authScreen").style.display="none";
-    document.getElementById("mainApp").style.display="block";
-    initApp();
-  }
-};
+window.onload=function(){const saved=localStorage.getItem("lai_session");if(saved){currentUser=JSON.parse(saved);document.getElementById("authScreen").style.display="none";document.getElementById("mainApp").style.display="block";initApp();}};
 </script>
 </body>
 </html>
