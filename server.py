@@ -53,26 +53,26 @@ def ask_groq(prompt, max_tokens=1500):
 
 def parse_note_sections(notes_text):
     sections = []
-    parts = re.split(r'\n(\d+\.\s+[A-Z][A-Z ]+)\n', '\n' + notes_text)
-    if len(parts) >= 3:
-        i = 1
-        while i < len(parts) - 1:
-            raw_title = parts[i].strip()
-            content = parts[i+1].strip() if i+1 < len(parts) else ""
-            title = re.sub(r'^\d+\.\s*', '', raw_title).strip()
-            title = title[0].upper() + title[1:].lower() if title else raw_title
-            lines = []
-            for l in content.split('\n'):
-                l = re.sub(r'^[•\-\*\d\.]+\s*', '', l).strip()
-                if len(l) > 8:
-                    lines.append(l)
-            sections.append({'title': title, 'bullets': lines[:5], 'full': content[:600]})
-            i += 2
+    # Match numbered sections in any case format: "1. Introduction" or "1. INTRODUCTION"
+    pattern = re.compile(r'(?:^|\n)(\d+)\.\s+([A-Za-z][^\n]+)\n([\s\S]*?)(?=(?:\n\d+\.\s+[A-Za-z])|$)')
+    matches = list(pattern.finditer('\n' + notes_text))
+    for m in matches:
+        title = m.group(2).strip()
+        body = m.group(3).strip()
+        lines = []
+        for l in body.split('\n'):
+            clean = re.sub(r'^[\s•\-\*\d\.]+', '', l).strip()
+            if len(clean) > 15:
+                lines.append(clean[:140])
+            if len(lines) >= 6:
+                break
+        narration = body.replace('\n', ' ')[:600]
+        sections.append({'title': title, 'bullets': lines, 'narration': narration, 'full': body[:800]})
     if not sections:
         paras = [p.strip() for p in notes_text.split('\n\n') if len(p.strip()) > 40]
-        for i, para in enumerate(paras[:7]):
-            lines = [re.sub(r'^[•\-\*\d\.]+\s*','',l).strip() for l in para.split('\n') if len(l.strip())>8]
-            sections.append({'title': f'Part {i+1}', 'bullets': lines[:5], 'full': para[:500]})
+        for i, para in enumerate(paras[:8]):
+            ls = [re.sub(r'^[•\-\*\d\.\s]+', '', l).strip() for l in para.split('\n') if len(l.strip()) > 15]
+            sections.append({'title': f'Section {i+1}', 'bullets': ls[:6], 'narration': para.replace('\n', ' ')[:500], 'full': para[:800]})
     return sections
 
 @app.route("/")
@@ -299,36 +299,37 @@ def generate_notes():
         topic=d.get("topic",""); level=d.get("level","Intermediate")
         duration=d.get("duration",75); objectives=d.get("objectives","")
         style=d.get("style","Lecture-based")
-        p = f"""You are an expert lecturer. Generate comprehensive lecture notes for a {duration}-minute {level}-level class on "{topic}" using a {style} approach.
+        p = f"""You are a senior university lecturer writing detailed lecture notes for students.
+Generate VERY COMPREHENSIVE and DETAILED lecture notes for a {duration}-minute {level}-level class on "{topic}" using a {style} approach.
 
 Learning objectives:
 {objectives}
 
-Use EXACTLY this structure with these exact headers:
+Use EXACTLY this numbered structure. Write at least 3-5 full paragraphs per section. Do not be brief.
 
-1. INTRODUCTION
-Write why this topic matters and its real-world relevance.
+1. Introduction
+Explain why this topic is important in the real world. Give 2-3 real industries or problems that use it. Explain what students will be able to do after this class. Write at least 300 words.
 
-2. KEY CONCEPTS
-Define and explain each core idea clearly with examples.
+2. Key Concepts
+Define every important term. Explain each concept fully. Use simple language first then build to technical language. Write at least 400 words.
 
-3. DETAILED EXPLANATIONS
-Go deep on each concept with reasoning and examples.
+3. Detailed Explanations
+Go deep. Explain HOW things work step by step. Cover edge cases. Explain assumptions. Write at least 400 words.
 
-4. WORKED EXAMPLES
-Give at least 2 concrete step-by-step examples.
+4. Worked Examples
+Give at least 3 fully worked examples with step-by-step solutions. Show all working. Explain each step. Write at least 400 words.
 
-5. COMMON MISCONCEPTIONS
-Explain what students often get wrong and why.
+5. Common Misconceptions
+List at least 5 things students commonly get wrong. Explain WHY they are wrong. Explain what the correct understanding is. Write at least 300 words.
 
-6. SUMMARY
-Bullet point recap of the most important points.
+6. Summary
+Recap every major point. Write in bullet points. At least 10 bullets.
 
-7. FURTHER READING
-Name 3 related topics to explore next.
+7. Further Reading
+Suggest 5 specific books, papers, or topics to explore next. Explain why each one is valuable.
 
-Write in clear academic English. Be thorough and detailed."""
-        result = ask_groq(p, max_tokens=2000)
+Write in clear academic English. Be thorough. Do not skip any section. These notes must be detailed enough for a student to pass an exam using them alone."""
+        result = ask_groq(p, max_tokens=3500)
         code = d.get("classCode","").upper().strip()
         if code:
             init_db(); conn = get_db()
@@ -419,72 +420,122 @@ def generate_slides():
         d = request.json
         topic = d.get("topic","Topic"); level = d.get("level","Intermediate")
         duration = d.get("duration",75); style = d.get("style","Lecture-based")
-        notes = d.get("notes","")
+        objectives = d.get("objectives",""); notes = d.get("notes","")
 
         GREEN=RGBColor(0x2d,0x6a,0x4f); WHITE=RGBColor(0xFF,0xFF,0xFF)
         DARK=RGBColor(0x1a,0x1a,0x1a); LGRAY=RGBColor(0xF7,0xF5,0xF2)
         ACCENT=RGBColor(0x74,0xC6,0x9D); DKGREEN=RGBColor(0x1B,0x43,0x32)
+        MIDGREEN=RGBColor(0x52,0x96,0x6B)
 
         prs = Presentation()
         prs.slide_width = Inches(13.33); prs.slide_height = Inches(7.5)
         blank = prs.slide_layouts[6]
 
-        def rect(slide,l,t,w,h,c):
+        def rect(slide,l,t,w,h,c,alpha=None):
             s=slide.shapes.add_shape(1,Inches(l),Inches(t),Inches(w),Inches(h))
             s.fill.solid(); s.fill.fore_color.rgb=c; s.line.fill.background(); return s
 
-        def addtxt(slide,text,l,t,w,h,sz=18,bold=False,color=None,align=PP_ALIGN.LEFT):
+        def addtxt(slide,text,l,t,w,h,sz=18,bold=False,color=None,align=PP_ALIGN.LEFT,wrap=True):
             tb=slide.shapes.add_textbox(Inches(l),Inches(t),Inches(w),Inches(h))
-            tf=tb.text_frame; tf.word_wrap=True; p=tf.paragraphs[0]; p.alignment=align
+            tf=tb.text_frame; tf.word_wrap=wrap; p=tf.paragraphs[0]; p.alignment=align
             run=p.add_run(); run.text=str(text); run.font.size=Pt(sz); run.font.bold=bold
             run.font.color.rgb=color if color else DARK
 
-        # Title slide
+        def addtxt_multi(slide,lines,l,t,w,h,sz=16,color=None,bullet_color=None):
+            tb=slide.shapes.add_textbox(Inches(l),Inches(t),Inches(w),Inches(h))
+            tf=tb.text_frame; tf.word_wrap=True
+            for i,line in enumerate(lines):
+                p=tf.paragraphs[0] if i==0 else tf.add_paragraph()
+                p.alignment=PP_ALIGN.LEFT
+                run=p.add_run()
+                run.text=("▸  " if bullet_color else "")+str(line)
+                run.font.size=Pt(sz)
+                run.font.color.rgb=color if color else DARK
+
+        # ── TITLE SLIDE ──
         s1=prs.slides.add_slide(blank)
-        rect(s1,0,0,13.33,7.5,GREEN); rect(s1,0,5.8,13.33,1.7,DKGREEN)
-        addtxt(s1,"LectureAI",0.5,0.3,12,0.6,sz=14,color=ACCENT,align=PP_ALIGN.CENTER)
-        addtxt(s1,topic,0.5,1.1,12,2.5,sz=42,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
-        addtxt(s1,level+" | "+str(duration)+" min | "+style,0.5,3.7,12,0.7,sz=16,color=ACCENT,align=PP_ALIGN.CENTER)
-        src = "Generated from AI Lecture Notes" if notes else "LectureAI"
-        addtxt(s1,src,0.5,4.4,12,0.5,sz=12,color=RGBColor(0xB7,0xDF,0xC8),align=PP_ALIGN.CENTER)
+        rect(s1,0,0,13.33,7.5,GREEN)
+        rect(s1,0,5.6,13.33,1.9,DKGREEN)
+        rect(s1,0,0,0.25,7.5,ACCENT)
+        addtxt(s1,"🎓 LectureAI",0.5,0.3,12,0.55,sz=14,color=ACCENT,align=PP_ALIGN.LEFT)
+        addtxt(s1,topic,0.5,1.0,12.3,2.8,sz=44,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
+        addtxt(s1,level+" Level  |  "+str(duration)+" min  |  "+style,0.5,3.9,12.3,0.7,sz=18,color=ACCENT,align=PP_ALIGN.CENTER)
+        src="Built from AI Lecture Notes" if notes else "LectureAI Lesson Plan"
+        addtxt(s1,src,0.5,4.7,12.3,0.5,sz=13,color=RGBColor(0xB7,0xDF,0xC8),align=PP_ALIGN.CENTER)
+
+        # ── OBJECTIVES SLIDE ──
+        s2=prs.slides.add_slide(blank)
+        s2.background.fill.solid(); s2.background.fill.fore_color.rgb=LGRAY
+        rect(s2,0,0,13.33,1.4,GREEN); rect(s2,0,6.9,13.33,0.6,DKGREEN)
+        rect(s2,0,0,0.18,7.5,ACCENT)
+        addtxt(s2,"Learning Objectives",0.4,0.25,12,0.9,sz=30,bold=True,color=WHITE)
+        obj_lines=[o.lstrip("0123456789. ").strip() for o in objectives.strip().split("\n") if o.strip()][:7]
+        if not obj_lines: obj_lines=["Understand core concepts","Apply the methods","Evaluate results","Reflect on learning"]
+        for i,obj in enumerate(obj_lines):
+            y=1.6+i*0.75
+            rect(s2,0.5,y+0.1,0.38,0.5,GREEN)
+            addtxt(s2,str(i+1),0.5,y+0.12,0.38,0.46,sz=16,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
+            addtxt(s2,obj,1.05,y+0.08,11.8,0.58,sz=16,color=DARK)
 
         if notes:
             sections = parse_note_sections(notes)
             for sec in sections:
-                s = prs.slides.add_slide(blank)
-                s.background.fill.solid(); s.background.fill.fore_color.rgb=LGRAY
-                rect(s,0,0,13.33,1.25,GREEN)
-                addtxt(s, sec['title'], 0.4, 0.2, 12.5, 0.9, sz=28, bold=True, color=WHITE)
-                y = 1.55
-                for bullet in sec['bullets']:
-                    if y > 6.9: break
-                    rect(s, 0.4, y+0.12, 0.18, 0.28, ACCENT)
-                    addtxt(s, bullet[:130], 0.75, y, 12.1, 0.6, sz=15, color=DARK)
-                    y += 0.72
+                sl=prs.slides.add_slide(blank)
+                sl.background.fill.solid(); sl.background.fill.fore_color.rgb=LGRAY
+                rect(sl,0,0,13.33,1.45,GREEN); rect(sl,0,6.9,13.33,0.6,DKGREEN)
+                rect(sl,0,0,0.18,7.5,ACCENT)
+                title_txt=sec['title']
+                addtxt(sl,title_txt,0.4,0.22,12.4,1.0,sz=28,bold=True,color=WHITE)
+                bullets=sec.get('bullets',[])
+                if not bullets and sec.get('full'):
+                    raw=sec['full']
+                    bullets=[l.strip() for l in raw.split('\n') if len(l.strip())>15][:6]
+                y=1.65
+                for b in bullets[:6]:
+                    if y>6.6: break
+                    rect(sl,0.4,y+0.1,0.2,0.38,ACCENT)
+                    addtxt(sl,"▸",0.4,y+0.08,0.2,0.42,sz=14,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
+                    lines=[]
+                    words=b.split()
+                    cur=""
+                    for w in words:
+                        if len(cur+" "+w)<80: cur=(cur+" "+w).strip()
+                        else: lines.append(cur);cur=w
+                    if cur: lines.append(cur)
+                    for li,ln in enumerate(lines[:2]):
+                        addtxt(sl,ln,0.75,y+0.06+li*0.38,12.1,0.42,sz=15,color=DARK)
+                    y+=0.38*min(len(lines[:2]),2)+0.42
         else:
-            segs=[("Introduction and Hook","Active",0.12),("Core Concept","Passive",0.35),
-                  ("Guided Activity","Constructive",0.28),("Peer Discussion","Interactive",0.13),
-                  ("Wrap-Up","Constructive",0.12)]
+            segs=[("Introduction & Hook","Active",0.12,"Why it matters, real-world context, lesson goals"),
+                  ("Core Concepts","Passive",0.35,"Key definitions, terminology, foundational theory"),
+                  ("Guided Activity","Constructive",0.28,"Hands-on application, worked examples, peer explanation"),
+                  ("Peer Discussion","Interactive",0.13,"Debate, defend reasoning, compare approaches"),
+                  ("Wrap-Up","Constructive",0.12,"Summary, exit ticket, key takeaways")]
             icap_c={"Passive":RGBColor(0xC0,0x44,0x0A),"Active":RGBColor(0x1A,0x66,0x40),
                     "Constructive":RGBColor(0x1A,0x3F,0x80),"Interactive":RGBColor(0x6A,0x1A,0x80)}
-            for i,(name,icap,pct) in enumerate(segs):
-                s=prs.slides.add_slide(blank)
-                s.background.fill.solid(); s.background.fill.fore_color.rgb=LGRAY
-                rect(s,0,0,13.33,1.2,GREEN)
-                addtxt(s,"Segment "+str(i+1),0.4,0.05,4,0.38,sz=11,color=ACCENT)
-                addtxt(s,name,0.4,0.38,10,0.75,sz=24,bold=True,color=WHITE)
+            for i,(name,icap,pct,desc) in enumerate(segs):
+                sl=prs.slides.add_slide(blank)
+                sl.background.fill.solid(); sl.background.fill.fore_color.rgb=LGRAY
+                rect(sl,0,0,13.33,1.45,GREEN); rect(sl,0,6.9,13.33,0.6,DKGREEN)
+                rect(sl,0,0,0.18,7.5,ACCENT)
+                addtxt(sl,"Segment "+str(i+1)+" of "+str(len(segs)),0.4,0.08,8,0.38,sz=12,color=ACCENT)
+                addtxt(sl,name,0.4,0.38,9.5,0.9,sz=26,bold=True,color=WHITE)
                 mins=max(5,round(duration*pct))
-                addtxt(s,str(mins)+" min",10.5,0.38,2.5,0.65,sz=19,bold=True,color=ACCENT,align=PP_ALIGN.RIGHT)
-                ic=icap_c.get(icap,GREEN); rect(s,0.4,1.5,2.1,0.48,ic)
-                addtxt(s,icap.upper(),0.4,1.52,2.1,0.44,sz=12,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
-                addtxt(s,"Topic: "+topic,0.4,2.2,12.5,0.48,sz=17,bold=True,color=GREEN)
-                addtxt(s,style+" for "+level.lower()+"-level students.",0.4,2.85,12.5,0.55,sz=15,color=DARK)
+                rect(sl,10.8,0.22,2.3,1.0,DKGREEN)
+                addtxt(sl,str(mins)+" min",10.8,0.38,2.3,0.65,sz=22,bold=True,color=ACCENT,align=PP_ALIGN.CENTER)
+                ic=icap_c.get(icap,GREEN); rect(sl,0.4,1.65,2.2,0.5,ic)
+                addtxt(sl,icap,0.4,1.68,2.2,0.44,sz=13,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
+                addtxt(sl,desc,0.4,2.4,12.5,0.55,sz=16,bold=True,color=GREEN)
+                addtxt(sl,"Topic: "+topic,0.4,3.1,12.5,0.55,sz=15,color=DARK)
+                addtxt(sl,style+" delivery for "+level.lower()+"-level students",0.4,3.7,12.5,0.5,sz=14,color=RGBColor(0x55,0x55,0x55))
 
-        # Thank you slide
+        # ── THANK YOU SLIDE ──
         sc=prs.slides.add_slide(blank)
-        rect(sc,0,0,13.33,7.5,GREEN); rect(sc,0,5.5,13.33,2.0,DKGREEN)
-        addtxt(sc,"Thank You",0.5,2.0,12,1.5,sz=52,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
-        addtxt(sc,"Questions about "+topic+"?",0.5,3.6,12,0.8,sz=22,color=ACCENT,align=PP_ALIGN.CENTER)
+        rect(sc,0,0,13.33,7.5,GREEN); rect(sc,0,5.3,13.33,2.2,DKGREEN)
+        rect(sc,0,0,0.25,7.5,ACCENT)
+        addtxt(sc,"Thank You",0.5,1.6,12.3,1.8,sz=56,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
+        addtxt(sc,"Questions about "+topic+"?",0.5,3.5,12.3,0.8,sz=24,color=ACCENT,align=PP_ALIGN.CENTER)
+        addtxt(sc,"LectureAI · Human-AI Co-Orchestration",0.5,4.5,12.3,0.6,sz=14,color=RGBColor(0xB7,0xDF,0xC8),align=PP_ALIGN.CENTER)
 
         buf=io.BytesIO(); prs.save(buf); buf.seek(0)
         return send_file(buf,as_attachment=True,
