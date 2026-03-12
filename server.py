@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from groq import Groq
 from pptx import Presentation
-from pptx.util import Inches, Pt
+from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
 
@@ -71,6 +71,7 @@ def index():
 def ping():
     return jsonify({"status": "ok"})
 
+# ── Class management ──────────────────────────────────────────
 @app.route("/save_class", methods=["POST"])
 def save_class():
     try:
@@ -103,6 +104,7 @@ def get_class():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
+# ── Assignments ───────────────────────────────────────────────
 @app.route("/create_assignment", methods=["POST"])
 def create_assignment():
     try:
@@ -194,6 +196,7 @@ def get_my_submission():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
+# ── Tests ─────────────────────────────────────────────────────
 @app.route("/create_test", methods=["POST"])
 def create_test():
     try:
@@ -279,6 +282,10 @@ def get_my_test_result():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
+
+# ══════════════════════════════════════════════════════════════
+#  ICAP-ALIGNED LECTURE NOTES (with language support)
+# ══════════════════════════════════════════════════════════════
 @app.route("/generate_notes", methods=["POST"])
 def generate_notes():
     try:
@@ -286,35 +293,82 @@ def generate_notes():
         topic = d.get("topic",""); level = d.get("level","Intermediate")
         duration = d.get("duration",75); objectives = d.get("objectives","")
         style = d.get("style","Lecture-based")
-        p = f"""You are an expert lecturer. Generate comprehensive lecture notes for a {duration}-minute {level}-level class on "{topic}" using a {style} approach.
+        language = d.get("language","English")
+
+        p = f"""You are an expert university lecturer designing a comprehensive {duration}-minute {level}-level lecture on "{topic}" using a {style} approach.
+
+IMPORTANT: Write the ENTIRE response in {language}. All section headings, content, and explanations must be in {language}.
 
 Learning objectives:
-{objectives}
+{objectives if objectives else "Cover the topic comprehensively for " + level + "-level learners."}
 
-Structure the notes with these exact sections:
-1. INTRODUCTION
-Why this topic matters and real-world relevance.
+You MUST structure the notes following the ICAP pedagogical framework (Chi & Wylie, 2014). Each section must be labeled with its ICAP engagement level. Use EXACTLY these section headers and ICAP tags:
 
-2. KEY CONCEPTS
-Define and explain each core idea clearly.
+[PASSIVE] 1. INTRODUCTION AND CONTEXT
+- Why this topic matters in the real world
+- Historical context and evolution of this concept
+- Where this fits in the broader curriculum
+- A compelling hook or story to open the lecture
+- At least 3 paragraphs of detailed context
 
-3. DETAILED EXPLANATIONS
-Go deep on each concept with examples and reasoning.
+[PASSIVE] 2. CORE DEFINITIONS AND TERMINOLOGY
+- Define every key term precisely with examples
+- Provide formal definitions alongside plain-language explanations
+- Include at least 6-8 key terms
+- Use analogies from everyday life to ground abstract concepts
 
-4. WORKED EXAMPLES
-At least 2 concrete step-by-step examples.
+[ACTIVE] 3. DETAILED CONCEPT EXPLANATIONS
+- Deep dive into each concept with step-by-step reasoning
+- Multiple representations: verbal, mathematical, visual descriptions
+- At least 3-4 major concepts each with 2+ paragraphs
+- Connect concepts to each other — show the "big picture"
+- Highlight what makes each concept non-obvious or surprising
 
-5. COMMON MISCONCEPTIONS
-What students often get wrong and why.
+[ACTIVE] 4. WORKED EXAMPLES WITH ANNOTATIONS
+- Provide at least 3 fully worked examples of increasing difficulty
+- For each example: state the problem, show every step, explain WHY each step is taken
+- Include common wrong approaches and why they fail
+- Use concrete, realistic data or scenarios
 
-6. SUMMARY
-Bullet point recap of everything covered.
+[CONSTRUCTIVE] 5. CRITICAL THINKING CHALLENGES
+- Pose 3-4 open-ended questions that require analysis, not just recall
+- Include "what if" scenarios that push students to extend concepts
+- Provide a mini case study where students must apply multiple concepts together
+- Ask students to generate their own examples or explanations
+- Include a "teach it back" prompt: "How would you explain this to someone who has never heard of it?"
 
-7. FURTHER READING
-3 topics to explore next.
+[CONSTRUCTIVE] 6. COMMON MISCONCEPTIONS AND DEBUGGING
+- List at least 5 common errors or misunderstandings
+- For each: explain WHY the misconception is intuitive, then clarify the correct understanding
+- Include "tricky edge cases" that test deep understanding
 
-Write in clear academic English. Be thorough. These are full notes a student will study from."""
-        result = ask_groq(p, max_tokens=2000)
+[INTERACTIVE] 7. COLLABORATIVE ACTIVITIES
+- Design a pair/group discussion activity (3-5 minutes) with specific prompts
+- Include a think-pair-share question
+- Design a mini-debate or argument-mapping exercise
+- Provide a peer-teaching activity where students explain concepts to each other
+- Include a polling/clicker-style question with answer choices and discussion points
+
+[INTERACTIVE] 8. REAL-WORLD APPLICATION PROJECT
+- Present a substantial real-world scenario or dataset
+- Guide students through applying the lecture concepts to solve it collaboratively
+- Include roles for different group members
+- Include reflection questions: "What surprised you?" "What would you do differently?"
+
+[PASSIVE] 9. SUMMARY AND KEY TAKEAWAYS
+- Bullet-point recap of every major concept
+- A "cheat sheet" of the most important formulas, rules, or principles
+- Connections to the next lecture topic
+
+[CONSTRUCTIVE] 10. SELF-ASSESSMENT AND REFLECTION
+- 5 self-check questions (mix of recall, application, and analysis)
+- A metacognitive prompt: "What was the hardest part for you? Why?"
+- Suggested further reading: 3-4 specific topics or resources
+- A "one-minute paper" prompt for students to summarize their learning
+
+Write in clear, engaging academic language. Be THOROUGH — these notes should be detailed enough for a student to study from independently. Each section should be substantial (not just a few bullet points). Aim for at least 2500 words total. Use markdown-style formatting with headers, sub-points, and emphasis where appropriate."""
+
+        result = ask_groq(p, max_tokens=4000)
         code = d.get("classCode","").upper().strip()
         if code:
             init_db(); conn = get_db()
@@ -344,6 +398,91 @@ def get_notes():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
+
+# ══════════════════════════════════════════════════════════════
+#  AI SLIDESHOW DATA (for in-browser presentation with TTS)
+# ══════════════════════════════════════════════════════════════
+@app.route("/generate_slideshow_data", methods=["POST"])
+def generate_slideshow_data():
+    try:
+        d = request.json
+        topic = d.get("topic","Topic"); level = d.get("level","Intermediate")
+        duration = d.get("duration",75); notes = d.get("notes","")
+        language = d.get("language","English")
+
+        context = f"Based on these lecture notes:\n{notes[:3000]}" if notes else f"Topic: {topic}"
+
+        p = f"""{context}
+
+Generate a detailed lecture slideshow for "{topic}" at {level} level. Write in {language}.
+
+Return ONLY valid JSON — no markdown, no preamble. Return an array of slide objects:
+[
+  {{
+    "title": "Slide title",
+    "bullets": ["Point 1", "Point 2", "Point 3", "Point 4"],
+    "narration": "A 2-3 sentence spoken narration for this slide that a presenter would say. Be conversational and engaging.",
+    "icap": "passive|active|constructive|interactive",
+    "type": "title|content|example|activity|summary"
+  }}
+]
+
+Generate EXACTLY 12-15 slides following this structure:
+1. Title slide (type:title) — topic name, level, duration
+2. Learning Objectives (type:content, icap:passive) — 4-5 objectives
+3. Why This Matters (type:content, icap:passive) — real-world relevance
+4. Core Concept 1 (type:content, icap:active) — first key idea with details
+5. Core Concept 2 (type:content, icap:active) — second key idea
+6. Core Concept 3 (type:content, icap:active) — third key idea
+7. Worked Example 1 (type:example, icap:active) — step by step
+8. Worked Example 2 (type:example, icap:active) — harder example
+9. Common Misconceptions (type:content, icap:constructive) — what students get wrong
+10. Think-Pair-Share (type:activity, icap:interactive) — discussion prompts
+11. Real-World Application (type:content, icap:constructive) — case study
+12. Group Challenge (type:activity, icap:interactive) — collaborative task
+13. Key Takeaways (type:summary, icap:passive) — recap
+14. Self-Check Questions (type:activity, icap:constructive) — 4 questions
+15. Thank You & Next Steps (type:title) — closing
+
+Each bullet should be a complete, informative sentence (not just fragments).
+Each narration should be 30-60 words of natural spoken language."""
+
+        result = ask_groq(p, max_tokens=3500)
+        match = re.search(r'\[.*\]', result, re.DOTALL)
+        slides = json.loads(match.group() if match else result)
+        return jsonify({"success": True, "slides": slides})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+# ══════════════════════════════════════════════════════════════
+#  STUDY PLAN GENERATOR
+# ══════════════════════════════════════════════════════════════
+@app.route("/generate_study_plan", methods=["POST"])
+def generate_study_plan():
+    try:
+        d = request.json
+        topic = d.get("topic",""); level = d.get("level","Intermediate")
+        background = d.get("background",""); language = d.get("language","English")
+        p = f"""Create a personalized 7-day study plan for a student studying "{topic}" at {level} level.
+Student background: {background if background else 'General learner'}.
+Write in {language}.
+
+Include for each day:
+- Study focus (30-60 minutes)
+- Specific tasks to complete
+- One self-check question
+- A tip for the day
+
+End with 3 recommended resources (books, videos, websites).
+Be specific and actionable."""
+        result = ask_groq(p, max_tokens=1500)
+        return jsonify({"success": True, "plan": result})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+# ── Layer 2: Real-time orchestration ─────────────────────────
 @app.route("/layer2/question", methods=["POST"])
 def layer2_question():
     try:
@@ -399,7 +538,7 @@ def generate_video_script():
     except Exception as e:
         return jsonify({"error": str(e)})
 
-# ── NEW: AI feedback on assignment before grading ─────────────
+# ── AI feedback on assignment ────────────────────────────────
 @app.route("/ai_feedback", methods=["POST"])
 def ai_feedback():
     try:
@@ -417,7 +556,7 @@ Give concise, encouraging feedback in 3-4 sentences. Note one strength and one a
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
-# ── NEW: AI quiz generator from lesson notes ──────────────────
+# ── AI quiz generator ────────────────────────────────────────
 @app.route("/generate_quiz", methods=["POST"])
 def generate_quiz():
     try:
@@ -443,7 +582,7 @@ The "ans" field is the index (0-3) of the correct option."""
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
-# ── NEW: Emoji reactions ──────────────────────────────────────
+# ── Emoji reactions ──────────────────────────────────────────
 @app.route("/save_reaction", methods=["POST"])
 def save_reaction():
     try:
@@ -474,7 +613,7 @@ def get_reactions():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
-# ── NEW: Attendance tracker ───────────────────────────────────
+# ── Attendance tracker ───────────────────────────────────────
 @app.route("/save_attendance", methods=["POST"])
 def save_attendance():
     try:
@@ -507,7 +646,7 @@ def get_attendance():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
-# ── NEW: Discussion board ─────────────────────────────────────
+# ── Discussion board ─────────────────────────────────────────
 @app.route("/discussion/post", methods=["POST"])
 def discussion_post():
     try:
@@ -543,7 +682,10 @@ def discussion_reply():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
-# ── Slides (PowerPoint) ───────────────────────────────────────
+
+# ══════════════════════════════════════════════════════════════
+#  POWERPOINT GENERATION (Massively improved)
+# ══════════════════════════════════════════════════════════════
 @app.route("/generate_slides", methods=["POST"])
 def generate_slides():
     try:
@@ -551,71 +693,224 @@ def generate_slides():
         topic = d.get("topic","Topic"); level = d.get("level","Intermediate")
         duration = d.get("duration",75); objectives = d.get("objectives","")
         style = d.get("style","Lecture-based"); notes = d.get("notes","")
-        GREEN = RGBColor(0x2d,0x6a,0x4f); WHITE = RGBColor(0xFF,0xFF,0xFF)
-        DARK = RGBColor(0x1a,0x1a,0x1a); LGRAY = RGBColor(0xF7,0xF5,0xF2)
-        ACCENT = RGBColor(0x74,0xC6,0x9D); DKGREEN = RGBColor(0x1B,0x43,0x32)
-        prs = Presentation(); prs.slide_width=Inches(13.33); prs.slide_height=Inches(7.5)
+
+        # ── Colors ──
+        GREEN = RGBColor(0x2d,0x6a,0x4f)
+        WHITE = RGBColor(0xFF,0xFF,0xFF)
+        DARK = RGBColor(0x1a,0x1a,0x1a)
+        LGRAY = RGBColor(0xF7,0xF5,0xF2)
+        ACCENT = RGBColor(0x74,0xC6,0x9D)
+        DKGREEN = RGBColor(0x1B,0x43,0x32)
+        GOLD = RGBColor(0xF4,0xA2,0x61)
+        SOFTWHITE = RGBColor(0xEC,0xEC,0xEC)
+
+        prs = Presentation()
+        prs.slide_width = Inches(13.33)
+        prs.slide_height = Inches(7.5)
         blank = prs.slide_layouts[6]
+
         def rect(slide,l,t,w,h,c):
-            s=slide.shapes.add_shape(1,Inches(l),Inches(t),Inches(w),Inches(h))
+            s = slide.shapes.add_shape(1,Inches(l),Inches(t),Inches(w),Inches(h))
             s.fill.solid(); s.fill.fore_color.rgb=c; s.line.fill.background(); return s
+
         def txt(slide,text,l,t,w,h,sz=18,bold=False,color=None,align=PP_ALIGN.LEFT):
-            tb=slide.shapes.add_textbox(Inches(l),Inches(t),Inches(w),Inches(h))
-            tf=tb.text_frame; tf.word_wrap=True; p=tf.paragraphs[0]; p.alignment=align
-            run=p.add_run(); run.text=text; run.font.size=Pt(sz); run.font.bold=bold
-            run.font.color.rgb=color if color else DARK
-        def add_content_slide(title_text, bullets, is_dark=False):
-            s = prs.slides.add_slide(blank)
-            bg = DKGREEN if is_dark else LGRAY
-            rect(s,0,0,13.33,7.5,bg)
-            rect(s,0,0,13.33,1.4,GREEN)
-            txt(s,title_text,0.4,0.2,12.5,1.0,sz=28,bold=True,color=WHITE)
-            txt(s,"LectureAI",11.5,0.22,1.5,0.5,sz=10,color=ACCENT)
-            y=1.6
-            for b in bullets[:6]:
-                rect(s,0.4,y,0.05,0.35,ACCENT)
-                txt(s,str(b),0.6,y,12.3,0.45,sz=16,color=WHITE if is_dark else DARK)
-                y+=0.55
-        # Title slide
-        s1=prs.slides.add_slide(blank)
-        rect(s1,0,0,13.33,7.5,GREEN); rect(s1,0,5.8,13.33,1.7,DKGREEN)
-        txt(s1,"LectureAI",0.5,0.3,12,0.5,sz=13,color=ACCENT,align=PP_ALIGN.CENTER)
-        txt(s1,topic,0.5,1.0,12,2.5,sz=40,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
-        txt(s1,level+" | "+str(duration)+" min | "+style,0.5,3.6,12,0.7,sz=16,color=ACCENT,align=PP_ALIGN.CENTER)
-        txt(s1,"Human-AI Co-Orchestration in Education",0.5,6.0,12,0.6,sz=12,color=WHITE,align=PP_ALIGN.CENTER)
-        if notes and len(notes) > 100:
-            raw_headers = re.findall(r'\n(\d+\.\s+[A-Z][A-Z ]+)\n', notes)
-            sections = re.split(r'\n\d+\.\s+[A-Z][A-Z ]+\n', notes)
-            for i, header in enumerate(raw_headers[:6]):
-                clean_header = re.sub(r'^\d+\.\s*','',header).strip()
+            tb = slide.shapes.add_textbox(Inches(l),Inches(t),Inches(w),Inches(h))
+            tf = tb.text_frame; tf.word_wrap = True; p = tf.paragraphs[0]; p.alignment = align
+            run = p.add_run(); run.text = text; run.font.size = Pt(sz)
+            run.font.bold = bold; run.font.color.rgb = color if color else DARK
+
+        def multi_txt(slide, lines, l, t, w, h, sz=16, color=None, spacing=0.5):
+            """Add multiple lines of text with bullet markers"""
+            tb = slide.shapes.add_textbox(Inches(l),Inches(t),Inches(w),Inches(h))
+            tf = tb.text_frame; tf.word_wrap = True
+            for i, line in enumerate(lines):
+                if i == 0:
+                    p = tf.paragraphs[0]
+                else:
+                    p = tf.add_paragraph()
+                p.space_before = Pt(6)
+                p.space_after = Pt(4)
+                run = p.add_run()
+                run.text = line
+                run.font.size = Pt(sz)
+                run.font.color.rgb = color if color else DARK
+
+        # ── First, generate slide content from AI if notes are sparse ──
+        slide_sections = []
+        if notes and len(notes) > 200:
+            # Parse ICAP-tagged sections from notes
+            icap_pattern = r'\[(?:PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE)\]\s*\d+\.\s*([^\n]+)'
+            headers = re.findall(icap_pattern, notes)
+            sections = re.split(r'\[(?:PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE)\]\s*\d+\.', notes)
+            icap_tags = re.findall(r'\[(PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE)\]', notes)
+
+            for i, header in enumerate(headers[:10]):
                 content = sections[i+1] if i+1 < len(sections) else ""
-                lines = [re.sub(r'^[•\-\*\d\.]+\s*','',l).strip() for l in content.split('\n')]
-                lines = [l for l in lines if len(l) > 8][:5]
-                if not lines: lines = ["Key concepts and definitions","Important examples and applications","Core principles to understand"]
-                add_content_slide(clean_header, lines, i%2==1)
-        else:
+                lines = [re.sub(r'^[\s•\-\*\d\.]+','',l).strip() for l in content.split('\n')]
+                lines = [l for l in lines if len(l) > 10][:6]
+                tag = icap_tags[i] if i < len(icap_tags) else "PASSIVE"
+                if lines:
+                    slide_sections.append({
+                        "title": header.strip(),
+                        "bullets": lines,
+                        "icap": tag
+                    })
+
+        # If parsing didn't yield enough, use fallback structured content
+        if len(slide_sections) < 5:
+            # Generate structured content from AI
+            gen_prompt = f"""For a {level}-level lecture on "{topic}", provide slide content.
+Return ONLY valid JSON array, no markdown:
+[
+  {{"title":"Learning Objectives","bullets":["Obj 1","Obj 2","Obj 3","Obj 4"],"icap":"PASSIVE"}},
+  {{"title":"Why This Matters","bullets":["Point 1","Point 2","Point 3"],"icap":"PASSIVE"}},
+  {{"title":"Core Concept: Definition","bullets":["Detail 1","Detail 2","Detail 3","Detail 4"],"icap":"ACTIVE"}},
+  {{"title":"Core Concept: How It Works","bullets":["Step 1","Step 2","Step 3","Step 4"],"icap":"ACTIVE"}},
+  {{"title":"Core Concept: Key Properties","bullets":["Property 1","Property 2","Property 3"],"icap":"ACTIVE"}},
+  {{"title":"Worked Example 1","bullets":["Problem setup","Step 1","Step 2","Result"],"icap":"ACTIVE"}},
+  {{"title":"Worked Example 2","bullets":["Problem setup","Step 1","Step 2","Result"],"icap":"ACTIVE"}},
+  {{"title":"Common Misconceptions","bullets":["Mistake 1 and why","Mistake 2 and why","Mistake 3 and why"],"icap":"CONSTRUCTIVE"}},
+  {{"title":"Think-Pair-Share Activity","bullets":["Discussion prompt 1","Discussion prompt 2","Reflection question"],"icap":"INTERACTIVE"}},
+  {{"title":"Real-World Applications","bullets":["Application 1","Application 2","Application 3"],"icap":"CONSTRUCTIVE"}},
+  {{"title":"Group Challenge","bullets":["Task description","What to discuss","How to present findings"],"icap":"INTERACTIVE"}},
+  {{"title":"Key Takeaways","bullets":["Takeaway 1","Takeaway 2","Takeaway 3","Takeaway 4"],"icap":"PASSIVE"}}
+]
+Make every bullet a complete, informative sentence about {topic}."""
+            try:
+                ai_result = ask_groq(gen_prompt, max_tokens=2000)
+                match = re.search(r'\[.*\]', ai_result, re.DOTALL)
+                if match:
+                    slide_sections = json.loads(match.group())
+            except:
+                pass
+
+        # Final fallback
+        if len(slide_sections) < 3:
             objs = [o.strip() for o in objectives.split('\n') if o.strip()][:5]
-            for title_text, bullets, is_dark in [
-                ("Learning Objectives", objs or ["Understand core concepts","Apply the methods","Evaluate your learning"], False),
-                ("Why It Matters", [f"Real-world relevance of {topic}", f"Where {topic} is applied today","What problem it solves","Why students study this"], True),
-                ("Core Concepts", [f"Fundamental principles of {topic}","Key terminology you need to know","How the parts connect","The logic behind the method"], False),
-                ("Examples & Analogies", [f"Think of {topic} like sorting a drawer — rules first","A flowchart where each step depends on data","How it appears in a professional setting","Does the output match your intuition?"], True),
-                ("Guided Activity", ["Apply what you just learned to a small problem","Work in pairs and talk through your reasoning","It is fine to be wrong — focus on thinking","Be ready to explain your approach"], False),
-                ("Common Mistakes", ["Skipping the assumptions — always check them","Confusing correlation with causation","Over-complicating when simpler is better","Not validating results against common sense"], True),
-                ("Summary", [f"Core idea: understand {topic} by applying it","Start with intuition before moving to formulas","Next: practise with a real example","Exit ticket: write one thing you learned today"], False),
-            ]:
-                add_content_slide(title_text, bullets, is_dark)
+            slide_sections = [
+                {"title":"Learning Objectives","bullets":objs or [f"Understand the fundamentals of {topic}",f"Apply {topic} concepts to real problems","Evaluate results critically","Connect theory to practice"],"icap":"PASSIVE"},
+                {"title":"Why This Matters","bullets":[f"Real-world relevance of {topic}",f"Where {topic} is applied today","What problem it solves","Why professionals need this skill"],"icap":"PASSIVE"},
+                {"title":"Core Concepts","bullets":[f"Fundamental principles of {topic}","Key terminology and definitions","How the components connect","The underlying logic and reasoning"],"icap":"ACTIVE"},
+                {"title":"Detailed Explanation","bullets":[f"Deep dive into the mechanics of {topic}","Step-by-step breakdown of the process","Multiple ways to think about this concept","What makes it different from related ideas"],"icap":"ACTIVE"},
+                {"title":"Worked Example 1","bullets":["Problem statement and setup","Step 1: Identify what we know","Step 2: Apply the method","Step 3: Interpret the result"],"icap":"ACTIVE"},
+                {"title":"Worked Example 2","bullets":["A more challenging scenario","Breaking down the complexity","Applying multiple concepts together","Verifying our answer makes sense"],"icap":"ACTIVE"},
+                {"title":"Common Misconceptions","bullets":["Confusing similar but different concepts","Skipping assumptions that matter","Overfitting a method to every problem","Ignoring edge cases and limitations"],"icap":"CONSTRUCTIVE"},
+                {"title":"Think-Pair-Share","bullets":["Discuss with your neighbor: What is the key insight?","Come up with your own example","Identify one thing you are unsure about","Prepare to share with the class"],"icap":"INTERACTIVE"},
+                {"title":"Real-World Application","bullets":[f"How {topic} is used in industry","A case study from recent research","Connecting theory to professional practice","What practitioners wish they learned earlier"],"icap":"CONSTRUCTIVE"},
+                {"title":"Group Challenge","bullets":["Work in groups of 3-4","Apply today's concepts to this scenario","Prepare a 2-minute explanation","Be ready for questions from peers"],"icap":"INTERACTIVE"},
+                {"title":"Key Takeaways","bullets":[f"Core idea: understand {topic} by doing it","Start with intuition, then formalize","Practice with varied examples","Connect each concept to the big picture"],"icap":"PASSIVE"},
+                {"title":"Self-Assessment","bullets":["Can you explain the key concept in your own words?","Could you solve a new problem using today's methods?","What would you review before an exam?","Write down one remaining question"],"icap":"CONSTRUCTIVE"},
+            ]
+
+        # ── ICAP color mapping ──
+        ICAP_COLORS = {
+            "PASSIVE": RGBColor(0x6C,0x75,0x7D),
+            "ACTIVE": RGBColor(0x0D,0x6E,0xFD),
+            "CONSTRUCTIVE": RGBColor(0xF4,0xA2,0x61),
+            "INTERACTIVE": RGBColor(0xE6,0x39,0x46),
+        }
+        ICAP_LABELS = {
+            "PASSIVE": "PASSIVE — Receiving",
+            "ACTIVE": "ACTIVE — Manipulating",
+            "CONSTRUCTIVE": "CONSTRUCTIVE — Generating",
+            "INTERACTIVE": "INTERACTIVE — Dialoguing",
+        }
+
+        # ══ SLIDE 1: Title ══
+        s1 = prs.slides.add_slide(blank)
+        rect(s1,0,0,13.33,7.5,GREEN)
+        rect(s1,0,5.6,13.33,1.9,DKGREEN)
+        # Decorative accent line
+        rect(s1,0.5,4.8,12.33,0.04,ACCENT)
+        txt(s1,"LectureAI",0.5,0.4,12,0.5,sz=14,color=ACCENT,align=PP_ALIGN.CENTER)
+        txt(s1,topic,0.5,1.2,12,2.5,sz=44,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
+        subtitle = f"{level} | {duration} min | {style}"
+        txt(s1,subtitle,0.5,3.6,12,0.7,sz=18,color=ACCENT,align=PP_ALIGN.CENTER)
+        txt(s1,"Human-AI Co-Orchestration in Education",0.5,6.0,12,0.5,sz=13,color=SOFTWHITE,align=PP_ALIGN.CENTER)
+        txt(s1,"Powered by ICAP Framework (Chi & Wylie, 2014)",0.5,6.5,12,0.5,sz=11,color=ACCENT,align=PP_ALIGN.CENTER)
+
+        # ══ SLIDE 2: ICAP Framework Overview ══
+        s2 = prs.slides.add_slide(blank)
+        rect(s2,0,0,13.33,7.5,LGRAY)
+        rect(s2,0,0,13.33,1.4,GREEN)
+        txt(s2,"ICAP Framework: How This Lecture Is Designed",0.4,0.2,12.5,1.0,sz=28,bold=True,color=WHITE)
+        txt(s2,"LectureAI",11.5,0.22,1.5,0.5,sz=10,color=ACCENT)
+        # ICAP boxes
+        icap_items = [
+            ("PASSIVE","Receiving information\nListening, reading, watching","#6C757D"),
+            ("ACTIVE","Manipulating materials\nHighlighting, copying, repeating","#0D6EFD"),
+            ("CONSTRUCTIVE","Generating new outputs\nExplaining, creating, hypothesizing","#F4A261"),
+            ("INTERACTIVE","Dialoguing with peers\nDebating, teaching, co-creating","#E63946"),
+        ]
+        x_start = 0.5
+        for idx, (label, desc, hex_c) in enumerate(icap_items):
+            bx = x_start + idx * 3.1
+            r_int = int(hex_c[1:3],16); g_int = int(hex_c[3:5],16); b_int = int(hex_c[5:7],16)
+            c = RGBColor(r_int, g_int, b_int)
+            rect(s2, bx, 1.8, 2.9, 0.12, c)
+            txt(s2, label, bx+0.1, 2.1, 2.7, 0.6, sz=22, bold=True, color=DARK)
+            desc_lines = desc.split('\n')
+            for li, line in enumerate(desc_lines):
+                txt(s2, line, bx+0.1, 2.8+li*0.4, 2.7, 0.4, sz=13, color=DARK)
+        txt(s2,"Higher engagement levels produce deeper learning outcomes (Chi & Wylie, 2014)",0.5,5.2,12.33,0.5,sz=14,bold=True,color=GREEN)
+        txt(s2,"This lecture follows ICAP: starting with foundational knowledge, building toward active application, then constructive analysis, and finally interactive collaboration.",
+            0.5,5.8,12.33,1.0,sz=13,color=DARK)
+
+        # ══ CONTENT SLIDES ══
+        for idx, section in enumerate(slide_sections):
+            s = prs.slides.add_slide(blank)
+            is_dark = idx % 2 == 1
+            bg = DKGREEN if is_dark else LGRAY
+            text_c = WHITE if is_dark else DARK
+
+            rect(s, 0, 0, 13.33, 7.5, bg)
+            rect(s, 0, 0, 13.33, 1.4, GREEN)
+
+            title_text = section.get("title","")
+            icap_tag = section.get("icap","PASSIVE").upper()
+
+            txt(s, title_text, 0.4, 0.2, 10.5, 1.0, sz=28, bold=True, color=WHITE)
+            txt(s, "LectureAI", 11.5, 0.22, 1.5, 0.5, sz=10, color=ACCENT)
+
+            # ICAP badge
+            icap_color = ICAP_COLORS.get(icap_tag, ACCENT)
+            icap_label = ICAP_LABELS.get(icap_tag, icap_tag)
+            badge = rect(s, 0.4, 1.5, 3.0, 0.35, icap_color)
+            txt(s, icap_label, 0.5, 1.52, 2.8, 0.3, sz=11, bold=True, color=WHITE)
+
+            # Slide number
+            txt(s, f"Slide {idx+3}", 12.0, 1.52, 1.0, 0.3, sz=10, color=ACCENT if is_dark else GREEN)
+
+            # Bullet content
+            bullets = section.get("bullets", [])[:6]
+            y = 2.1
+            for b in bullets:
+                # Accent bar
+                rect(s, 0.5, y+0.05, 0.06, 0.35, ACCENT)
+                txt(s, str(b), 0.75, y, 12.0, 0.5, sz=16, color=text_c)
+                y += 0.65
+
+        # ══ THANK YOU SLIDE ══
         sc = prs.slides.add_slide(blank)
         rect(sc,0,0,13.33,7.5,DKGREEN)
-        txt(sc,"Thank You",0.5,1.5,12,1.5,sz=48,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
-        txt(sc,f"Questions about {topic}?",0.5,3.2,12,0.8,sz=22,color=ACCENT,align=PP_ALIGN.CENTER)
-        txt(sc,"Built with LectureAI · Human-AI Co-Orchestration",0.5,6.5,12,0.6,sz=12,color=ACCENT,align=PP_ALIGN.CENTER)
+        rect(sc,0.5,3.0,12.33,0.04,ACCENT)
+        txt(sc,"Thank You",0.5,1.2,12,1.5,sz=52,bold=True,color=WHITE,align=PP_ALIGN.CENTER)
+        txt(sc,f"Questions about {topic}?",0.5,3.3,12,0.8,sz=24,color=ACCENT,align=PP_ALIGN.CENTER)
+        txt(sc,"Key Reminder: The best way to learn is to explain it to someone else.",
+            0.5,4.5,12,0.6,sz=15,color=SOFTWHITE,align=PP_ALIGN.CENTER)
+        txt(sc,"Built with LectureAI · Human-AI Co-Orchestration · ICAP Framework",
+            0.5,6.5,12,0.6,sz=12,color=ACCENT,align=PP_ALIGN.CENTER)
+
         buf = io.BytesIO()
         prs.save(buf); buf.seek(0)
-        return send_file(buf, mimetype="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                         as_attachment=True, download_name=f"LectureAI_{topic[:30].replace(' ','_')}.pptx")
+        return send_file(buf,
+            mimetype="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            as_attachment=True,
+            download_name=f"LectureAI_{topic[:30].replace(' ','_')}.pptx")
     except Exception as e:
+        import traceback; traceback.print_exc()
         return jsonify({"success": False, "error": str(e)})
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
