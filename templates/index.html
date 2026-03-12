@@ -177,6 +177,7 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
 <div id="roleScreen" class="screen active">
   <h2>Welcome to LectureAI</h2>
   <p>Human-AI Co-Orchestration in Education · Powered by ICAP</p>
+  <p id="serverStatus" style="font-size:.82rem;color:#888">⏳ Checking server...</p>
   <div class="role-cards">
     <div class="role-card" onclick="showRole('teacher')">
       <div class="icon">👩‍🏫</div><h3>I'm a Teacher</h3><p style="font-size:.85rem;color:#888;margin-top:6px">Create lessons, manage class, present</p>
@@ -653,19 +654,32 @@ async function teacherLogin(){
   const email=v('tEmail'),name=v('tName'),code=v('tCode').toUpperCase().trim();
   const topic=v('tTopicEdit')||v('tTopic'), level=document.getElementById('tLevelEdit').value||document.getElementById('tLevel').value;
   if(!email||!name||!code||!topic){document.getElementById('tAuthMsg').textContent='Please fill all fields.';return;}
-  teacher={email,name,code,topic,level};
+  document.getElementById('tAuthMsg').textContent='Connecting...';
+
+  // Save the class
   const res = await api('/save_class',{code,teacherEmail:email,teacherName:name,topic,level});
-  if(res.success||res.error){
-    document.getElementById('tWelcome').textContent=`Welcome, ${name}`;
-    document.getElementById('tClassCode').textContent=code;
-    document.getElementById('tTopicEdit').value=topic;
-    document.getElementById('tLevelEdit').value=level;
-    document.getElementById('logoutBtn').style.display='';
-    showScreen('teacherDashboard');
-    loadAssignments(); loadTests();
-    startReactionPoll(); initVoices();
-    document.getElementById('attTodayDate').textContent=new Date().toLocaleDateString();
+  if(!res.success){
+    document.getElementById('tAuthMsg').textContent='Failed to save class: '+(res.error||'Server unreachable. Check your connection.');
+    return;
   }
+
+  // Verify the class was actually saved by reading it back
+  const verify = await api('/get_class',{code});
+  if(!verify.success){
+    document.getElementById('tAuthMsg').textContent='Class save could not be verified. Try again.';
+    return;
+  }
+
+  teacher={email,name,code,topic,level};
+  document.getElementById('tWelcome').textContent=`Welcome, ${name}`;
+  document.getElementById('tClassCode').textContent=code;
+  document.getElementById('tTopicEdit').value=topic;
+  document.getElementById('tLevelEdit').value=level;
+  document.getElementById('logoutBtn').style.display='';
+  showScreen('teacherDashboard');
+  loadAssignments(); loadTests();
+  startReactionPoll(); initVoices();
+  document.getElementById('attTodayDate').textContent=new Date().toLocaleDateString();
 }
 
 // ── STUDENT LOGIN ──
@@ -673,8 +687,27 @@ async function studentLogin(){
   const email=v('sEmail'),name=v('sName'),code=v('sCode').toUpperCase().trim();
   const year=v('sYear'), background=v('sBackground');
   if(!email||!name||!code){document.getElementById('sAuthMsg').textContent='Please fill all fields.';return;}
+  document.getElementById('sAuthMsg').textContent='Connecting...';
+  document.getElementById('sAuthMsg').style.color='#888';
+
   const res = await api('/get_class',{code});
-  if(!res.success){document.getElementById('sAuthMsg').textContent='Class code not found. Ask your teacher.';return;}
+
+  if(res.error && !res.success){
+    // Distinguish between "not found" and "server error"
+    if(res.error === 'Code not found'){
+      document.getElementById('sAuthMsg').textContent=`Class "${code}" not found. Make sure your teacher has logged in first and you have the correct code.`;
+    } else {
+      document.getElementById('sAuthMsg').textContent='Could not connect to server: '+res.error;
+    }
+    document.getElementById('sAuthMsg').style.color='var(--red)';
+    return;
+  }
+  if(!res.success){
+    document.getElementById('sAuthMsg').textContent='Could not find class. Check the code and try again.';
+    document.getElementById('sAuthMsg').style.color='var(--red)';
+    return;
+  }
+
   const cls=res.class;
   student={email,name,code,year,background,topic:cls.topic,level:cls.level};
   document.getElementById('sWelcome').textContent=`Welcome, ${name}`;
@@ -703,8 +736,17 @@ function switchStuTab(id){
 // ── UTILS ──
 function v(id){return (document.getElementById(id)||{}).value||'';}
 async function api(path,body){
-  try{const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return await r.json();}
-  catch(e){return {error:e.message};}
+  try{
+    const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok){
+      const text = await r.text().catch(()=>'');
+      return {success:false, error:`Server error ${r.status}: ${text.substring(0,100)}`};
+    }
+    return await r.json();
+  }catch(e){
+    console.error('API call failed:', path, e);
+    return {success:false, error:'Cannot reach server. Check your internet connection and that the server is running.'};
+  }
 }
 function loading(id,show){const el=document.getElementById(id);if(el)el.style.display=show?'inline-block':'none';}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -1584,6 +1626,17 @@ async function loadStudentDiscuss(){
 document.addEventListener('DOMContentLoaded',()=>{
   // Init voices early
   initVoices();
+
+  // Check server connection
+  fetch(API+'/ping').then(r=>r.json()).then(d=>{
+    if(d.status==='ok'){
+      document.getElementById('serverStatus').textContent='🟢 Server connected';
+      document.getElementById('serverStatus').style.color='var(--g)';
+    }
+  }).catch(()=>{
+    document.getElementById('serverStatus').textContent='🔴 Server unreachable — check your deployment';
+    document.getElementById('serverStatus').style.color='var(--red)';
+  });
 
   const modal=document.createElement('div');modal.id='modal';
   modal.style.cssText='display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;overflow-y:auto;padding:20px;justify-content:center;align-items:flex-start;';
