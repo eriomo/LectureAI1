@@ -410,48 +410,71 @@ def generate_slideshow_data():
         duration = d.get("duration",75); notes = d.get("notes","")
         language = d.get("language","English")
 
-        context = f"Based on these lecture notes:\n{notes[:3000]}" if notes else f"Topic: {topic}"
+        # Use notes excerpt if available, otherwise topic only
+        context = f"Based on these lecture notes:\n{notes[:2000]}" if notes and len(notes) > 50 else f"Topic: {topic}"
 
+        # Simpler, more reliable prompt - fewer slides, cleaner JSON
         p = f"""{context}
 
-Generate a detailed lecture slideshow for "{topic}" at {level} level. Write in {language}.
+Create 10 lecture slides for "{topic}" at {level} level in {language}.
 
-Return ONLY valid JSON — no markdown, no preamble. Return an array of slide objects:
-[
-  {{
-    "title": "Slide title",
-    "bullets": ["Point 1", "Point 2", "Point 3", "Point 4"],
-    "narration": "A 2-3 sentence spoken narration for this slide that a presenter would say. Be conversational and engaging.",
-    "icap": "passive|active|constructive|interactive",
-    "type": "title|content|example|activity|summary"
-  }}
-]
+RESPOND WITH ONLY A JSON ARRAY. No text before or after. No markdown backticks.
 
-Generate EXACTLY 12-15 slides following this structure:
-1. Title slide (type:title) — topic name, level, duration
-2. Learning Objectives (type:content, icap:passive) — 4-5 objectives
-3. Why This Matters (type:content, icap:passive) — real-world relevance
-4. Core Concept 1 (type:content, icap:active) — first key idea with details
-5. Core Concept 2 (type:content, icap:active) — second key idea
-6. Core Concept 3 (type:content, icap:active) — third key idea
-7. Worked Example 1 (type:example, icap:active) — step by step
-8. Worked Example 2 (type:example, icap:active) — harder example
-9. Common Misconceptions (type:content, icap:constructive) — what students get wrong
-10. Think-Pair-Share (type:activity, icap:interactive) — discussion prompts
-11. Real-World Application (type:content, icap:constructive) — case study
-12. Group Challenge (type:activity, icap:interactive) — collaborative task
-13. Key Takeaways (type:summary, icap:passive) — recap
-14. Self-Check Questions (type:activity, icap:constructive) — 4 questions
-15. Thank You & Next Steps (type:title) — closing
+Each slide object:
+{{"title":"string","bullets":["string","string","string"],"narration":"string","icap":"passive","type":"content"}}
 
-Each bullet should be a complete, informative sentence (not just fragments).
-Each narration should be 30-60 words of natural spoken language."""
+The 10 slides:
+1. title slide: title="{topic}", bullets=["{level} level","{duration} minutes","Human-AI Co-Orchestration"], narration="Welcome...", type="title"
+2. objectives: 3-4 learning goals, icap="passive", type="content"
+3. key definitions: 3-4 terms defined, icap="passive", type="content"
+4. concept 1: main idea explained in 3-4 points, icap="active", type="content"
+5. concept 2: second idea in 3-4 points, icap="active", type="content"
+6. worked example: step-by-step in 4 points, icap="active", type="example"
+7. misconceptions: 3 common errors, icap="constructive", type="content"
+8. discussion activity: 3 prompts for pair work, icap="interactive", type="activity"
+9. key takeaways: 4 summary points, icap="passive", type="summary"
+10. closing: next steps and thank you, type="title"
 
-        result = ask_groq(p, max_tokens=3500)
-        match = re.search(r'\[.*\]', result, re.DOTALL)
-        slides = json.loads(match.group() if match else result)
-        return jsonify({"success": True, "slides": slides})
+Each narration should be 20-40 words of natural speech. Each bullet must be a full sentence.
+Return ONLY the JSON array, starting with [ and ending with ]."""
+
+        result = ask_groq(p, max_tokens=2500)
+
+        # Robust JSON extraction - try multiple approaches
+        slides = None
+
+        # Try 1: direct parse
+        try:
+            slides = json.loads(result)
+        except:
+            pass
+
+        # Try 2: find array in text
+        if not slides:
+            try:
+                match = re.search(r'\[[\s\S]*\]', result)
+                if match:
+                    slides = json.loads(match.group())
+            except:
+                pass
+
+        # Try 3: strip markdown fences
+        if not slides:
+            try:
+                cleaned = re.sub(r'^```(?:json)?\s*', '', result.strip())
+                cleaned = re.sub(r'\s*```$', '', cleaned.strip())
+                slides = json.loads(cleaned)
+            except:
+                pass
+
+        if slides and isinstance(slides, list) and len(slides) > 0:
+            return jsonify({"success": True, "slides": slides})
+        else:
+            # Return the raw text so the client can see what went wrong
+            return jsonify({"success": False, "error": "AI did not return valid slides. Using local fallback.", "raw": result[:500]})
+
     except Exception as e:
+        import traceback; traceback.print_exc()
         return jsonify({"success": False, "error": str(e)})
 
 
