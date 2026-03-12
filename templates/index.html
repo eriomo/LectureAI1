@@ -2,970 +2,1128 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LectureAI</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LectureAI – Human-AI Co-Orchestration</title>
 <style>
+:root{--g:#2d6a4f;--g2:#1b4332;--ga:#74c69d;--w:#fff;--bg:#f7f5f2;--card:#fff;--text:#1a1a1a;--border:#e0ddd8;--red:#e63946;--amber:#f4a261}
+body.dark{--bg:#121212;--card:#1e1e1e;--text:#e0e0e0;--border:#333;--w:#e0e0e0}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:#f7f5f2;color:#1a1a1a;min-height:100vh}
-#authScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1b4332,#2d6a4f);padding:1rem}
-#mainApp{display:none}
-.auth-box{background:white;border-radius:16px;padding:2rem;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,0.2)}
-.auth-logo{text-align:center;margin-bottom:1.2rem}
-.auth-logo h1{font-family:'DM Serif Display',serif;font-size:2rem;color:#2d6a4f}
-.auth-logo p{font-size:0.85rem;color:#888;margin-top:0.3rem}
-.role-pick{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1.2rem}
-.role-btn{border:2px solid #ddd;border-radius:10px;padding:1rem;cursor:pointer;text-align:center;background:white}
-.role-btn.selected{border-color:#2d6a4f;background:#f0faf4}
-.role-btn .ri{font-size:1.8rem;margin-bottom:0.3rem}
-.role-btn .rl{font-weight:600;font-size:0.9rem;color:#333}
-.role-btn .rs{font-size:0.75rem;color:#888}
-.auth-tabs{display:flex;margin-bottom:1rem;border:1.5px solid #ddd;border-radius:8px;overflow:hidden}
-.auth-tab{flex:1;padding:0.6rem;text-align:center;cursor:pointer;font-size:0.9rem;font-weight:600;color:#666;background:white}
-.auth-tab.active{background:#2d6a4f;color:white}
-header{background:#2d6a4f;color:white;padding:0.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
-header h1{font-family:'DM Serif Display',serif;font-size:1.3rem}
-.hright{display:flex;align-items:center;gap:0.7rem;flex-wrap:wrap}
-.ubadge{background:rgba(255,255,255,0.15);border-radius:20px;padding:0.3rem 0.9rem;font-size:0.82rem}
-.lbtn{background:rgba(255,255,255,0.2);border:none;color:white;border-radius:6px;padding:0.35rem 0.8rem;cursor:pointer;font-size:0.8rem;font-family:'DM Sans',sans-serif}
-.tabs{display:flex;background:white;border-bottom:2px solid #e8e4de;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tab{padding:0.7rem 1rem;cursor:pointer;font-weight:500;font-size:0.85rem;white-space:nowrap;border-bottom:3px solid transparent;color:#666}
-.tab.active{border-bottom-color:#2d6a4f;color:#2d6a4f;font-weight:600}
-.content{max-width:920px;margin:0 auto;padding:1.2rem}
-.section{display:none}.section.active{display:block}
-.fg{margin-bottom:1rem;position:relative}
-label{display:block;font-weight:600;font-size:0.88rem;margin-bottom:0.35rem;color:#333}
-input,select,textarea{width:100%;padding:0.6rem 0.8rem;border:1.5px solid #ddd;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.93rem;background:white;-webkit-appearance:none}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#2d6a4f}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s}
+header{background:var(--g2);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+header h1{font-size:1.4rem;letter-spacing:.5px}header span{font-size:.8rem;opacity:.7;margin-left:8px}
+.header-right{display:flex;align-items:center;gap:12px}
+#darkToggle{background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:.85rem}
+#darkToggle:hover{background:rgba(255,255,255,.25)}
+.screen{display:none;max-width:1100px;margin:0 auto;padding:20px}
+.screen.active{display:block}
+/* ROLE SELECT */
+#roleScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:24px}
+#roleScreen h2{font-size:1.6rem;color:var(--text)}
+.role-cards{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
+.role-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:36px 40px;cursor:pointer;text-align:center;transition:.2s;min-width:200px}
+.role-card:hover{border-color:var(--g);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.role-card .icon{font-size:3rem;margin-bottom:12px}
+.role-card h3{font-size:1.2rem;color:var(--g)}
+/* AUTH */
+.auth-box{background:var(--card);border-radius:16px;padding:36px;max-width:440px;margin:60px auto;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.auth-box h2{margin-bottom:20px;color:var(--g)}
+input,textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:.95rem;background:var(--card);color:var(--text);margin-bottom:14px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--g)}
 textarea{resize:vertical;min-height:80px}
-.btn{background:#2d6a4f;color:white;border:none;border-radius:8px;padding:0.65rem 1.5rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.95rem;width:100%;margin-top:0.5rem}
-.btn:active{background:#1e4d38}.btn:disabled{background:#aaa;cursor:not-allowed}
-.bsm{background:#2d6a4f;color:white;border:none;border-radius:6px;padding:0.4rem 0.9rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.82rem}
-.bor{background:#e67e22;color:white;border:none;border-radius:8px;padding:0.65rem 1.5rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.95rem;width:100%;margin-top:0.5rem}
-.bbl{background:#2980b9;color:white;border:none;border-radius:8px;padding:0.65rem 1.5rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.95rem;width:100%;margin-top:0.5rem}
-.bpu{background:#8e44ad;color:white;border:none;border-radius:8px;padding:0.65rem 1.5rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.95rem;width:100%;margin-top:0.5rem}
-.bred{background:#e74c3c;color:white;border:none;border-radius:6px;padding:0.35rem 0.8rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.82rem}
-.bout{background:white;color:#2d6a4f;border:2px solid #2d6a4f;border-radius:8px;padding:0.6rem 1.2rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.9rem;margin-top:0.5rem}
-.card{background:white;border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:0.9rem;border-left:4px solid #2d6a4f;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.card h3{font-size:1rem;margin-bottom:0.4rem}.card p{font-size:0.88rem;color:#444;line-height:1.55}
-.cbl{border-left-color:#2980b9}.cor{border-left-color:#e67e22}.cpu{border-left-color:#8e44ad}
-.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:0.72rem;font-weight:600;margin-left:6px}
-.bp{background:#fde8d8;color:#c0440a}.ba{background:#d8f0e8;color:#1a6640}
-.bc{background:#dce8fd;color:#1a3f80}.bi{background:#f0d8fd;color:#6a1a80}
-.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem;margin-bottom:1rem}
-.metric{background:white;border-radius:10px;padding:0.8rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.07)}
-.metric .val{font-size:1.3rem;font-weight:700;color:#2d6a4f}.metric .lbl{font-size:0.75rem;color:#777;margin-top:2px}
-.icap-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-bottom:1rem}
-.icap-box{border-radius:10px;padding:0.7rem;text-align:center}
-.icap-box .num{font-size:1.5rem;font-weight:700}.icap-box .lbl{font-size:0.72rem;font-weight:600}
-.pb{background:#fde8d8;color:#c0440a}.ab{background:#d8f0e8;color:#1a6640}
-.cb{background:#dce8fd;color:#1a3f80}.ib{background:#f0d8fd;color:#6a1a80}
-.stitle{font-family:'DM Serif Display',serif;font-size:1.1rem;margin:1.2rem 0 0.6rem;border-bottom:2px solid #e8e4de;padding-bottom:0.3rem}
-.qcard{background:white;border-radius:10px;padding:1rem;margin-bottom:0.7rem;box-shadow:0 1px 5px rgba(0,0,0,0.07)}
-.qcard .diff{font-size:0.75rem;font-weight:700;margin-bottom:0.4rem}
-.easy{color:#1a6640}.medium{color:#7a5900}.hard{color:#c0440a}
-input[type=range]{accent-color:#2d6a4f;width:100%}
-.sdisplay{text-align:center;background:#f0faf4;border:1px solid #b7dfc8;border-radius:10px;padding:1rem;margin-top:1rem}
-.sdisplay .big{font-size:2rem;font-weight:700;color:#2d6a4f}
-.info{background:#e8f4fd;border:1px solid #b3d4f0;border-radius:8px;padding:0.9rem 1rem;font-size:0.88rem;color:#1a3f80;margin-bottom:1rem}
-.ebox{background:white;border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);white-space:pre-wrap;font-size:0.78rem;font-family:monospace;max-height:320px;overflow-y:auto;color:#333}
-.rbox{background:#f0faf4;border:1px solid #b7dfc8;border-radius:10px;padding:1rem;margin-top:0.8rem;font-size:0.88rem;line-height:1.7;color:#1a1a1a;min-height:50px;white-space:pre-wrap}
-.rbox.or{background:#fef6ee;border-color:#f5cba7}.rbox.bl{background:#eaf4fd;border-color:#aed6f1}.rbox.pu{background:#f5eef8;border-color:#d2b4de}
-.loading{color:#888;font-style:italic}
-.ltgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:0.5rem}
-@media(max-width:600px){.ltgrid{grid-template-columns:1fr}}
-.tcrd{background:white;border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.tcrd h3{font-size:0.95rem;margin-bottom:0.6rem}
-.vbtn{background:none;border:1.5px solid #2d6a4f;border-radius:8px;padding:0.35rem 0.75rem;cursor:pointer;font-size:0.8rem;color:#2d6a4f;font-family:'DM Sans',sans-serif;margin-top:0.4rem}
-.vbtn.listening{background:#ffe8e8;border-color:#e74c3c;color:#e74c3c}
-.spkbtn{background:#2d6a4f;color:white;border:none;border-radius:6px;padding:0.3rem 0.7rem;cursor:pointer;font-size:0.78rem;font-family:'DM Sans',sans-serif;margin-top:0.4rem}
-.aclist{position:absolute;top:100%;left:0;right:0;background:white;border:1.5px solid #2d6a4f;border-top:none;border-radius:0 0 8px 8px;max-height:220px;overflow-y:auto;z-index:999;display:none}
-.aclist.show{display:block}
-.acitem{padding:0.5rem 0.8rem;cursor:pointer;font-size:0.9rem;color:#333;border-bottom:1px solid #f0f0f0}
-.accat{font-size:0.72rem;color:#888;margin-left:6px;background:#f0f0f0;padding:1px 6px;border-radius:10px}
-.cdisplay{background:#1b4332;color:#74c69d;font-family:monospace;font-size:2rem;font-weight:700;text-align:center;letter-spacing:0.3rem;padding:1rem;border-radius:10px;margin:0.7rem 0}
-.rcrd{background:white;border-radius:10px;padding:1rem 1.2rem;margin-bottom:0.7rem;box-shadow:0 1px 5px rgba(0,0,0,0.07);border-left:4px solid #e67e22}
-.sbox{background:white;border-radius:12px;padding:1.2rem;white-space:pre-wrap;font-size:0.85rem;line-height:1.7;max-height:400px;overflow-y:auto;color:#333;margin-top:0.8rem;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.shero{background:linear-gradient(135deg,#1b4332,#2d6a4f);border-radius:12px;padding:1.5rem;color:white;margin-bottom:1rem;text-align:center}
-.shero h2{font-family:'DM Serif Display',serif;font-size:1.4rem;margin-bottom:0.3rem}
-.shero p{font-size:0.88rem;opacity:0.8}
-.cbox{background:white;border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:1rem}
-.ccls{background:#f0faf4;border:1.5px solid #74c69d;border-radius:10px;padding:0.8rem 1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between}
-.ctopic{font-weight:600;color:#2d6a4f}.cteacher{font-size:0.82rem;color:#666}
-.disbtn{background:none;border:1px solid #ddd;color:#888;border-radius:6px;padding:0.3rem 0.8rem;cursor:pointer;font-size:0.82rem}
-.stabs{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap}
-.stab{padding:0.5rem 1rem;border-radius:20px;cursor:pointer;font-size:0.85rem;font-weight:600;border:2px solid #ddd;color:#666;background:white}
-.stab.active{border-color:#2d6a4f;color:#2d6a4f;background:#f0faf4}
-.qzcard{background:white;border-radius:12px;padding:1.2rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.qzopt{display:block;padding:0.6rem 0.9rem;margin:0.4rem 0;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;font-size:0.9rem;background:white;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
-.qzopt.correct{border-color:#1a6640;background:#d8f0e8;color:#1a6640;font-weight:600}
-.qzopt.wrong{border-color:#c0440a;background:#fde8d8;color:#c0440a}
-.qzopt.disabled{cursor:default;pointer-events:none}
-.qzfb{margin-top:0.6rem;font-size:0.88rem;font-weight:600;padding:0.5rem 0.8rem;border-radius:6px}
-.qzfb.pass{background:#d8f0e8;color:#1a6640}.qzfb.fail{background:#fde8d8;color:#c0440a}
-.qzscore{text-align:center;background:#f0faf4;border:1px solid #b7dfc8;border-radius:10px;padding:1.2rem;margin-top:1rem}
-.qzscore .big{font-size:2.5rem;font-weight:700;color:#2d6a4f}
-.acard{background:white;border-radius:12px;padding:1.2rem;margin-bottom:0.8rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid #e67e22}
-.acard h3{font-size:1rem;margin-bottom:0.3rem}
-.acard .meta{font-size:0.8rem;color:#888;margin-bottom:0.5rem}
-.tscard{background:white;border-radius:12px;padding:1.2rem;margin-bottom:0.8rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid #8e44ad}
-.tscard h3{font-size:1rem;margin-bottom:0.3rem}
-.tscard .meta{font-size:0.8rem;color:#888;margin-bottom:0.5rem}
-.subcrd{background:#f9f9f9;border-radius:10px;padding:1rem;margin-bottom:0.6rem;border:1px solid #eee}
-.subcrd .sn{font-weight:600;font-size:0.9rem}
-.subcrd .sc{font-size:0.85rem;color:#444;margin-top:0.4rem;white-space:pre-wrap}
-.grow{display:flex;gap:0.5rem;margin-top:0.6rem;align-items:center;flex-wrap:wrap}
-.qitem{background:#f9f9f9;border-radius:10px;padding:1rem;margin-bottom:0.8rem;border:1px solid #eee}
-.qnum{font-weight:700;color:#2d6a4f;font-size:0.9rem;margin-bottom:0.5rem}
-.rtable{width:100%;border-collapse:collapse;margin-top:0.8rem}
-.rtable th{background:#2d6a4f;color:white;padding:0.6rem;text-align:left;font-size:0.85rem}
-.rtable td{padding:0.6rem;border-bottom:1px solid #eee;font-size:0.85rem}
-.rtable tr:nth-child(even){background:#f9f9f9}
-.notesbox{background:white;border-radius:12px;padding:1.2rem;white-space:pre-wrap;font-size:0.85rem;line-height:1.8;max-height:500px;overflow-y:auto;color:#333;box-shadow:0 1px 5px rgba(0,0,0,0.07);margin-top:1rem}
-
-/* ═══ SLIDESHOW ═══ */
-#ssOverlay{
-  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-  background:#0d1117;z-index:9999;
-  flex-direction:column;overflow:hidden;
-}
-#ssOverlay.open{display:flex}
-
-.ss-topbar{
-  flex-shrink:0;width:100%;height:48px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 10px;background:#111827;
-  border-bottom:1px solid #1f2937;gap:8px;
-}
-.ss-topic{color:#9ca3af;font-size:0.75rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:30%;flex-shrink:1}
-.ss-badge{background:#e74c3c;color:white;padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:700;white-space:nowrap;flex-shrink:0}
-.ss-badge.idle{background:#374151}
-.ss-topbar-right{display:flex;align-items:center;gap:5px;flex-shrink:0}
-.ss-vsel{background:#1f2937;color:#d1d5db;border:1px solid #374151;border-radius:5px;padding:3px 4px;font-size:0.7rem;max-width:120px}
-.ss-tbtn{background:#1f2937;border:1px solid #374151;color:#e5e7eb;border-radius:5px;padding:4px 8px;cursor:pointer;font-size:0.72rem;font-family:'DM Sans',sans-serif;font-weight:700;white-space:nowrap}
-.ss-tbtn.red{background:#c0392b;border-color:#c0392b;color:white}
-
-.ss-slide-wrap{
-  flex:1;display:flex;align-items:center;justify-content:center;
-  padding:10px;overflow:hidden;
-}
-/* Slide sized by JS - see resizeSlide() */
-.ss-slide{
-  background:white;border-radius:10px;
-  box-shadow:0 20px 60px rgba(0,0,0,0.7);
-  display:flex;flex-direction:column;overflow:hidden;position:relative;
-  /* width and height set by JS */
-}
-.ss-slide.type-title{background:linear-gradient(135deg,#1b4332,#2d6a4f)}
-
-.ss-slide-header{background:#2d6a4f;flex-shrink:0;border-bottom:3px solid #74c69d;display:flex;align-items:center;justify-content:space-between;padding:0}
-.ss-slide-title{font-family:'DM Serif Display',serif;color:white;line-height:1.2;padding:0.5em 0.7em}
-.ss-slide-num{background:rgba(255,255,255,0.15);color:#74c69d;border-radius:20px;padding:2px 8px;font-weight:700;white-space:nowrap;margin-right:0.6em;flex-shrink:0}
-.ss-slide-body{flex:1;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:0.5em 0.8em}
-.ss-bullet{display:flex;gap:0.5em;padding:0.3em 0;border-bottom:1px solid #f0f0f0;align-items:flex-start;color:#1a1a1a;line-height:1.4}
-.ss-bullet:last-child{border-bottom:none}
-.ss-bullet-dot{color:#2d6a4f;font-weight:900;flex-shrink:0}
-.ss-slide-brand{position:absolute;bottom:4px;right:8px;color:#ccc;font-weight:600}
-.ss-narration{display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.85);color:#d1fae5;padding:5px 10px;line-height:1.4;overflow:hidden}
-
-.ss-controls{
-  flex-shrink:0;width:100%;height:52px;
-  display:flex;align-items:center;gap:6px;padding:0 8px;
-  background:#111827;border-top:1px solid #1f2937;justify-content:center;
-}
-.ss-nav-btn{background:#1f2937;border:2px solid #374151;color:#e5e7eb;border-radius:7px;padding:6px 14px;cursor:pointer;font-size:0.85rem;font-family:'DM Sans',sans-serif;font-weight:700;white-space:nowrap}
-.ss-nav-btn.primary{background:#2d6a4f;border-color:#2d6a4f;color:white}
-.ss-progbar{flex:1;min-width:40px;max-width:220px;background:#374151;height:5px;border-radius:3px;overflow:hidden}
-.ss-progfill{background:#74c69d;height:100%;border-radius:3px;transition:width 0.35s ease}
+button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:.95rem;transition:.2s}
+.btn-primary{background:var(--g);color:#fff;width:100%}
+.btn-primary:hover{background:var(--g2)}
+.btn-sm{background:var(--g);color:#fff;padding:6px 14px;font-size:.85rem;border-radius:6px}
+.btn-sm:hover{background:var(--g2)}
+.btn-danger{background:var(--red);color:#fff;padding:6px 14px;font-size:.85rem;border-radius:6px}
+.btn-outline{background:transparent;border:1.5px solid var(--g);color:var(--g);padding:6px 14px;font-size:.85rem;border-radius:6px}
+.btn-outline:hover{background:var(--g);color:#fff}
+.btn-amber{background:var(--amber);color:#fff;padding:6px 14px;font-size:.85rem;border-radius:6px}
+/* TABS */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:4px}
+.tab-btn{background:transparent;border:none;padding:8px 16px;font-size:.9rem;color:var(--text);opacity:.6;border-radius:6px 6px 0 0;cursor:pointer;transition:.15s}
+.tab-btn.active{background:var(--g);color:#fff;opacity:1}
+.tab-btn:hover:not(.active){opacity:1;background:var(--border)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.card h3{margin-bottom:12px;color:var(--g);font-size:1.05rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.75rem;font-weight:600}
+.badge-green{background:#d1fae5;color:#065f46}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-amber{background:#fef3c7;color:#92400e}
+.due-soon{background:#fee2e2;color:var(--red);padding:3px 8px;border-radius:12px;font-size:.75rem;font-weight:700;margin-left:8px}
+/* NOTES */
+#notesOutput{white-space:pre-wrap;line-height:1.7;font-size:.95rem;padding:16px;background:var(--bg);border-radius:8px;border:1px solid var(--border);min-height:80px}
+/* RESULTS */
+.result-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;white-space:pre-wrap;font-size:.9rem;line-height:1.6;margin-top:10px}
+/* QUIZ */
+.quiz-q{margin-bottom:20px}
+.quiz-q p{font-weight:600;margin-bottom:8px}
+.quiz-option{display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;padding:8px 10px;border-radius:6px;border:1.5px solid var(--border);transition:.15s}
+.quiz-option:hover{border-color:var(--g)}
+.quiz-option.correct{background:#d1fae5;border-color:var(--g)}
+.quiz-option.wrong{background:#fee2e2;border-color:var(--red)}
+/* REACTIONS */
+.reaction-bar{display:flex;gap:12px;margin:12px 0}
+.react-btn{font-size:1.5rem;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;cursor:pointer;transition:.2s}
+.react-btn:hover,.react-btn.active{background:var(--g);border-color:var(--g)}
+.reaction-count{display:flex;gap:16px;margin-top:8px;font-size:1.1rem}
+.reaction-count span{background:var(--bg);padding:6px 12px;border-radius:8px;border:1px solid var(--border)}
+/* ATTENDANCE */
+.att-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+/* HISTORY PANEL */
+#historyPanel{display:none;position:fixed;top:0;right:0;width:340px;height:100vh;background:var(--card);border-left:2px solid var(--border);z-index:200;overflow-y:auto;padding:20px;box-shadow:-4px 0 20px rgba(0,0,0,.12)}
+#historyPanel h3{color:var(--g);margin-bottom:14px}
+.hist-item{padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;font-size:.85rem}
+.hist-item:hover{border-color:var(--g);background:var(--bg)}
+.hist-item .hist-topic{font-weight:600;color:var(--g)}
+/* DISCUSS */
+.discuss-post{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
+.discuss-post .meta{font-size:.78rem;color:#888;margin-bottom:6px}
+.discuss-post .question{font-weight:600;margin-bottom:8px}
+.discuss-post .reply{background:var(--card);border-left:3px solid var(--g);padding:8px 12px;margin-top:8px;border-radius:4px;font-size:.88rem}
+/* LOADER */
+.loader{display:inline-block;width:18px;height:18px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-left:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* MISC */
+.info{font-size:.85rem;color:#666;margin-bottom:10px}
+.sep{height:1px;background:var(--border);margin:16px 0}
+.success-msg{color:var(--g);font-size:.85rem;margin-top:6px}
+.error-msg{color:var(--red);font-size:.85rem;margin-top:6px}
+.code-badge{font-family:monospace;background:var(--g);color:#fff;padding:2px 8px;border-radius:6px;font-size:1.1rem;letter-spacing:2px}
+@media(max-width:600px){.role-cards{flex-direction:column}.tabs{gap:2px}.tab-btn{font-size:.8rem;padding:6px 10px}}
 </style>
 </head>
 <body>
+<header>
+  <div><h1>🎓 LectureAI <span>Human-AI Co-Orchestration</span></h1></div>
+  <div class="header-right">
+    <button id="darkToggle" onclick="toggleDark()">🌙 Dark</button>
+    <button class="btn-sm" id="logoutBtn" style="display:none" onclick="logout()">Logout</button>
+  </div>
+</header>
 
-<div id="authScreen">
+<!-- HISTORY PANEL (teacher) -->
+<div id="historyPanel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <h3>📂 Lesson History</h3>
+    <button class="btn-sm" onclick="closeHistory()">✕</button>
+  </div>
+  <div id="historyList"></div>
+</div>
+
+<!-- ROLE SELECT -->
+<div id="roleScreen" class="screen active">
+  <h2>Welcome to LectureAI</h2>
+  <p class="info">Select your role to continue</p>
+  <div class="role-cards">
+    <div class="role-card" onclick="showRole('teacher')">
+      <div class="icon">👩‍🏫</div><h3>I'm a Teacher</h3><p style="font-size:.85rem;color:#666;margin-top:6px">Create lessons, manage class</p>
+    </div>
+    <div class="role-card" onclick="showRole('student')">
+      <div class="icon">🎒</div><h3>I'm a Student</h3><p style="font-size:.85rem;color:#666;margin-top:6px">Join a class, learn &amp; submit work</p>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHER AUTH -->
+<div id="teacherAuthScreen" class="screen">
   <div class="auth-box">
-    <div class="auth-logo"><h1>🎓 LectureAI</h1><p>Human-AI Co-Orchestration in Education</p></div>
-    <div class="role-pick">
-      <div class="role-btn" id="roleTeacher" onclick="pickRole('teacher')"><div class="ri">👩‍🏫</div><div class="rl">Teacher</div><div class="rs">Create lessons</div></div>
-      <div class="role-btn" id="roleStudent" onclick="pickRole('student')"><div class="ri">🙋</div><div class="rl">Student</div><div class="rs">Join a class</div></div>
-    </div>
-    <div id="authForms" style="display:none">
-      <div class="auth-tabs">
-        <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Log In</div>
-        <div class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Sign Up</div>
-      </div>
-      <div id="loginForm">
-        <div class="fg"><label>Email</label><input id="loginEmail" type="email" placeholder="your@email.com"/></div>
-        <div class="fg"><label>Password</label><input id="loginPassword" type="password" placeholder="Password"/></div>
-        <button class="btn" onclick="doLogin()">Log In</button>
-        <p id="loginError" style="color:#e74c3c;font-size:0.82rem;margin-top:0.5rem;display:none"></p>
-      </div>
-      <div id="signupForm" style="display:none">
-        <div class="fg"><label>Full Name</label><input id="suName" placeholder="Your full name"/></div>
-        <div class="fg"><label>Email</label><input id="suEmail" type="email" placeholder="your@email.com"/></div>
-        <div class="fg"><label>Password</label><input id="suPassword" type="password" placeholder="Create a password"/></div>
-        <div id="studentFields">
-          <div class="fg"><label>Age</label><input id="suAge" type="number" placeholder="e.g. 20"/></div>
-          <div class="fg"><label>Year of Study</label>
-            <select id="suYear"><option value="">Select year</option><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Masters</option><option>PhD</option><option>Working Professional</option></select>
-          </div>
-          <div class="fg"><label>Your Background</label>
-            <select id="suBackground"><option value="">Select background</option><option>Mathematics / Statistics</option><option>Computer Science</option><option>Engineering</option><option>Medicine / Healthcare</option><option>Law</option><option>Social Sciences</option><option>Business / Economics</option><option>Biology / Life Sciences</option><option>Arts / Humanities</option><option>No technical background</option></select>
-          </div>
-        </div>
-        <button class="btn" onclick="doSignup()">Create Account</button>
-        <p id="signupError" style="color:#e74c3c;font-size:0.82rem;margin-top:0.5rem;display:none"></p>
-      </div>
-    </div>
+    <h2>👩‍🏫 Teacher Login</h2>
+    <input id="tEmail" type="email" placeholder="Your email address"/>
+    <input id="tName" type="text" placeholder="Your full name"/>
+    <input id="tCode" type="text" placeholder="Class code (e.g. BIO101) — create or re-enter yours"/>
+    <input id="tTopic" type="text" placeholder="Course topic (e.g. Cell Biology)"/>
+    <select id="tLevel"><option>Introductory</option><option selected>Intermediate</option><option>Advanced</option></select>
+    <button class="btn-primary" onclick="teacherLogin()">Enter Dashboard</button>
+    <button class="btn-outline" style="width:100%;margin-top:8px" onclick="showScreen('roleScreen')">← Back</button>
+    <p id="tAuthMsg" class="error-msg"></p>
   </div>
 </div>
 
-<div id="mainApp">
-  <header>
-    <h1>🎓 LectureAI</h1>
-    <div class="hright">
-      <div class="ubadge" id="userBadge"></div>
-      <button class="lbtn" onclick="doLogout()">Log Out</button>
-    </div>
-  </header>
-  <div class="tabs" id="teacherTabs" style="display:none">
-    <div class="tab active" onclick="switchTab('builder')">📋 Lesson</div>
-    <div class="tab" onclick="switchTab('liveclass')">🔴 Live</div>
-    <div class="tab" onclick="switchTab('studsupport')">📚 Support</div>
-    <div class="tab" onclick="switchTab('assignments')">📝 Assignments</div>
-    <div class="tab" onclick="switchTab('tests')">📋 Tests</div>
-    <div class="tab" onclick="switchTab('reports')">📨 Reports</div>
-    <div class="tab" onclick="switchTab('video')">🎬 Script</div>
-    <div class="tab" onclick="switchTab('rubric')">📊 Rubric</div>
-    <div class="tab" onclick="switchTab('export')">📁 Export</div>
+<!-- STUDENT AUTH -->
+<div id="studentAuthScreen" class="screen">
+  <div class="auth-box">
+    <h2>🎒 Student Login</h2>
+    <input id="sEmail" type="email" placeholder="Your email address"/>
+    <input id="sName" type="text" placeholder="Your full name"/>
+    <input id="sCode" type="text" placeholder="Class code from your teacher"/>
+    <input id="sYear" type="text" placeholder="Year / Programme (e.g. Year 2, Biology)"/>
+    <input id="sBackground" type="text" placeholder="Prior knowledge (e.g. basic chemistry)"/>
+    <button class="btn-primary" onclick="studentLogin()">Join Class</button>
+    <button class="btn-outline" style="width:100%;margin-top:8px" onclick="showScreen('roleScreen')">← Back</button>
+    <p id="sAuthMsg" class="error-msg"></p>
   </div>
-  <div class="tabs" id="studentTabs" style="display:none">
-    <div class="tab active" onclick="switchTab('studenthome')">🏠 My Class</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TEACHER DASHBOARD
+══════════════════════════════════════════════════════ -->
+<div id="teacherDashboard" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div>
+      <span id="tWelcome" style="font-weight:600;font-size:1.1rem"></span>
+      <span style="margin-left:10px">Class: <span id="tClassCode" class="code-badge"></span></span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-outline" onclick="openHistory()">📂 History</button>
+      <button class="btn-sm" onclick="saveToHistory()">💾 Save Plan</button>
+    </div>
+  </div>
+  <div class="tabs" id="tTabs">
+    <button class="tab-btn active" onclick="switchTab('lesson')">📋 Lesson</button>
+    <button class="tab-btn" onclick="switchTab('live')">🎙️ Live</button>
+    <button class="tab-btn" onclick="switchTab('support')">🤝 Support</button>
+    <button class="tab-btn" onclick="switchTab('assignments')">📝 Assignments</button>
+    <button class="tab-btn" onclick="switchTab('tests')">📊 Tests</button>
+    <button class="tab-btn" onclick="switchTab('reports')">📈 Reports</button>
+    <button class="tab-btn" onclick="switchTab('script')">🎬 Script</button>
+    <button class="tab-btn" onclick="switchTab('rubric')">📐 Rubric</button>
+    <button class="tab-btn" onclick="switchTab('export')">📤 Export</button>
+    <button class="tab-btn" onclick="switchTab('discuss')">💬 Discuss</button>
   </div>
 
-  <div class="content">
-    <div id="builder" class="section active">
+  <!-- LESSON TAB -->
+  <div class="tab-pane active" id="tab-lesson">
+    <div class="card">
+      <h3>⚙️ Lesson Settings</h3>
+      <input id="tTopicEdit" type="text" placeholder="Topic"/>
+      <select id="tLevelEdit"><option>Introductory</option><option selected>Intermediate</option><option>Advanced</option></select>
+      <input id="tDuration" type="number" placeholder="Duration (minutes)" value="75"/>
+      <select id="tStyle"><option>Lecture-based</option><option>Socratic</option><option>Problem-based</option><option>Flipped</option><option>Project-based</option></select>
+      <textarea id="tObjectives" placeholder="Learning objectives (one per line)"></textarea>
+      <button class="btn-primary" onclick="generateNotes()">🤖 Generate Lesson Notes <span id="notesLoader" style="display:none" class="loader"></span></button>
+    </div>
+    <div class="card" id="notesCard" style="display:none">
+      <h3>📄 Lesson Notes</h3>
+      <div id="notesOutput"></div>
+    </div>
+  </div>
+
+  <!-- LIVE TAB -->
+  <div class="tab-pane" id="tab-live">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;flex-wrap:wrap">
+      <!-- Timer -->
       <div class="card">
-        <h3>🔑 Your Class Code</h3>
-        <p style="font-size:0.85rem;color:#555;margin-bottom:0.5rem">Share this with students so they can join.</p>
-        <div class="cdisplay" id="classCodeDisplay">------</div>
-        <button class="bout" onclick="generateClassCode()" style="width:auto">New Code</button>
-      </div>
-      <div class="fg">
-        <label>Topic *</label>
-        <input id="topic" placeholder="Start typing any topic..." autocomplete="off" oninput="handleTopicInput(this.value)" onblur="setTimeout(closeAC,200)"/>
-        <div class="aclist" id="acList"></div>
-      </div>
-      <div class="fg">
-        <label>Learning Objectives *</label>
-        <textarea id="objectives" placeholder="Type your objectives or select a topic above to auto-fill..."></textarea>
-        <div id="objSug" style="margin-top:0.4rem"></div>
-      </div>
-      <div class="fg"><label>Class Level</label>
-        <select id="level"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option></select>
-      </div>
-      <div class="fg"><label>Duration (minutes): <span id="durLabel">75</span></label>
-        <input type="range" id="duration" min="30" max="180" value="75" step="5" oninput="document.getElementById('durLabel').textContent=this.value"/>
-      </div>
-      <div class="fg"><label>Teaching Style</label>
-        <select id="style"><option>Lecture-based</option><option>Discussion-based</option><option>Project-based</option><option>Flipped</option></select>
-      </div>
-      <button class="btn" onclick="generateLesson()">✨ Generate Lesson Plan</button>
-
-      <div id="planOutput" style="display:none">
-        <div class="stitle">📊 Overview</div>
-        <div class="metrics">
-          <div class="metric"><div class="val" id="mTopic">-</div><div class="lbl">Topic</div></div>
-          <div class="metric"><div class="val" id="mLevel">-</div><div class="lbl">Level</div></div>
-          <div class="metric"><div class="val" id="mDur">-</div><div class="lbl">Duration</div></div>
+        <h3>⏱️ Class Timer</h3>
+        <div style="font-size:2.5rem;font-weight:700;color:var(--g);margin:10px 0" id="timerDisplay">00:00</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-sm" onclick="startTimer()">▶ Start</button>
+          <button class="btn-sm" onclick="pauseTimer()">⏸ Pause</button>
+          <button class="btn-outline" onclick="resetTimer()">↺ Reset</button>
         </div>
-        <div class="stitle">🏷️ ICAP</div>
-        <div class="icap-row">
-          <div class="icap-box pb"><div class="num" id="icapP">0</div><div class="lbl">Passive</div></div>
-          <div class="icap-box ab"><div class="num" id="icapA">0</div><div class="lbl">Active</div></div>
-          <div class="icap-box cb"><div class="num" id="icapC">0</div><div class="lbl">Constructive</div></div>
-          <div class="icap-box ib"><div class="num" id="icapI">0</div><div class="lbl">Interactive</div></div>
-        </div>
-        <div class="stitle">📐 Outline</div><div id="outlineCards"></div>
-        <div class="stitle">💡 Analogies</div><div id="analogyCards"></div>
-        <div class="stitle">🎯 Activities</div><div id="activityCards"></div>
-        <div class="stitle">🪞 Reflections</div><div id="reflectionList"></div>
-
-        <div class="stitle">📄 AI Lecture Notes</div>
-        <div class="card" style="border-left-color:#e67e22">
-          <h3>📝 Generate Full Lecture Notes</h3>
-          <p style="margin-bottom:0.8rem">AI writes very detailed notes from your lesson plan. Students download them instantly. The slideshow and PowerPoint automatically use these notes.</p>
-          <button class="btn" id="genNotesBtn" onclick="generateAINotes()">📝 Generate Full Notes</button>
-          <div id="notesGenStatus" style="margin-top:0.6rem;font-size:0.85rem;color:#888"></div>
-          <div id="teacherNotesBox" style="display:none;margin-top:1rem">
-            <div style="background:#f0faf4;border:1px solid #74c69d;border-radius:8px;padding:0.6rem 1rem;font-size:0.85rem;color:#1a6640;margin-bottom:0.7rem">✅ Notes generated and saved. Slideshow and PowerPoint now use these notes.</div>
-            <div class="notesbox" id="teacherNotesContent"></div>
-            <div style="display:flex;gap:0.7rem;margin-top:0.8rem;flex-wrap:wrap">
-              <button class="btn" onclick="downloadTeacherNotes()" style="width:auto">⬇️ Download Notes</button>
-              <button class="bout" onclick="generateAINotes()" style="margin-top:0">🔄 Regenerate</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="stitle">🎙️ AI Slideshow and PowerPoint</div>
-        <div class="card">
-          <p style="font-size:0.88rem;color:#555;margin-bottom:0.5rem">Generate AI notes first for best results. Slideshow plays fully in-browser with voice narration, arrow controls, auto mode and fullscreen.</p>
-          <div id="notesReadyBadge" style="display:none;background:#d8f0e8;color:#1a6640;padding:0.4rem 0.8rem;border-radius:6px;font-size:0.82rem;font-weight:600;margin-bottom:0.8rem">✅ AI Notes ready — slideshow and PowerPoint built from notes</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem">
-            <button class="btn" onclick="launchSlideshow()">🎙️ Launch AI Slideshow</button>
-            <button class="bout" id="slidesBtn" onclick="generateSlides()" style="margin-top:0">📊 Download PowerPoint</button>
-          </div>
-          <div id="slidesStatus" style="margin-top:0.5rem;font-size:0.85rem;color:#888"></div>
+      </div>
+      <!-- Emoji Reactions Panel -->
+      <div class="card">
+        <h3>😊 Live Reactions</h3>
+        <p class="info">Students send reactions; updates every 10 sec</p>
+        <div class="reaction-count" id="teacherReactions">
+          <span>👍 <b id="r_thumbs">0</b></span>
+          <span>😕 <b id="r_confused">0</b></span>
+          <span>⚡ <b id="r_lightning">0</b></span>
         </div>
       </div>
     </div>
-
-    <div id="liveclass" class="section">
-      <div id="noplanLive" class="info">⚠️ Generate a lesson plan first.</div>
-      <div id="liveclassContent" style="display:none">
-        <div class="ltgrid">
-          <div class="tcrd"><h3>💬 Question Handler</h3>
-            <textarea id="teacherQ" rows="2" placeholder="Student question..."></textarea>
-            <button class="vbtn" onclick="startVoice('teacherQ')">🎤 Speak</button>
-            <button class="btn" onclick="handleTeacherQuestion()">Get Response</button>
-            <div class="rbox" id="teacherQResult"></div>
-            <button class="spkbtn" id="speakTQ" style="display:none" onclick="speakText('teacherQResult')">🔊 Read</button>
-          </div>
-          <div class="tcrd"><h3>😕 Confusion Detector</h3>
-            <textarea id="confusionInput" rows="2" placeholder="Describe the confusion..."></textarea>
-            <button class="vbtn" onclick="startVoice('confusionInput')">🎤 Speak</button>
-            <button class="bor" onclick="handleConfusion()">Rescue Strategy</button>
-            <div class="rbox or" id="confusionResult"></div>
-            <button class="spkbtn" id="speakCon" style="display:none" onclick="speakText('confusionResult')">🔊 Read</button>
-          </div>
-          <div class="tcrd"><h3>✅ Concept Check</h3>
-            <input id="conceptQ" placeholder="Question you asked the class"/>
-            <label style="margin-top:0.6rem">% correct: <span id="pctLabel">50</span>%</label>
-            <input type="range" min="0" max="100" value="50" id="correctPct" oninput="document.getElementById('pctLabel').textContent=this.value"/>
-            <button class="bbl" onclick="handleConceptCheck()">Interpret</button>
-            <div class="rbox bl" id="conceptResult"></div>
-            <button class="spkbtn" id="speakCC" style="display:none" onclick="speakText('conceptResult')">🔊 Read</button>
-          </div>
-          <div class="tcrd"><h3>⏱️ Pacing</h3>
-            <input type="number" id="minsElapsed" placeholder="Minutes elapsed"/>
-            <input id="currentSeg" placeholder="Current segment" style="margin-top:0.5rem"/>
-            <button class="bpu" onclick="handlePacing()">Pacing Advice</button>
-            <div class="rbox pu" id="pacingResult"></div>
-            <button class="spkbtn" id="speakPac" style="display:none" onclick="speakText('pacingResult')">🔊 Read</button>
-          </div>
-        </div>
-      </div>
+    <!-- Question & Pacing -->
+    <div class="card">
+      <h3>❓ Quick Q&amp;A</h3>
+      <textarea id="liveQ" placeholder="Paste a student question or concept you want to address…" style="min-height:70px"></textarea>
+      <button class="btn-sm" onclick="liveQuestion()">Get AI Response</button>
+      <div id="liveQResult" class="result-box" style="display:none"></div>
     </div>
-
-    <div id="studsupport" class="section">
-      <div id="noplan1" class="info">⚠️ Generate a lesson plan first.</div>
-      <div id="studentContent" style="display:none">
-        <div class="stitle">📖 Micro-Explanation</div>
-        <div class="card"><p id="microExp"></p></div>
-        <div class="stitle">✏️ Practice Questions</div><div id="practiceQs"></div>
-        <div class="stitle">🧠 Self-Regulated Learning</div><div id="srlCards"></div>
-      </div>
+    <div class="card">
+      <h3>😰 Confusion Rescue</h3>
+      <textarea id="confusionDesc" placeholder="Describe the confusion or misconception…" style="min-height:60px"></textarea>
+      <button class="btn-sm" onclick="confusionRescue()">🚨 Get Rescue Strategy</button>
+      <div id="confusionResult" class="result-box" style="display:none"></div>
     </div>
-
-    <div id="assignments" class="section">
-      <div class="stitle">📝 Assignments</div>
-      <div id="noplanAssign" class="info">⚠️ Generate a lesson plan first.</div>
-      <div id="assignContent" style="display:none">
-        <div class="card"><h3>➕ Create Assignment</h3>
-          <div class="fg"><label>Title</label><input id="assignTitle" placeholder="Assignment title"/></div>
-          <div class="fg"><label>Instructions</label><textarea id="assignDesc" placeholder="What should students do?"></textarea></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem">
-            <div class="fg"><label>Due Date</label><input id="assignDue" type="date"/></div>
-            <div class="fg"><label>Max Score</label><input id="assignMax" type="number" value="100"/></div>
-          </div>
-          <button class="btn" onclick="createAssignment()">📤 Post Assignment</button>
-        </div>
-        <div class="stitle">Posted</div><div id="assignList"></div>
+    <div class="card">
+      <h3>⏰ Pacing Check</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <input id="paceTotal" type="number" placeholder="Total min" value="75"/>
+        <input id="paceElapsed" type="number" placeholder="Elapsed min" value="30"/>
+        <input id="paceCurrent" type="text" placeholder="Current segment"/>
       </div>
+      <button class="btn-sm" onclick="pacingCheck()">Check Pacing</button>
+      <div id="pacingResult" class="result-box" style="display:none"></div>
     </div>
-
-    <div id="tests" class="section">
-      <div class="stitle">📋 Tests</div>
-      <div id="noplanTests" class="info">⚠️ Generate a lesson plan first.</div>
-      <div id="testsContent" style="display:none">
-        <div class="card"><h3>🔨 Build a Test</h3>
-          <div class="fg"><label>Test Title</label><input id="testTitle" placeholder="e.g. Week 3 Quiz"/></div>
-          <div class="fg"><label>Time Limit (minutes, 0 = none)</label><input id="testTimeLimit" type="number" value="0"/></div>
-          <div id="testQuestions"></div>
-          <button class="bout" onclick="addTestQuestion()" style="width:auto;margin-top:0.5rem">➕ Add Question</button>
-          <button class="btn" onclick="publishTest()">📤 Publish Test</button>
-        </div>
-        <div class="stitle">Published</div><div id="testList"></div>
+    <!-- Attendance Tracker -->
+    <div class="card">
+      <h3>📋 Attendance Tracker</h3>
+      <p class="info">Date: <span id="attTodayDate"></span></p>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input id="attStudentName" type="text" placeholder="Student name" style="margin:0;flex:1"/>
+        <button class="btn-sm" onclick="addAttendanceRow()">+ Add</button>
       </div>
-    </div>
-
-    <div id="reports" class="section">
-      <div class="stitle">📨 Student Reports</div>
-      <div id="reportsEmpty" class="info">No reports yet.</div>
-      <div id="reportsList"></div>
-      <button class="bout" onclick="clearReports()" style="margin-top:0.5rem;width:auto">🗑️ Clear All</button>
-    </div>
-
-    <div id="video" class="section">
-      <div id="noplanVideo" class="info">⚠️ Generate a lesson plan first.</div>
-      <div id="videoContent" style="display:none">
-        <div class="stitle">🎬 Video Script</div>
-        <div class="card">
-          <p style="font-size:0.88rem;color:#555;margin-bottom:0.7rem">Generate a full narration script for HeyGen, Synthesia, or to record yourself.</p>
-          <button class="btn" id="videoBtn" onclick="generateVideoScript()">🎬 Generate Script</button>
-          <div id="videoStatus" style="margin-top:0.5rem;font-size:0.85rem;color:#888"></div>
-        </div>
-        <div class="sbox" id="scriptBox" style="display:none"></div>
-        <button class="bout" id="copyScriptBtn" style="display:none;width:auto" onclick="copyScript()">📋 Copy</button>
-      </div>
-    </div>
-
-    <div id="rubric" class="section">
-      <div id="noplan2" class="info">⚠️ Generate a lesson plan first.</div>
-      <div id="rubricContent" style="display:none">
-        <p style="font-size:0.88rem;color:#555;margin-bottom:1rem">Score each criterion 1-5.</p>
-        <div id="rubricRows"></div>
-        <div class="sdisplay">
-          <div class="big" id="totalScore">-</div>
-          <div style="font-size:0.85rem;color:#555">Total · <span id="totalPct">-</span> · <span id="rating">-</span></div>
-        </div>
-        <button class="btn" style="margin-top:1rem" onclick="alert('Scores saved!')">💾 Save</button>
-      </div>
-    </div>
-
-    <div id="export" class="section">
-      <div id="noplan3" class="info">⚠️ Generate a lesson plan first.</div>
-      <div id="exportContent" style="display:none">
-        <button class="btn" onclick="downloadTxt()">⬇️ Download Text File</button>
-        <div class="stitle" style="margin-top:1rem">Preview</div>
-        <div class="ebox" id="exportPreview"></div>
-      </div>
-    </div>
-
-    <div id="studenthome" class="section">
-      <div class="shero">
-        <h2 id="stuWelcome">Welcome 👋</h2>
-        <p>Ask questions, take quizzes, submit work</p>
-      </div>
-      <div class="cbox" id="connectBox">
-        <h3>🔗 Join Your Class</h3>
-        <p style="font-size:0.85rem;color:#555;margin-bottom:0.8rem">Enter the code your teacher gave you.</p>
-        <div style="display:flex;gap:0.5rem">
-          <input id="classCodeInput" placeholder="e.g. ABC123" style="text-transform:uppercase;letter-spacing:0.1rem;flex:1" maxlength="6"/>
-          <button class="btn" style="width:auto;margin-top:0" onclick="joinClass()">Join</button>
-        </div>
-        <p id="joinError" style="color:#e74c3c;font-size:0.82rem;margin-top:0.4rem;display:none"></p>
-      </div>
-      <div id="connectedClassBox" style="display:none">
-        <div class="ccls">
-          <div><div class="ctopic" id="connectedTopic">-</div><div class="cteacher" id="connectedTeacher">-</div></div>
-          <button class="disbtn" onclick="disconnectClass()">Leave</button>
-        </div>
-      </div>
-      <div id="stuAskArea" style="display:none">
-        <div class="stabs">
-          <div class="stab active" onclick="switchStuTab('ask')">🙋 Ask</div>
-          <div class="stab" onclick="switchStuTab('notes')">📄 Notes</div>
-          <div class="stab" onclick="switchStuTab('quiz')">🧠 Quiz</div>
-          <div class="stab" onclick="switchStuTab('stuassign')">📝 Work</div>
-          <div class="stab" onclick="switchStuTab('stutests')">📋 Tests</div>
-        </div>
-        <div id="stuAsk">
-          <div class="card cbl"><h3>🙋 Ask a Question</h3>
-            <textarea id="stuQuestion" rows="3" placeholder="Type anything you did not understand..."></textarea>
-            <button class="vbtn" onclick="startVoice('stuQuestion')">🎤 Speak</button>
-            <button class="bbl" onclick="handleStudentQuestion()">Get Answer</button>
-            <div class="rbox bl" id="stuQuestionResult"></div>
-            <button class="spkbtn" id="speakStuQ" style="display:none" onclick="speakText('stuQuestionResult')">🔊 Read</button>
-          </div>
-        </div>
-        <div id="stuNotes" style="display:none">
-          <div class="card">
-            <h3>📄 Lecture Notes</h3>
-            <div id="aiNotesBanner" style="display:none;background:#f0faf4;border:1.5px solid #74c69d;border-radius:10px;padding:1rem;margin-bottom:0.8rem">
-              <div style="font-weight:700;color:#2d6a4f;margin-bottom:0.3rem">✅ Teacher has published AI-generated notes</div>
-              <div style="font-size:0.83rem;color:#555">Full detailed lecture notes are available below.</div>
-            </div>
-            <div id="aiNotesStatus" style="font-size:0.85rem;color:#888;margin-bottom:0.5rem"></div>
-            <div style="display:flex;gap:0.7rem;flex-wrap:wrap;margin-top:0.5rem">
-              <button class="btn" onclick="downloadStudentNotes()" style="width:auto">⬇️ Download Template Notes</button>
-              <button class="bbl" id="downloadAINotesBtn" style="display:none;width:auto;margin-top:0" onclick="downloadAINotes()">⬇️ Download AI Notes</button>
-            </div>
-          </div>
-          <div id="aiNotesPreview" class="notesbox" style="display:none"></div>
-          <div class="ebox" id="notesPreviewBox" style="margin-top:1rem"></div>
-        </div>
-        <div id="stuQuiz" style="display:none">
-          <div class="card"><h3>🧠 Practice Quiz</h3>
-            <button class="btn" id="startQuizBtn" onclick="startQuiz()">Start Quiz</button>
-          </div>
-          <div id="quizArea"></div>
-          <div id="quizScoreBox" class="qzscore" style="display:none">
-            <div class="big" id="quizScoreDisplay">-</div>
-            <div style="font-size:0.9rem;color:#555;margin-top:0.3rem" id="quizScoreMsg"></div>
-            <button class="btn" style="width:auto;margin-top:1rem" onclick="startQuiz()">Try Again</button>
-          </div>
-        </div>
-        <div id="stuassign" style="display:none">
-          <div class="stitle">📝 Assignments</div>
-          <div id="stuAssignList"><div class="info">Loading...</div></div>
-        </div>
-        <div id="stutests" style="display:none">
-          <div class="stitle">📋 Tests</div>
-          <div id="stuTestList"><div class="info">Loading...</div></div>
-        </div>
-      </div>
-      <div id="stuNoClass" class="info" style="margin-top:1rem">Enter your class code above to get started.</div>
-    </div>
-  </div>
-</div>
-
-<!-- SLIDESHOW OVERLAY -->
-<div id="ssOverlay">
-  <div class="ss-topbar">
-    <div style="display:flex;align-items:center;gap:6px;overflow:hidden;flex:1;min-width:0">
-      <span class="ss-topic" id="ssTopic">LectureAI</span>
-      <span class="ss-badge idle" id="ssBadge">🔊 Ready</span>
-    </div>
-    <div class="ss-topbar-right">
-      <select class="ss-vsel" id="voiceSelect" onchange="changeVoice(this.value)"></select>
-      <button class="ss-tbtn" onclick="toggleNarration()">📝</button>
-      <button class="ss-tbtn" onclick="toggleFullscreen()" id="fsBtn">⛶ Full</button>
-      <button class="ss-tbtn red" onclick="closeSlideshow()">✕</button>
+      <div id="attList"></div>
+      <button class="btn-sm" style="margin-top:10px" onclick="loadAttendance()">🔄 Load Saved</button>
     </div>
   </div>
 
-  <div class="ss-slide-wrap" id="ssSlideWrap">
-    <div class="ss-slide" id="ssSlide">
-      <div class="ss-slide-header" id="ssHeader">
-        <div class="ss-slide-title" id="ssSlideTitle">-</div>
-        <div class="ss-slide-num" id="ssSlideNum">1/1</div>
-      </div>
-      <div class="ss-slide-body" id="ssSlideBody"></div>
-      <div class="ss-slide-brand" id="ssBrand">🎓 LectureAI</div>
-      <div class="ss-narration" id="ssNarration"></div>
+  <!-- SUPPORT TAB -->
+  <div class="tab-pane" id="tab-support">
+    <div class="card">
+      <h3>🤝 Student Support Tool</h3>
+      <input id="suppStudentName" type="text" placeholder="Student name"/>
+      <input id="suppStudentYear" type="text" placeholder="Year / Programme"/>
+      <input id="suppStudentBg" type="text" placeholder="Background knowledge"/>
+      <select id="suppLevel"><option>Introductory</option><option selected>Intermediate</option><option>Advanced</option></select>
+      <textarea id="suppQ" placeholder="Student's question…" style="min-height:80px"></textarea>
+      <button class="btn-sm" onclick="supportAnswer()">Get Student-Friendly Answer</button>
+      <div id="suppResult" class="result-box" style="display:none"></div>
     </div>
   </div>
 
-  <div class="ss-controls">
-    <button class="ss-nav-btn" onclick="prevSlide()">← Prev</button>
-    <div class="ss-progbar"><div class="ss-progfill" id="ssProgFill" style="width:0%"></div></div>
-    <button class="ss-nav-btn primary" onclick="nextSlide()">Next →</button>
-    <button class="ss-nav-btn" onclick="replaySlide()">🔁</button>
-    <button class="ss-nav-btn" id="autoBtn" onclick="toggleAuto()">▶ Auto</button>
+  <!-- ASSIGNMENTS TAB -->
+  <div class="tab-pane" id="tab-assignments">
+    <div class="card">
+      <h3>➕ Create Assignment</h3>
+      <input id="asgTitle" type="text" placeholder="Assignment title"/>
+      <textarea id="asgDesc" placeholder="Instructions / description" style="min-height:70px"></textarea>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <input id="asgDue" type="date"/>
+        <input id="asgMax" type="number" placeholder="Max score" value="100"/>
+      </div>
+      <button class="btn-primary" onclick="createAssignment()">Create Assignment</button>
+      <p id="asgMsg" class="success-msg"></p>
+    </div>
+    <div id="assignmentsList"></div>
   </div>
-</div>
+
+  <!-- TESTS TAB -->
+  <div class="tab-pane" id="tab-tests">
+    <div class="card">
+      <h3>🤖 Generate AI Quiz</h3>
+      <p class="info">Let AI create 5 questions from your lesson notes automatically</p>
+      <button class="btn-amber" onclick="generateAIQuiz()">⚡ Generate Quiz from Notes <span id="quizGenLoader" style="display:none" class="loader"></span></button>
+      <p id="quizGenMsg" class="info" style="margin-top:8px"></p>
+    </div>
+    <div class="card">
+      <h3>➕ Create Test</h3>
+      <input id="testTitle" type="text" placeholder="Test title"/>
+      <input id="testTimeLimit" type="number" placeholder="Time limit (minutes, 0 = no limit)"/>
+      <div id="testQuestionsBuilder"></div>
+      <button class="btn-outline" onclick="addQuestion()">+ Add Question</button>
+      <button class="btn-primary" style="margin-top:10px" onclick="createTest()">Save &amp; Publish Test</button>
+      <p id="testMsg" class="success-msg"></p>
+    </div>
+    <div id="testsList"></div>
+  </div>
+
+  <!-- REPORTS TAB -->
+  <div class="tab-pane" id="tab-reports">
+    <div class="card">
+      <h3>📈 Engagement Overview</h3>
+      <button class="btn-sm" onclick="loadReports()">🔄 Refresh Stats</button>
+      <div id="reportsContent" style="margin-top:14px">
+        <p class="info">Click Refresh to load stats</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📊 Concept Check</h3>
+      <textarea id="conceptQ" placeholder="Question you asked the class…" style="min-height:60px"></textarea>
+      <input id="conceptPct" type="number" placeholder="% who answered correctly (e.g. 45)"/>
+      <button class="btn-sm" onclick="conceptCheck()">Get AI Interpretation</button>
+      <div id="conceptResult" class="result-box" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- SCRIPT TAB -->
+  <div class="tab-pane" id="tab-script">
+    <div class="card">
+      <h3>🎬 Video Script Generator</h3>
+      <p class="info">Generate a 5-minute narrated script for your topic</p>
+      <button class="btn-primary" onclick="generateScript()">Generate Script <span id="scriptLoader" style="display:none" class="loader"></span></button>
+      <div id="scriptResult" class="result-box" style="display:none;margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- RUBRIC TAB -->
+  <div class="tab-pane" id="tab-rubric">
+    <div class="card">
+      <h3>📐 AI Rubric Builder</h3>
+      <textarea id="rubricTask" placeholder="Describe the assignment or task to generate a rubric for…" style="min-height:80px"></textarea>
+      <select id="rubricType"><option>Essay</option><option>Project</option><option>Presentation</option><option>Lab Report</option><option>Code</option></select>
+      <button class="btn-primary" onclick="generateRubric()">Generate Rubric <span id="rubricLoader" style="display:none" class="loader"></span></button>
+      <div id="rubricResult" class="result-box" style="display:none;margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- EXPORT TAB -->
+  <div class="tab-pane" id="tab-export">
+    <div class="card">
+      <h3>📤 Export Slides (PowerPoint)</h3>
+      <p class="info">Downloads a fully styled .pptx based on your lesson notes</p>
+      <button class="btn-primary" onclick="exportSlides()">⬇ Download Slides <span id="exportLoader" style="display:none" class="loader"></span></button>
+    </div>
+  </div>
+
+  <!-- DISCUSS TAB (teacher) -->
+  <div class="tab-pane" id="tab-discuss">
+    <div class="card">
+      <h3>💬 Discussion Board</h3>
+      <p class="info">Reply to student questions publicly</p>
+      <button class="btn-sm" onclick="loadTeacherDiscuss()">🔄 Refresh</button>
+      <div id="teacherDiscussionList" style="margin-top:14px"></div>
+    </div>
+  </div>
+</div><!-- /teacherDashboard -->
+
+
+<!-- ═══════════════════════════════════════════════════
+     STUDENT DASHBOARD
+══════════════════════════════════════════════════════ -->
+<div id="studentDashboard" class="screen">
+  <div style="margin-bottom:16px">
+    <span id="sWelcome" style="font-weight:600;font-size:1.1rem"></span>
+    <span style="margin-left:10px">Class: <span id="sClassCode" class="code-badge"></span></span>
+  </div>
+  <div class="tabs" id="sTabs">
+    <button class="tab-btn active" onclick="switchStuTab('ask')">🙋 Ask</button>
+    <button class="tab-btn" onclick="switchStuTab('notes')">📄 Notes</button>
+    <button class="tab-btn" onclick="switchStuTab('quiz')">🧠 Quiz</button>
+    <button class="tab-btn" onclick="switchStuTab('work')">📝 Work</button>
+    <button class="tab-btn" onclick="switchStuTab('tests')">📊 Tests</button>
+    <button class="tab-btn" onclick="switchStuTab('discuss')">💬 Discuss</button>
+  </div>
+
+  <!-- ASK TAB -->
+  <div class="tab-pane active" id="stab-ask">
+    <div class="card">
+      <h3>🙋 Ask a Question</h3>
+      <textarea id="stuQ" placeholder="Type your question about the lesson…" style="min-height:80px"></textarea>
+      <button class="btn-sm" onclick="studentAsk()">Ask AI <span id="askLoader" style="display:none" class="loader"></span></button>
+      <div id="askResult" class="result-box" style="display:none;margin-top:10px"></div>
+    </div>
+    <!-- Emoji Reactions -->
+    <div class="card">
+      <h3>😊 How do you feel about this lesson?</h3>
+      <p class="info">Send a reaction to your teacher</p>
+      <div class="reaction-bar">
+        <button class="react-btn" id="rb_thumbs" onclick="sendReaction('👍')">👍</button>
+        <button class="react-btn" id="rb_confused" onclick="sendReaction('😕')">😕</button>
+        <button class="react-btn" id="rb_lightning" onclick="sendReaction('⚡')">⚡</button>
+      </div>
+      <p id="reactionMsg" class="success-msg"></p>
+    </div>
+  </div>
+
+  <!-- NOTES TAB -->
+  <div class="tab-pane" id="stab-notes">
+    <div class="card">
+      <h3>📄 Lesson Notes</h3>
+      <button class="btn-sm" onclick="loadStuNotes()">Load Notes</button>
+      <div id="stuNotesOutput" class="result-box" style="margin-top:12px;display:none"></div>
+    </div>
+    <!-- Personal Notes -->
+    <div class="card">
+      <h3>✏️ My Personal Notes</h3>
+      <p class="info">These are private — saved to your browser only</p>
+      <textarea id="personalNotes" placeholder="Write your own notes here…" style="min-height:140px" oninput="savePersonalNotes()"></textarea>
+      <button class="btn-sm" style="margin-top:8px" onclick="downloadPersonalNotes()">⬇ Download My Notes</button>
+    </div>
+  </div>
+
+  <!-- QUIZ TAB -->
+  <div class="tab-pane" id="stab-quiz">
+    <div class="card">
+      <h3>🧠 Quick Quiz (AI Generated)</h3>
+      <button class="btn-sm" onclick="loadStuQuiz()">Generate Quiz <span id="stuQuizLoader" style="display:none" class="loader"></span></button>
+      <div id="stuQuizContent" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- WORK TAB -->
+  <div class="tab-pane" id="stab-work">
+    <div class="card">
+      <h3>📝 Assignments</h3>
+      <button class="btn-sm" onclick="loadStuAssignments()">🔄 Refresh</button>
+      <div id="stuAssignmentsList" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- TESTS TAB -->
+  <div class="tab-pane" id="stab-tests">
+    <div class="card">
+      <h3>📊 Tests</h3>
+      <button class="btn-sm" onclick="loadStuTests()">🔄 Refresh</button>
+      <div id="stuTestsList" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- DISCUSS TAB (student) -->
+  <div class="tab-pane" id="stab-discuss">
+    <div class="card">
+      <h3>💬 Post a Question</h3>
+      <textarea id="discussQuestion" placeholder="Ask a public question — your teacher and classmates can see it" style="min-height:80px"></textarea>
+      <button class="btn-sm" onclick="postDiscussion()">Post Question</button>
+      <p id="discussMsg" class="success-msg"></p>
+    </div>
+    <div class="card">
+      <h3>📬 Class Discussion Board</h3>
+      <button class="btn-sm" onclick="loadStudentDiscuss()">🔄 Refresh</button>
+      <div id="studentDiscussionList" style="margin-top:14px"></div>
+    </div>
+  </div>
+</div><!-- /studentDashboard -->
 
 <script>
-/* ─── DATA ─── */
-const TOPICS=[{t:"Linear Regression",c:"Data Science"},{t:"Logistic Regression",c:"Data Science"},{t:"Decision Trees",c:"Data Science"},{t:"Random Forests",c:"Data Science"},{t:"Neural Networks",c:"Data Science"},{t:"Deep Learning",c:"Data Science"},{t:"Natural Language Processing",c:"Data Science"},{t:"Computer Vision",c:"Data Science"},{t:"Reinforcement Learning",c:"Data Science"},{t:"Clustering Algorithms",c:"Data Science"},{t:"Feature Engineering",c:"Data Science"},{t:"Model Evaluation Metrics",c:"Data Science"},{t:"Overfitting and Underfitting",c:"Data Science"},{t:"Cross-Validation",c:"Data Science"},{t:"Gradient Boosting",c:"Data Science"},{t:"Support Vector Machines",c:"Data Science"},{t:"Time Series Analysis",c:"Data Science"},{t:"Transfer Learning",c:"Data Science"},{t:"Transformers and Attention",c:"Data Science"},{t:"Generative AI",c:"Data Science"},{t:"Explainable AI",c:"Data Science"},{t:"A/B Testing",c:"Data Science"},{t:"Hypothesis Testing",c:"Statistics"},{t:"Probability Theory",c:"Statistics"},{t:"Bayesian Statistics",c:"Statistics"},{t:"Descriptive Statistics",c:"Statistics"},{t:"ANOVA",c:"Statistics"},{t:"Confidence Intervals",c:"Statistics"},{t:"Central Limit Theorem",c:"Statistics"},{t:"Normal Distribution",c:"Statistics"},{t:"Correlation vs Causation",c:"Statistics"},{t:"Sampling Methods",c:"Statistics"},{t:"Experimental Design",c:"Statistics"},{t:"Python for Data Science",c:"Programming"},{t:"Pandas",c:"Programming"},{t:"NumPy",c:"Programming"},{t:"SQL Fundamentals",c:"Programming"},{t:"Advanced SQL",c:"Programming"},{t:"R Programming",c:"Programming"},{t:"Scikit-Learn",c:"Programming"},{t:"TensorFlow",c:"Programming"},{t:"PyTorch",c:"Programming"},{t:"Web Scraping",c:"Programming"},{t:"APIs and REST",c:"Programming"},{t:"Version Control with Git",c:"Programming"},{t:"Docker",c:"Programming"},{t:"Object-Oriented Programming",c:"Programming"},{t:"Anatomy and Physiology",c:"Medicine"},{t:"Pharmacology Basics",c:"Medicine"},{t:"Clinical Diagnosis",c:"Medicine"},{t:"Medical Ethics",c:"Medicine"},{t:"Epidemiology",c:"Medicine"},{t:"Pathophysiology",c:"Medicine"},{t:"Evidence-Based Medicine",c:"Medicine"},{t:"AI in Healthcare",c:"Medicine"},{t:"Public Health",c:"Medicine"},{t:"Genetics and Genomics",c:"Medicine"},{t:"Neuroscience",c:"Medicine"},{t:"Mental Health",c:"Medicine"},{t:"Contract Law",c:"Law"},{t:"Criminal Law",c:"Law"},{t:"Constitutional Law",c:"Law"},{t:"Tort Law",c:"Law"},{t:"Intellectual Property",c:"Law"},{t:"Data Privacy Law",c:"Law"},{t:"Corporate Law",c:"Law"},{t:"International Law",c:"Law"},{t:"Human Rights Law",c:"Law"},{t:"Thermodynamics",c:"Engineering"},{t:"Fluid Mechanics",c:"Engineering"},{t:"Structural Analysis",c:"Engineering"},{t:"Electrical Circuits",c:"Engineering"},{t:"Control Systems",c:"Engineering"},{t:"Signal Processing",c:"Engineering"},{t:"Materials Science",c:"Engineering"},{t:"Software Engineering",c:"Engineering"},{t:"Robotics",c:"Engineering"},{t:"Renewable Energy",c:"Engineering"},{t:"Microeconomics",c:"Business"},{t:"Macroeconomics",c:"Business"},{t:"Financial Accounting",c:"Business"},{t:"Marketing Strategy",c:"Business"},{t:"Operations Management",c:"Business"},{t:"Corporate Finance",c:"Business"},{t:"Project Management",c:"Business"},{t:"Strategic Management",c:"Business"},{t:"Research Methods",c:"Social Sciences"},{t:"Sociology",c:"Social Sciences"},{t:"Psychology",c:"Social Sciences"},{t:"Political Science",c:"Social Sciences"},{t:"Behavioural Economics",c:"Social Sciences"},{t:"Education Theory",c:"Social Sciences"},{t:"AI Ethics",c:"Ethics"},{t:"Algorithmic Bias",c:"Ethics"},{t:"Fairness in AI",c:"Ethics"},{t:"Data Privacy",c:"Ethics"},{t:"Data Visualisation",c:"Visualisation"},{t:"Tableau",c:"Visualisation"},{t:"Power BI",c:"Visualisation"},{t:"Storytelling with Data",c:"Visualisation"},{t:"Matplotlib and Seaborn",c:"Visualisation"}];
-const OBJ_MAP={"Linear Regression":"1. Understand what linear regression is and when to use it\n2. Interpret coefficients and the regression equation\n3. Evaluate model fit using R-squared and RMSE\n4. Identify assumptions and when they are violated","Neural Networks":"1. Understand the structure of a neural network\n2. Explain how backpropagation works\n3. Identify appropriate activation functions\n4. Build a simple neural network in Python","Decision Trees":"1. Understand how a decision tree splits data\n2. Interpret a decision tree visually\n3. Identify overfitting and apply pruning\n4. Compare decision trees to other classifiers","SQL Fundamentals":"1. Write basic SELECT WHERE and JOIN queries\n2. Understand primary keys and foreign keys\n3. Use aggregate functions like COUNT SUM and AVG\n4. Filter and sort results effectively","Python for Data Science":"1. Write Python code using variables loops and functions\n2. Load and manipulate data using Pandas\n3. Create basic visualisations with Matplotlib\n4. Understand list comprehensions and lambda functions","Hypothesis Testing":"1. Understand the null and alternative hypothesis\n2. Choose the right statistical test\n3. Interpret p-values and confidence intervals\n4. Avoid common mistakes like p-hacking","AI Ethics":"1. Identify common sources of bias in AI systems\n2. Explain fairness metrics and their limitations\n3. Understand legal and ethical frameworks\n4. Critically evaluate the societal impact of AI","Contract Law":"1. Define a valid contract and its essential elements\n2. Identify offer acceptance and consideration\n3. Understand breach of contract and remedies\n4. Apply contract principles to case studies","Thermodynamics":"1. Understand the laws of thermodynamics\n2. Apply energy conservation principles\n3. Analyse heat engines and refrigeration cycles\n4. Solve thermodynamic problems","Microeconomics":"1. Understand supply and demand principles\n2. Analyse market equilibrium and price elasticity\n3. Explain consumer and producer surplus\n4. Evaluate market failures","Psychology":"1. Understand the major schools of psychological thought\n2. Explain key psychological theories\n3. Critically evaluate research methods\n4. Apply psychological concepts to real-world scenarios","Epidemiology":"1. Define key epidemiological measures\n2. Understand study designs including cohort and case-control\n3. Interpret risk ratios and odds ratios\n4. Evaluate public health interventions"};
-const QUIZ_Q={"Linear Regression":[{q:"What does a regression line minimise?",opts:["Sum of squared errors","Sum of absolute values","R-squared","Mean"],ans:0,exp:"Linear regression minimises the sum of squared differences between actual and predicted values."},{q:"What does R-squared measure?",opts:["Prediction error","Proportion of variance explained","Number of variables","Slope"],ans:1,exp:"R-squared tells you how much variation in the outcome is explained by the model."},{q:"What happens when you add irrelevant variables?",opts:["R-squared decreases","R-squared increases","Model crashes","Coefficients become zero"],ans:1,exp:"Adding any variable even irrelevant ones will never decrease R-squared."},{q:"A coefficient of 0.5 on years of experience means?",opts:["Outcome increases 0.5 per year","Outcome halves","Not significant","Model is 50% accurate"],ans:0,exp:"Coefficients show the expected change in outcome for a one-unit increase in the predictor."},{q:"What assumption does linear regression make about residuals?",opts:["Must be positive","Must be normally distributed","Must be zero","Must be integers"],ans:1,exp:"Residuals should be normally distributed with constant variance."}],"default":[{q:"What is the first step when working with a new dataset?",opts:["Build a model","Explore the data","Delete missing values","Scale features"],ans:1,exp:"Exploratory Data Analysis always comes before modelling."},{q:"What does overfitting mean?",opts:["Model is too simple","Good on training poor on new data","Too few parameters","Too much data"],ans:1,exp:"An overfitted model memorised training data and fails to generalise."},{q:"What is cross-validation used for?",opts:["Speeding up training","Estimating model performance","Cleaning data","Selecting features"],ans:1,exp:"Cross-validation uses multiple train/test splits for a reliable performance estimate."},{q:"What does a confusion matrix show?",opts:["How confused the model is","Counts of correct and incorrect predictions","Training loss","Feature importance"],ans:1,exp:"A confusion matrix shows true positives false positives true negatives and false negatives."},{q:"Why do we normalise features?",opts:["Make data look nicer","Ensure all features contribute equally","Remove outliers","Increase accuracy"],ans:1,exp:"Normalisation prevents large-valued features dominating distance-based models."}]};
-const SEGS=[{name:"Introduction and Hook",icap:"Active",pct:0.12,desc:(t,s)=>`Open with a compelling real-world question about "${t}". Use ${s} to engage immediately.`},{name:"Core Concept Explanation",icap:"Passive",pct:0.35,desc:(t,s)=>`Explain the foundational ideas of "${t}" using layered analogies and visual representations.`},{name:"Guided In-Class Activity",icap:"Constructive",pct:0.28,desc:(t,s)=>`Students apply "${t}" to a structured task. Pairs encouraged to explain reasoning aloud.`},{name:"Peer Discussion and Debate",icap:"Interactive",pct:0.13,desc:(t,s)=>`Groups debate a conceptual challenge about "${t}" and defend their reasoning.`},{name:"Wrap-Up and Reflection",icap:"Constructive",pct:0.12,desc:(t,s)=>`Summarise key takeaways. Students write a 2-sentence exit ticket about "${t}".`}];
-const ANALOGIES=[(t)=>`Beginner: Think of "${t}" like sorting a messy drawer — you create rules before touching anything.`,(t)=>`Visual: Imagine "${t}" as a flowchart where each arrow depends on real data.`,(t)=>`Non-technical: "${t}" is like a recipe — right ingredients, right steps, then check the result.`];
-const ACTIVITIES=[{title:"Think-Pair-Share",icap:"Interactive",p:(t)=>`Identify one place where "${t}" changes the result. Discuss with a partner.`},{title:"Error Spotting",icap:"Constructive",p:(t)=>`Find the mistake in this incorrect application of "${t}" and explain why it is wrong.`},{title:"Concept Map",icap:"Constructive",p:(t)=>`In 5 minutes sketch how "${t}" connects to two ideas from previous lectures.`}];
-const REFLECTIONS=[(t)=>`What is the single most important idea you learned about "${t}" today?`,(t)=>`Where did you feel confused and what would help?`,(t)=>`How might "${t}" appear in a real project you care about?`,(t)=>`What question would you still like to ask about "${t}"?`];
-const PRACTICE=[{diff:"Easy",q:(t)=>`Define "${t}" in one sentence in your own words.`,hint:"Focus on what it does not how it works."},{diff:"Easy",q:(t)=>`Give one real-life example where "${t}" is useful.`,hint:"Think about everyday patterns and decisions."},{diff:"Medium",q:(t)=>`Explain one advantage and one limitation of "${t}".`,hint:"Consider what assumptions it makes."},{diff:"Medium",q:(t)=>`How would you explain "${t}" to a friend with no technical background?`,hint:"Use a simple analogy."},{diff:"Hard",q:(t)=>`Design an experiment to test whether "${t}" performs well. What metrics would you use?`,hint:"Think about what success means."},{diff:"Hard",q:(t)=>`What ethical concerns arise when applying "${t}" in a high-stakes setting?`,hint:"Consider bias transparency and accountability."}];
-const SRL=["Before studying: What do I already know about this topic?","During study: Am I understanding this or just reading the words?","After practice: Can I explain this without looking at my notes?","Reflection: What is my study plan for the parts I found difficult?"];
-const RUBRIC=[{name:"Relevance",d:"Does output match topic and learning objectives?"},{name:"Clarity",d:"Is language appropriate for the target level?"},{name:"Pedagogical Value",d:"Does it support active constructive interactive engagement?"},{name:"Correctness",d:"Are concepts technically accurate?"},{name:"Usability",d:"Is the workflow easy for instructors?"}];
+const API = "";
+let teacher = {}, student = {}, timerInterval = null, timerSecs = 0, timerRunning = false;
+let reactionPollInterval = null;
 
-let role="",currentUser=null,currentPlan=null,quizAnswers={},quizTopic="default";
-let slides=[],slideIdx=0,autoTimer=null,isAuto=false,showNarration=false;
-let voices=[],selectedVoice=null,activeRec=null;
-let testQCount=0,activeTestData=null,activeTestAnswers={},testTimer=null;
-let aiNotesContent="";
-
-/* ─── SLIDE RESIZE ENGINE ─── */
-/* Called whenever slideshow opens or window resizes.
-   Computes exact pixel dimensions for a 16:9 slide
-   that fits inside the available space. */
-function resizeSlide(){
-  const overlay=document.getElementById("ssOverlay");
-  if(!overlay.classList.contains("open"))return;
-  const topH=48,ctrlH=52,pad=16;
-  const availW=window.innerWidth-pad;
-  const availH=window.innerHeight-topH-ctrlH-pad;
-  // Fit 16:9 inside availW x availH
-  let w=availW;
-  let h=w*9/16;
-  if(h>availH){h=availH;w=h*16/9;}
-  const slide=document.getElementById("ssSlide");
-  slide.style.width=Math.floor(w)+"px";
-  slide.style.height=Math.floor(h)+"px";
-  // Scale text proportionally to slide width
-  const base=Math.floor(w);
-  const hdrSize=Math.max(11,Math.floor(base*0.028))+"px";
-  const bulletSize=Math.max(9,Math.floor(base*0.022))+"px";
-  const numSize=Math.max(8,Math.floor(base*0.016))+"px";
-  const brandSize=Math.max(7,Math.floor(base*0.013))+"px";
-  const narrSize=Math.max(8,Math.floor(base*0.018))+"px";
-  document.getElementById("ssSlideTitle").style.fontSize=hdrSize;
-  document.getElementById("ssSlideNum").style.fontSize=numSize;
-  document.getElementById("ssBrand").style.fontSize=brandSize;
-  document.getElementById("ssNarration").style.fontSize=narrSize;
-  document.querySelectorAll(".ss-bullet").forEach(b=>b.style.fontSize=bulletSize);
-  document.querySelectorAll(".ss-bullet-dot").forEach(b=>b.style.fontSize=bulletSize);
+// ── DARK MODE ─────────────────────────────────────────────────
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  const btn = document.getElementById('darkToggle');
+  btn.textContent = document.body.classList.contains('dark') ? '☀️ Light' : '🌙 Dark';
+  localStorage.setItem('darkMode', document.body.classList.contains('dark') ? '1' : '0');
 }
-window.addEventListener("resize",resizeSlide);
+(function(){if(localStorage.getItem('darkMode')==='1'){document.body.classList.add('dark');document.getElementById('darkToggle').textContent='☀️ Light';}})();
 
-/* ─── AUTH ─── */
-function pickRole(r){role=r;document.getElementById("roleTeacher").classList.toggle("selected",r==="teacher");document.getElementById("roleStudent").classList.toggle("selected",r==="student");document.getElementById("authForms").style.display="block";document.getElementById("studentFields").style.display=r==="student"?"block":"none";}
-function switchAuthTab(t){document.getElementById("tabLogin").classList.toggle("active",t==="login");document.getElementById("tabSignup").classList.toggle("active",t==="signup");document.getElementById("loginForm").style.display=t==="login"?"block":"none";document.getElementById("signupForm").style.display=t==="signup"?"block":"none";}
-function getUsers(){return JSON.parse(localStorage.getItem("lai_users")||"[]");}
-function saveUsers(u){localStorage.setItem("lai_users",JSON.stringify(u));}
-function getReports(){return JSON.parse(localStorage.getItem("lai_reports")||"[]");}
-function saveReports(r){localStorage.setItem("lai_reports",JSON.stringify(r));}
-function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display="block";}
-function doLogin(){if(!role){alert("Select Teacher or Student first.");return;}const email=document.getElementById("loginEmail").value.trim().toLowerCase();const pass=document.getElementById("loginPassword").value;const user=getUsers().find(u=>u.email===email&&u.password===pass&&u.role===role);if(!user){showErr("loginError","Email or password not found.");return;}loginSuccess(user);}
-function doSignup(){if(!role){alert("Select Teacher or Student first.");return;}const name=document.getElementById("suName").value.trim();const email=document.getElementById("suEmail").value.trim().toLowerCase();const pass=document.getElementById("suPassword").value;if(!name||!email||!pass){showErr("signupError","Fill in all fields.");return;}const users=getUsers();if(users.find(u=>u.email===email)){showErr("signupError","Account already exists.");return;}const user={name,email,password:pass,role};if(role==="student"){user.age=document.getElementById("suAge").value;user.year=document.getElementById("suYear").value;user.background=document.getElementById("suBackground").value;}users.push(user);saveUsers(users);loginSuccess(user);}
-function loginSuccess(user){currentUser=user;localStorage.setItem("lai_session",JSON.stringify(user));document.getElementById("authScreen").style.display="none";document.getElementById("mainApp").style.display="block";initApp();}
-function doLogout(){localStorage.removeItem("lai_session");location.reload();}
-
-/* ─── INIT ─── */
-function initApp(){
-  document.getElementById("userBadge").textContent=currentUser.name+(currentUser.role==="teacher"?" · Teacher":" · Student");
-  if(currentUser.role==="teacher"){document.getElementById("teacherTabs").style.display="flex";loadOrCreateCode();loadReports();switchTab("builder");}
-  else{document.getElementById("studentTabs").style.display="flex";document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById("studenthome").classList.add("active");document.getElementById("stuWelcome").textContent="Welcome back, "+currentUser.name+" 👋";checkStudentConnection();}
+// ── SCREENS ───────────────────────────────────────────────────
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showRole(role){
+  showScreen(role==='teacher'?'teacherAuthScreen':'studentAuthScreen');
+}
+function logout(){
+  teacher={}; student={};
+  clearInterval(reactionPollInterval);
+  document.getElementById('logoutBtn').style.display='none';
+  showScreen('roleScreen');
 }
 
-/* ─── CLASS CODE ─── */
-function getCode(){const s=localStorage.getItem("lai_code_"+currentUser.email);return s?JSON.parse(s).code:"";}
-async function generateClassCode(){const code=Math.random().toString(36).substring(2,8).toUpperCase();const cls={code,teacherEmail:currentUser.email,teacherName:currentUser.name,topic:"",level:""};localStorage.setItem("lai_code_"+currentUser.email,JSON.stringify(cls));document.getElementById("classCodeDisplay").textContent=code;try{await fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)});}catch(e){}}
-async function loadOrCreateCode(){const saved=localStorage.getItem("lai_code_"+currentUser.email);if(saved){const cls=JSON.parse(saved);document.getElementById("classCodeDisplay").textContent=cls.code;try{await fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)});}catch(e){}}else{generateClassCode();}}
-async function joinClass(){const code=document.getElementById("classCodeInput").value.trim().toUpperCase();if(code.length<4){showJE("Enter a valid code.");return;}document.getElementById("joinError").style.display="none";try{const res=await fetch("/get_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});const data=await res.json();if(!data.success){showJE("Code not found. Ask your teacher.");return;}localStorage.setItem("lai_stuclass_"+currentUser.email,JSON.stringify(data.class));showConnected(data.class);}catch(e){showJE("Could not connect.");}}
-function showJE(m){const el=document.getElementById("joinError");el.textContent=m;el.style.display="block";}
-function disconnectClass(){localStorage.removeItem("lai_stuclass_"+currentUser.email);document.getElementById("connectBox").style.display="block";document.getElementById("connectedClassBox").style.display="none";document.getElementById("stuAskArea").style.display="none";document.getElementById("stuNoClass").style.display="block";}
-function checkStudentConnection(){const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);if(saved)showConnected(JSON.parse(saved));}
-function showConnected(cls){document.getElementById("connectBox").style.display="none";document.getElementById("connectedClassBox").style.display="block";document.getElementById("stuAskArea").style.display="block";document.getElementById("stuNoClass").style.display="none";document.getElementById("connectedTopic").textContent=cls.topic||"Class in session";document.getElementById("connectedTeacher").textContent="Teacher: "+cls.teacherName;document.getElementById("joinError").style.display="none";buildStudentNotes(cls.topic||"this topic",cls.level||"Intermediate");quizTopic=cls.topic||"default";loadStudentAssignments(cls.code);loadStudentTests(cls.code);}
+// ── TEACHER LOGIN ─────────────────────────────────────────────
+async function teacherLogin(){
+  const email=v('tEmail'),name=v('tName'),code=v('tCode').toUpperCase().trim();
+  const topic=v('tTopicEdit')||v('tTopic'), level=document.getElementById('tLevelEdit').value||document.getElementById('tLevel').value;
+  if(!email||!name||!code||!topic){document.getElementById('tAuthMsg').textContent='Please fill all fields.';return;}
+  teacher={email,name,code,topic,level};
+  const res = await api('/save_class',{code,teacherEmail:email,teacherName:name,topic,level});
+  if(res.success||res.error){
+    document.getElementById('tWelcome').textContent=`Welcome, ${name}`;
+    document.getElementById('tClassCode').textContent=code;
+    document.getElementById('tTopicEdit').value=topic;
+    document.getElementById('tLevelEdit').value=level;
+    document.getElementById('logoutBtn').style.display='';
+    showScreen('teacherDashboard');
+    loadAssignments(); loadTests();
+    startReactionPoll();
+    document.getElementById('attTodayDate').textContent=new Date().toLocaleDateString();
+  }
+}
 
-/* ─── STUDENT TABS ─── */
+// ── STUDENT LOGIN ─────────────────────────────────────────────
+async function studentLogin(){
+  const email=v('sEmail'),name=v('sName'),code=v('sCode').toUpperCase().trim();
+  const year=v('sYear'), background=v('sBackground');
+  if(!email||!name||!code){document.getElementById('sAuthMsg').textContent='Please fill all fields.';return;}
+  const res = await api('/get_class',{code});
+  if(!res.success){document.getElementById('sAuthMsg').textContent='Class code not found. Ask your teacher.';return;}
+  const cls=res.class;
+  student={email,name,code,year,background,topic:cls.topic,level:cls.level};
+  document.getElementById('sWelcome').textContent=`Welcome, ${name}`;
+  document.getElementById('sClassCode').textContent=code;
+  document.getElementById('logoutBtn').style.display='';
+  showScreen('studentDashboard');
+  loadStuAssignments(); loadStuTests();
+  loadPersonalNotes();
+}
+
+// ── TABS ──────────────────────────────────────────────────────
+function switchTab(id){
+  document.querySelectorAll('#tTabs .tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#teacherDashboard .tab-pane').forEach(p=>p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='reports') loadReports();
+  if(id==='discuss') loadTeacherDiscuss();
+}
 function switchStuTab(id){
-  const all=["ask","notes","quiz","stuassign","stutests"];
-  document.querySelectorAll(".stab").forEach((t,i)=>t.classList.toggle("active",all[i]===id));
-  ["stuAsk","stuNotes","stuQuiz","stuassign","stutests"].forEach(x=>document.getElementById(x).style.display="none");
-  if(id==="ask")document.getElementById("stuAsk").style.display="block";
-  else if(id==="notes"){document.getElementById("stuNotes").style.display="block";loadAINotes();}
-  else if(id==="quiz")document.getElementById("stuQuiz").style.display="block";
-  else if(id==="stuassign")document.getElementById("stuassign").style.display="block";
-  else if(id==="stutests")document.getElementById("stutests").style.display="block";
+  document.querySelectorAll('#sTabs .tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#studentDashboard .tab-pane').forEach(p=>p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('stab-'+id).classList.add('active');
 }
 
-/* ─── AUTOCOMPLETE ─── */
-function handleTopicInput(val){const list=document.getElementById("acList");if(!val){list.classList.remove("show");return;}const filtered=TOPICS.filter(t=>t.t.toLowerCase().includes(val.toLowerCase())).slice(0,12);if(!filtered.length){list.classList.remove("show");return;}list.innerHTML=filtered.map(t=>`<div class="acitem" onmousedown="selectTopic('${t.t.replace(/'/g,"\\'")}')">${t.t}<span class="accat">${t.c}</span></div>`).join("");list.classList.add("show");}
-function selectTopic(topic){document.getElementById("topic").value=topic;closeAC();if(OBJ_MAP[topic]){document.getElementById("objSug").innerHTML=`<span style="font-size:0.82rem;color:#2d6a4f;font-weight:600">Suggested objectives: </span><button class="bout" style="font-size:0.82rem;padding:0.3rem 0.7rem;margin-top:0" onclick="useObj('${topic.replace(/'/g,"\\'")}')">Use ✓</button>`;}else document.getElementById("objSug").innerHTML="";}
-function useObj(t){document.getElementById("objectives").value=OBJ_MAP[t]||"";document.getElementById("objSug").innerHTML="";}
-function closeAC(){document.getElementById("acList").classList.remove("show");}
-function bdg(icap){const m={Passive:"bp",Active:"ba",Constructive:"bc",Interactive:"bi"};return`<span class="badge ${m[icap]||"ba"}">${icap}</span>`;}
-
-/* ─── GENERATE LESSON ─── */
-function generateLesson(){
-  const topic=document.getElementById("topic").value.trim();const objectives=document.getElementById("objectives").value.trim();
-  if(!topic||!objectives){alert("Fill in Topic and Learning Objectives.");return;}
-  const level=document.getElementById("level").value;const duration=parseInt(document.getElementById("duration").value);const style=document.getElementById("style").value;
-  currentPlan={topic,objectives,level,duration,style,generatedAt:new Date().toLocaleString()};
-  aiNotesContent="";
-  document.getElementById("teacherNotesBox").style.display="none";
-  document.getElementById("notesGenStatus").textContent="";
-  document.getElementById("notesReadyBadge").style.display="none";
-  const saved=localStorage.getItem("lai_code_"+currentUser.email);
-  if(saved){const cls=JSON.parse(saved);cls.topic=topic;cls.level=level;localStorage.setItem("lai_code_"+currentUser.email,JSON.stringify(cls));fetch("/save_class",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cls)}).catch(()=>{});}
-  document.getElementById("mTopic").textContent=topic.length>12?topic.substring(0,12)+"...":topic;
-  document.getElementById("mLevel").textContent=level;
-  document.getElementById("mDur").textContent=duration+" min";
-  const counts={Passive:0,Active:0,Constructive:0,Interactive:0};
-  const outEl=document.getElementById("outlineCards");outEl.innerHTML="";
-  SEGS.forEach((seg,i)=>{counts[seg.icap]++;const mins=Math.max(5,Math.round(duration*seg.pct));outEl.innerHTML+=`<div class="card"><h3>${i+1}. ${seg.name} (${mins} min) ${bdg(seg.icap)}</h3><p>${seg.desc(topic,style)}</p><div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.7rem"><input type="checkbox" checked/><label style="margin:0;font-weight:400;font-size:0.85rem">Approve</label></div><input placeholder="Instructor notes..." style="margin-top:0.5rem;font-size:0.83rem"/></div>`;});
-  document.getElementById("icapP").textContent=counts.Passive;document.getElementById("icapA").textContent=counts.Active;document.getElementById("icapC").textContent=counts.Constructive;document.getElementById("icapI").textContent=counts.Interactive;
-  document.getElementById("analogyCards").innerHTML=ANALOGIES.map(a=>`<div class="card"><p>${a(topic)}</p></div>`).join("");
-  document.getElementById("activityCards").innerHTML=ACTIVITIES.map(a=>`<div class="card"><h3>${a.title} ${bdg(a.icap)}</h3><p>${a.p(topic)}</p></div>`).join("");
-  document.getElementById("reflectionList").innerHTML="<div class='card'><ul style='padding-left:1.2rem'>"+REFLECTIONS.map(r=>`<li style='margin-bottom:0.4rem;font-size:0.88rem'>${r(topic)}</li>`).join("")+"</ul></div>";
-  document.getElementById("microExp").textContent=topic+": "+topic+" is the process of taking raw information and applying a systematic method to reach a useful conclusion. For a "+level.toLowerCase()+"-level student, start with intuition before moving to formulas.";
-  document.getElementById("practiceQs").innerHTML=PRACTICE.map(p=>`<div class="qcard"><div class="diff ${p.diff.toLowerCase()}">[${p.diff}]</div><p style="font-size:0.88rem;font-weight:600">${p.q(topic)}</p><p style="font-size:0.8rem;color:#666;margin-top:0.3rem">Hint: ${p.hint}</p></div>`).join("");
-  document.getElementById("srlCards").innerHTML=SRL.map(s=>`<div class="card"><p>${s}</p></div>`).join("");
-  document.getElementById("rubricRows").innerHTML=RUBRIC.map((c,i)=>`<div style="margin-bottom:1.2rem"><label>${c.name}</label><p style="font-size:0.8rem;color:#777;margin-bottom:0.4rem">${c.d}</p><input type="range" min="1" max="5" value="3" id="r${i}" oninput="updateScore()"/><small>Score: <b id="rv${i}">3</b>/5</small></div>`).join("");
-  updateScore();buildExport();
-  document.getElementById("planOutput").style.display="block";
-  ["studentContent","rubricContent","exportContent","liveclassContent","videoContent","assignContent","testsContent"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display="block";});
-  ["noplan1","noplan2","noplan3","noplanLive","noplanVideo","noplanAssign","noplanTests"].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display="none";});
-  loadTeacherAssignments();loadTeacherTests();
-  setTimeout(()=>document.getElementById("planOutput").scrollIntoView({behavior:"smooth"}),100);
-}
-
-/* ─── AI NOTES ─── */
-async function generateAINotes(){
-  if(!currentPlan){alert("Generate a lesson plan first.");return;}
-  const btn=document.getElementById("genNotesBtn");const st=document.getElementById("notesGenStatus");
-  btn.disabled=true;btn.textContent="✍️ Writing notes...";
-  st.style.color="#888";st.textContent="AI is writing comprehensive notes. This takes 20-30 seconds...";
+// ── UTILS ─────────────────────────────────────────────────────
+function v(id){return (document.getElementById(id)||{}).value||'';}
+async function api(path,body){
   try{
-    const res=await fetch("/generate_notes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...currentPlan,classCode:getCode()})});
-    const data=await res.json();
-    if(data.success){aiNotesContent=data.notes;document.getElementById("teacherNotesContent").textContent=data.notes;document.getElementById("teacherNotesBox").style.display="block";document.getElementById("notesReadyBadge").style.display="block";st.style.color="#1a6640";st.textContent="✅ Notes generated! Slideshow and PowerPoint now use these notes.";}
-    else{st.style.color="#e74c3c";st.textContent="❌ Error: "+data.error;}
-  }catch(e){st.style.color="#e74c3c";st.textContent="❌ Could not generate. Try again.";}
-  finally{btn.disabled=false;btn.textContent="📝 Generate Full Notes";}
+    const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    return await r.json();
+  }catch(e){return {error:e.message};}
 }
-function downloadTeacherNotes(){if(!aiNotesContent){alert("Generate notes first.");return;}const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(aiNotesContent);a.download="LectureNotes_"+currentPlan.topic.replace(/\s+/g,"_")+".txt";a.click();}
-async function loadAINotes(){
-  const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);if(!saved)return;
-  const cls=JSON.parse(saved);const st=document.getElementById("aiNotesStatus");
-  st.textContent="Checking for teacher notes...";
-  try{
-    const res=await fetch("/get_notes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:cls.code})});
-    const data=await res.json();
-    if(data.success&&data.notes){aiNotesContent=data.notes;document.getElementById("aiNotesBanner").style.display="block";document.getElementById("downloadAINotesBtn").style.display="inline-block";document.getElementById("aiNotesPreview").style.display="block";document.getElementById("aiNotesPreview").textContent=data.notes;st.textContent="";}
-    else{st.textContent="No AI notes from your teacher yet. Template notes are below.";}
-  }catch(e){st.textContent="Could not load notes.";}
+function loading(id,show){const el=document.getElementById(id);if(el)el.style.display=show?'inline-block':'none';}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function daysUntil(dateStr){
+  if(!dateStr)return 999;
+  const diff=new Date(dateStr)-new Date();
+  return Math.ceil(diff/(1000*60*60*24));
 }
-function downloadAINotes(){if(!aiNotesContent){alert("No AI notes available.");return;}const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);const topic=saved?JSON.parse(saved).topic||"topic":"topic";const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(aiNotesContent);a.download="AILectureNotes_"+topic.replace(/\s+/g,"_")+".txt";a.click();}
 
-/* ─── PARSE NOTES INTO SLIDES ─── */
-function parseNotesIntoSlides(notes,topic){
-  const result=[];
-  result.push({type:"title",title:topic,sub:"AI-Generated Lecture · Voice Narrated",note:"Welcome to today's lecture on "+topic+". These slides are built directly from comprehensive AI-generated lecture notes. Sit back and follow along, or use the arrows to move at your own pace."});
-  const lines=notes.split("\n");
-  let currentTitle=null,currentBody=[];
-  const re=/^(\d+)\.\s+(.+)$/;
-  for(const line of lines){
-    const m=line.match(re);
-    if(m){
-      if(currentTitle)result.push(buildSlide(currentTitle,currentBody));
-      currentTitle=m[2].trim();currentBody=[];
-    }else if(currentTitle){currentBody.push(line);}
+// ── LESSON NOTES ──────────────────────────────────────────────
+async function generateNotes(){
+  const topic=v('tTopicEdit')||teacher.topic;
+  const level=document.getElementById('tLevelEdit').value||teacher.level;
+  const duration=v('tDuration')||75;
+  const objectives=v('tObjectives'); const style=document.getElementById('tStyle').value;
+  if(!topic)return alert('Enter a topic first');
+  loading('notesLoader',true);
+  const res=await api('/generate_notes',{topic,level,duration,objectives,style,classCode:teacher.code});
+  loading('notesLoader',false);
+  if(res.success){
+    teacher.notes=res.notes; teacher.topic=topic; teacher.level=level;
+    document.getElementById('notesOutput').textContent=res.notes;
+    document.getElementById('notesCard').style.display='';
+  }else alert('Error: '+res.error);
+}
+
+// ── HISTORY ───────────────────────────────────────────────────
+function saveToHistory(){
+  if(!teacher.notes)return alert('Generate notes first');
+  const history=JSON.parse(localStorage.getItem('lectureHistory')||'[]');
+  history.unshift({topic:teacher.topic,level:teacher.level,notes:teacher.notes,date:new Date().toLocaleDateString()});
+  if(history.length>20)history.pop();
+  localStorage.setItem('lectureHistory',JSON.stringify(history));
+  alert('Lesson plan saved to history!');
+}
+function openHistory(){
+  const history=JSON.parse(localStorage.getItem('lectureHistory')||'[]');
+  const list=document.getElementById('historyList');
+  list.innerHTML='';
+  if(!history.length){list.innerHTML='<p class="info">No saved plans yet.</p>';document.getElementById('historyPanel').style.display='';return;}
+  history.forEach((h,i)=>{
+    const d=document.createElement('div'); d.className='hist-item';
+    d.innerHTML=`<div class="hist-topic">${esc(h.topic)}</div><div style="font-size:.75rem;color:#888">${h.level} · ${h.date}</div>`;
+    d.onclick=()=>{teacher.notes=h.notes;teacher.topic=h.topic;teacher.level=h.level;
+      document.getElementById('notesOutput').textContent=h.notes;
+      document.getElementById('notesCard').style.display='';
+      document.getElementById('tTopicEdit').value=h.topic;
+      closeHistory(); switchTab.call({currentTarget:document.querySelector('#tTabs .tab-btn')},'lesson');
+      document.querySelectorAll('#tTabs .tab-btn').forEach((b,j)=>{b.classList.toggle('active',j===0);});
+      document.querySelectorAll('#teacherDashboard .tab-pane').forEach(p=>p.classList.remove('active'));
+      document.getElementById('tab-lesson').classList.add('active');
+    };
+    list.appendChild(d);
+  });
+  document.getElementById('historyPanel').style.display='';
+}
+function closeHistory(){document.getElementById('historyPanel').style.display='none';}
+
+// ── TIMER ─────────────────────────────────────────────────────
+function startTimer(){if(!timerRunning){timerRunning=true;timerInterval=setInterval(()=>{timerSecs++;updateTimerDisplay();},1000);}}
+function pauseTimer(){timerRunning=false;clearInterval(timerInterval);}
+function resetTimer(){pauseTimer();timerSecs=0;updateTimerDisplay();}
+function updateTimerDisplay(){const m=String(Math.floor(timerSecs/60)).padStart(2,'0'),s=String(timerSecs%60).padStart(2,'0');document.getElementById('timerDisplay').textContent=`${m}:${s}`;}
+
+// ── LIVE TOOLS ────────────────────────────────────────────────
+async function liveQuestion(){
+  const q=v('liveQ'); if(!q)return;
+  const res=await api('/layer2/question',{topic:teacher.topic,level:teacher.level,question:q});
+  const el=document.getElementById('liveQResult'); el.style.display=''; el.textContent=res.result||res.error;
+}
+async function confusionRescue(){
+  const c=v('confusionDesc'); if(!c)return;
+  const res=await api('/layer2/confusion',{topic:teacher.topic,level:teacher.level,confusion:c});
+  const el=document.getElementById('confusionResult'); el.style.display=''; el.textContent=res.result||res.error;
+}
+async function pacingCheck(){
+  const res=await api('/layer2/pacing',{topic:teacher.topic,total_duration:v('paceTotal'),mins_elapsed:v('paceElapsed'),current_segment:v('paceCurrent')});
+  const el=document.getElementById('pacingResult'); el.style.display=''; el.textContent=res.result||res.error;
+}
+async function conceptCheck(){
+  const q=v('conceptQ'),pct=v('conceptPct');
+  const res=await api('/layer2/conceptcheck',{topic:teacher.topic,level:teacher.level,question:q,correct_pct:pct});
+  const el=document.getElementById('conceptResult'); el.style.display=''; el.textContent=res.result||res.error;
+}
+async function supportAnswer(){
+  const res=await api('/layer2/student_question',{topic:teacher.topic||student.topic,level:document.getElementById('suppLevel').value,name:v('suppStudentName'),year:v('suppStudentYear'),background:v('suppStudentBg'),question:v('suppQ')});
+  const el=document.getElementById('suppResult'); el.style.display=''; el.textContent=res.result||res.error;
+}
+
+// ── EMOJI REACTIONS ───────────────────────────────────────────
+function startReactionPoll(){
+  clearInterval(reactionPollInterval);
+  pollReactions();
+  reactionPollInterval=setInterval(pollReactions,10000);
+}
+async function pollReactions(){
+  if(!teacher.code)return;
+  const res=await api('/get_reactions',{classCode:teacher.code});
+  if(res.success){
+    document.getElementById('r_thumbs').textContent=res.reactions['👍']||0;
+    document.getElementById('r_confused').textContent=res.reactions['😕']||0;
+    document.getElementById('r_lightning').textContent=res.reactions['⚡']||0;
   }
-  if(currentTitle)result.push(buildSlide(currentTitle,currentBody));
-  if(result.length<=1){
-    notes.split(/\n{2,}/).filter(p=>p.trim().length>40).slice(0,8).forEach((para,i)=>{
-      const ls=para.split("\n");
-      const ttl=ls[0].replace(/^[\d\.\s]+/,"").trim()||"Part "+(i+1);
-      const bullets=ls.slice(1).map(l=>l.replace(/^[\s•\-\*]+/,"").trim()).filter(l=>l.length>15).slice(0,5);
-      result.push({type:"content",title:ttl,bullets:bullets.length?bullets:[para.substring(0,130)],note:para.replace(/\n/g," ").substring(0,480)});
+}
+async function sendReaction(emoji){
+  document.querySelectorAll('.react-btn').forEach(b=>b.classList.remove('active'));
+  const ids={'👍':'rb_thumbs','😕':'rb_confused','⚡':'rb_lightning'};
+  if(ids[emoji])document.getElementById(ids[emoji]).classList.add('active');
+  await api('/save_reaction',{classCode:student.code,studentEmail:student.email,studentName:student.name,reaction:emoji});
+  document.getElementById('reactionMsg').textContent='Reaction sent! ✓';
+  setTimeout(()=>{document.getElementById('reactionMsg').textContent='';},2000);
+}
+
+// ── ATTENDANCE ────────────────────────────────────────────────
+let attendanceRows=[];
+function addAttendanceRow(){
+  const name=v('attStudentName').trim(); if(!name)return;
+  attendanceRows.push({name,present:true});
+  document.getElementById('attStudentName').value='';
+  renderAttendance();
+}
+function renderAttendance(){
+  const list=document.getElementById('attList'); list.innerHTML='';
+  attendanceRows.forEach((r,i)=>{
+    const d=document.createElement('div'); d.className='att-row';
+    d.innerHTML=`<span>${esc(r.name)}</span>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="badge ${r.present?'badge-green':'badge-red'}">${r.present?'Present':'Absent'}</span>
+      <button class="btn-sm" onclick="toggleAttendance(${i})">${r.present?'Mark Absent':'Mark Present'}</button>
+      <button class="btn-danger" onclick="saveAttRow(${i})">💾</button>
+    </div>`;
+    list.appendChild(d);
+  });
+}
+function toggleAttendance(i){attendanceRows[i].present=!attendanceRows[i].present;renderAttendance();}
+async function saveAttRow(i){
+  const r=attendanceRows[i];
+  await api('/save_attendance',{classCode:teacher.code,teacherEmail:teacher.email,studentName:r.name,sessionDate:new Date().toISOString().split('T')[0],present:r.present});
+  alert(`Saved attendance for ${r.name}`);
+}
+async function loadAttendance(){
+  const res=await api('/get_attendance',{classCode:teacher.code});
+  if(res.success&&res.attendance.length){
+    const today=new Date().toISOString().split('T')[0];
+    const todayRecs=res.attendance.filter(a=>a.session_date===today);
+    attendanceRows=todayRecs.map(a=>({name:a.student_name,present:!!a.present}));
+    renderAttendance();
+  }
+}
+
+// ── ASSIGNMENTS (teacher) ─────────────────────────────────────
+async function createAssignment(){
+  const title=v('asgTitle'),desc=v('asgDesc'),due=v('asgDue'),max=v('asgMax');
+  if(!title)return;
+  const res=await api('/create_assignment',{classCode:teacher.code,teacherEmail:teacher.email,title,description:desc,dueDate:due,maxScore:max||100});
+  if(res.success){document.getElementById('asgMsg').textContent='Assignment created!';loadAssignments();['asgTitle','asgDesc','asgDue'].forEach(id=>document.getElementById(id).value='');}
+}
+async function loadAssignments(){
+  if(!teacher.code)return;
+  const res=await api('/get_assignments',{classCode:teacher.code});
+  if(!res.success)return;
+  const el=document.getElementById('assignmentsList'); el.innerHTML='';
+  res.assignments.forEach(a=>{
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
+      <div><strong>${esc(a.title)}</strong><br><span class="info">${esc(a.description)}</span><br>
+      <span class="info">Due: ${a.due_date||'No deadline'} · Max: ${a.max_score} pts</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn-sm" onclick="viewSubmissions('${a.id}','${esc(a.title)}','${esc(a.description)}',${a.max_score})">📋 Submissions</button>
+        <button class="btn-danger" onclick="deleteAssignment('${a.id}')">🗑</button>
+      </div></div>`;
+    el.appendChild(card);
+  });
+}
+async function deleteAssignment(id){
+  if(!confirm('Delete this assignment?'))return;
+  await api('/delete_assignment',{id});
+  loadAssignments();
+}
+async function viewSubmissions(aid,title,description,maxScore){
+  const res=await api('/get_submissions',{assignmentId:aid});
+  if(!res.success)return;
+  const subs=res.submissions;
+  let html=`<div class="card"><h3>📋 Submissions for: ${esc(title)}</h3>`;
+  if(!subs.length){html+='<p class="info">No submissions yet.</p>';}
+  subs.forEach(s=>{
+    const scored=s.score>=0;
+    html+=`<div style="border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px">
+      <strong>${esc(s.student_name)}</strong> <span class="info">${esc(s.student_email)}</span>
+      <span class="info" style="margin-left:8px">${s.submitted_at}</span>
+      ${scored?`<span class="badge badge-green" style="margin-left:8px">${s.score}/${maxScore}</span>`:''}
+      <p style="margin:8px 0;font-size:.9rem">${esc(s.content)}</p>
+      ${s.feedback?`<p style="color:var(--g);font-size:.85rem">Feedback: ${esc(s.feedback)}</p>`:''}
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <button class="btn-amber" onclick="getAIFeedback('${s.id}','${esc(title)}','${esc(description)}',${maxScore},'${esc(s.content).replace(/'/g,"\\'")}')">🤖 AI Feedback</button>
+        <input type="number" id="score_${s.id}" placeholder="Score" value="${scored?s.score:''}" style="width:80px;margin:0"/>
+        <input type="text" id="fb_${s.id}" placeholder="Feedback" value="${esc(s.feedback)}" style="width:200px;margin:0"/>
+        <button class="btn-sm" onclick="gradeSubmission('${s.id}','${aid}')">💾 Grade</button>
+      </div>
+      <div id="aifb_${s.id}" class="result-box" style="display:none;margin-top:8px"></div>
+    </div>`;
+  });
+  html+='</div>';
+  const modal=document.getElementById('modalContent'); modal.innerHTML=html;
+  document.getElementById('modal').style.display='flex';
+}
+async function getAIFeedback(sid,title,description,maxScore,content){
+  const el=document.getElementById('aifb_'+sid); el.style.display=''; el.textContent='Getting AI feedback…';
+  const res=await api('/ai_feedback',{title,description,maxScore,content});
+  el.textContent=res.success?('🤖 '+res.feedback):('Error: '+res.error);
+}
+async function gradeSubmission(sid,aid){
+  const score=document.getElementById('score_'+sid).value;
+  const feedback=document.getElementById('fb_'+sid).value;
+  await api('/grade_submission',{submissionId:sid,score,feedback});
+  alert('Graded!');
+}
+
+// ── TESTS (teacher) ───────────────────────────────────────────
+let testQuestions=[];
+function addQuestion(prefill){
+  const q=prefill||{q:'',options:['','','',''],ans:0,exp:''};
+  const i=testQuestions.length; testQuestions.push(q);
+  const builder=document.getElementById('testQuestionsBuilder');
+  const div=document.createElement('div'); div.className='card'; div.id='tq_'+i;
+  div.innerHTML=`<div style="display:flex;justify-content:space-between"><strong>Q${i+1}</strong><button class="btn-danger" onclick="removeQuestion(${i})">✕</button></div>
+  <input type="text" id="tqq_${i}" value="${esc(q.q)}" placeholder="Question text" oninput="testQuestions[${i}].q=this.value"/>
+  ${q.options.map((opt,j)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+    <input type="radio" name="tqans_${i}" value="${j}" ${q.ans==j?'checked':''} onchange="testQuestions[${i}].ans=${j}"/>
+    <input type="text" id="tqo_${i}_${j}" value="${esc(opt)}" placeholder="Option ${String.fromCharCode(65+j)}" style="margin:0;flex:1" oninput="testQuestions[${i}].options[${j}]=this.value"/>
+  </div>`).join('')}
+  <input type="text" id="tqexp_${i}" value="${esc(q.exp)}" placeholder="Explanation (optional)" oninput="testQuestions[${i}].exp=this.value"/>`;
+  builder.appendChild(div);
+}
+function removeQuestion(i){testQuestions.splice(i,1);rebuildTestQuestions();}
+function rebuildTestQuestions(){
+  const all=[...testQuestions]; testQuestions=[];
+  document.getElementById('testQuestionsBuilder').innerHTML='';
+  all.forEach(q=>addQuestion(q));
+}
+async function createTest(){
+  const title=v('testTitle'); if(!title||!testQuestions.length)return alert('Add a title and at least one question');
+  const res=await api('/create_test',{classCode:teacher.code,teacherEmail:teacher.email,title,questions:testQuestions,timeLimit:v('testTimeLimit')||0});
+  if(res.success){document.getElementById('testMsg').textContent='Test published!';testQuestions=[];document.getElementById('testQuestionsBuilder').innerHTML='';document.getElementById('testTitle').value='';loadTests();}
+}
+async function loadTests(){
+  if(!teacher.code)return;
+  const res=await api('/get_tests',{classCode:teacher.code});
+  if(!res.success)return;
+  const el=document.getElementById('testsList'); el.innerHTML='';
+  res.tests.forEach(t=>{
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center">
+      <div><strong>${esc(t.title)}</strong> <span class="info">${t.questions.length} questions · ${t.time_limit?t.time_limit+' min':'No time limit'}</span></div>
+      <div style="display:flex;gap:6px">
+        <button class="btn-sm" onclick="viewTestResults('${t.id}','${esc(t.title)}')">📊 Results</button>
+        <button class="btn-danger" onclick="deleteTest('${t.id}')">🗑</button>
+      </div></div>`;
+    el.appendChild(card);
+  });
+}
+async function deleteTest(id){if(!confirm('Delete?'))return;await api('/delete_test',{id});loadTests();}
+async function viewTestResults(tid,title){
+  const res=await api('/get_test_results',{testId:tid});
+  if(!res.success)return;
+  let html=`<div class="card"><h3>📊 Results: ${esc(title)}</h3>`;
+  if(!res.results.length){html+='<p class="info">No submissions yet.</p>';}
+  res.results.forEach(r=>{
+    const pct=r.total>0?Math.round((r.score/r.total)*100):0;
+    html+=`<div style="padding:8px;border-bottom:1px solid var(--border)">
+      <strong>${esc(r.student_name)}</strong> — ${r.score}/${r.total} (${pct}%)
+      <span class="badge ${pct>=70?'badge-green':'badge-red'}" style="margin-left:8px">${pct>=70?'Pass':'Fail'}</span>
+    </div>`;
+  });
+  html+='</div>';
+  document.getElementById('modalContent').innerHTML=html;
+  document.getElementById('modal').style.display='flex';
+}
+
+// ── AI QUIZ GENERATOR ─────────────────────────────────────────
+async function generateAIQuiz(){
+  loading('quizGenLoader',true);
+  document.getElementById('quizGenMsg').textContent='Generating…';
+  const res=await api('/generate_quiz',{topic:teacher.topic,level:teacher.level,notes:teacher.notes||''});
+  loading('quizGenLoader',false);
+  if(res.success&&res.questions.length){
+    testQuestions=[]; document.getElementById('testQuestionsBuilder').innerHTML='';
+    res.questions.forEach(q=>addQuestion(q));
+    document.getElementById('quizGenMsg').textContent=`✓ ${res.questions.length} questions added to the builder below!`;
+    document.getElementById('testTitle').value=`Quiz: ${teacher.topic}`;
+  }else{
+    document.getElementById('quizGenMsg').textContent='Error: '+res.error;
+  }
+}
+
+// ── REPORTS ───────────────────────────────────────────────────
+async function loadReports(){
+  const [asgs,tests]=await Promise.all([
+    api('/get_assignments',{classCode:teacher.code}),
+    api('/get_tests',{classCode:teacher.code})
+  ]);
+  let html='';
+  if(asgs.success){
+    let totalSubs=0, totalGraded=0, totalScore=0;
+    for(const a of asgs.assignments){
+      const sr=await api('/get_submissions',{assignmentId:a.id});
+      if(sr.success){
+        totalSubs+=sr.submissions.length;
+        sr.submissions.forEach(s=>{if(s.score>=0){totalGraded++;totalScore+=s.score;}});
+      }
+    }
+    html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+      <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${asgs.assignments.length}</div><div class="info">Assignments</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${totalSubs}</div><div class="info">Submissions</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${totalGraded>0?Math.round(totalScore/totalGraded)+'%':'—'}</div><div class="info">Avg Score</div></div>
+    </div>`;
+  }
+  if(tests.success){
+    let totalAttempts=0, totalScore=0, totalQ=0;
+    for(const t of tests.tests){
+      const tr=await api('/get_test_results',{testId:t.id});
+      if(tr.success){totalAttempts+=tr.results.length;tr.results.forEach(r=>{totalScore+=r.score;totalQ+=r.total;});}
+    }
+    html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${tests.tests.length}</div><div class="info">Tests</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${totalAttempts}</div><div class="info">Quiz Attempts</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${totalQ>0?Math.round((totalScore/totalQ)*100)+'%':'—'}</div><div class="info">Avg Quiz Score</div></div>
+    </div>`;
+  }
+  document.getElementById('reportsContent').innerHTML=html||'<p class="info">No data yet.</p>';
+}
+
+// ── SCRIPT & RUBRIC ───────────────────────────────────────────
+async function generateScript(){
+  loading('scriptLoader',true);
+  const res=await api('/generate_video_script',{topic:teacher.topic,level:teacher.level});
+  loading('scriptLoader',false);
+  const el=document.getElementById('scriptResult'); el.style.display=''; el.textContent=res.result||res.error;
+}
+async function generateRubric(){
+  loading('rubricLoader',true);
+  const task=v('rubricTask'); const type=document.getElementById('rubricType').value;
+  const p=`Create a detailed grading rubric for a ${type} assignment: "${task}". Include 4-5 criteria with Excellent/Good/Adequate/Poor descriptors and point ranges.`;
+  const res=await api('/layer2/question',{topic:task,level:'General',question:p});
+  loading('rubricLoader',false);
+  const el=document.getElementById('rubricResult'); el.style.display=''; el.textContent=res.result||res.error;
+}
+
+// ── EXPORT SLIDES ─────────────────────────────────────────────
+async function exportSlides(){
+  loading('exportLoader',true);
+  const body={topic:teacher.topic,level:teacher.level,duration:v('tDuration')||75,objectives:v('tObjectives'),style:document.getElementById('tStyle').value,notes:teacher.notes||''};
+  const res=await fetch(API+'/generate_slides',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  loading('exportLoader',false);
+  if(res.ok){const blob=await res.blob();const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`LectureAI_${teacher.topic}.pptx`;a.click();}
+  else alert('Export failed');
+}
+
+// ── DISCUSSION (teacher) ──────────────────────────────────────
+async function loadTeacherDiscuss(){
+  const res=await api('/discussion/get',{classCode:teacher.code});
+  const el=document.getElementById('teacherDiscussionList'); el.innerHTML='';
+  if(!res.success||!res.posts.length){el.innerHTML='<p class="info">No posts yet.</p>';return;}
+  res.posts.forEach(p=>{
+    const d=document.createElement('div'); d.className='discuss-post';
+    d.innerHTML=`<div class="meta">${esc(p.student_name)} · ${p.created_at}</div>
+    <div class="question">${esc(p.question)}</div>
+    ${p.reply?`<div class="reply">📩 ${esc(p.reply)} <span style="font-size:.75rem;color:#888">— ${esc(p.replied_by)}</span></div>`:''}
+    ${!p.reply?`<div style="display:flex;gap:8px;margin-top:8px">
+      <input type="text" id="reply_${p.id}" placeholder="Your reply…" style="margin:0;flex:1"/>
+      <button class="btn-sm" onclick="replyDiscussion('${p.id}')">Reply</button>
+    </div>`:''}`;
+    el.appendChild(d);
+  });
+}
+async function replyDiscussion(id){
+  const reply=document.getElementById('reply_'+id).value; if(!reply)return;
+  await api('/discussion/reply',{id,reply,repliedBy:teacher.name});
+  loadTeacherDiscuss();
+}
+
+// ── STUDENT: ASK ──────────────────────────────────────────────
+async function studentAsk(){
+  const q=v('stuQ'); if(!q)return;
+  loading('askLoader',true);
+  const res=await api('/layer2/student_question',{topic:student.topic,level:student.level,name:student.name,year:student.year,background:student.background,question:q});
+  loading('askLoader',false);
+  const el=document.getElementById('askResult'); el.style.display=''; el.textContent=res.result||res.error;
+}
+
+// ── STUDENT: NOTES ────────────────────────────────────────────
+async function loadStuNotes(){
+  const res=await api('/get_notes',{classCode:student.code});
+  const el=document.getElementById('stuNotesOutput'); el.style.display='';
+  el.textContent=res.success?(res.notes||'No notes generated yet.'):'Could not load notes.';
+}
+function savePersonalNotes(){localStorage.setItem('personalNotes_'+student.code,document.getElementById('personalNotes').value);}
+function loadPersonalNotes(){
+  const saved=localStorage.getItem('personalNotes_'+student.code);
+  if(saved)document.getElementById('personalNotes').value=saved;
+}
+function downloadPersonalNotes(){
+  const notes=document.getElementById('personalNotes').value;
+  if(!notes)return alert('Nothing to download');
+  const blob=new Blob([notes],{type:'text/plain'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`My_Notes_${student.code}_${new Date().toLocaleDateString().replace(/\//g,'-')}.txt`;
+  a.click();
+}
+
+// ── STUDENT: QUIZ ─────────────────────────────────────────────
+let stuQuizQuestions=[], stuQuizAnswers={};
+async function loadStuQuiz(){
+  loading('stuQuizLoader',true);
+  const res=await api('/generate_quiz',{topic:student.topic,level:student.level,notes:''});
+  loading('stuQuizLoader',false);
+  const el=document.getElementById('stuQuizContent'); el.innerHTML='';
+  if(!res.success){el.innerHTML='<p class="error-msg">Could not generate quiz.</p>';return;}
+  stuQuizQuestions=res.questions; stuQuizAnswers={};
+  res.questions.forEach((q,i)=>{
+    const div=document.createElement('div'); div.className='quiz-q';
+    div.innerHTML=`<p>Q${i+1}. ${esc(q.q)}</p>`;
+    q.options.forEach((opt,j)=>{
+      const label=document.createElement('label'); label.className='quiz-option'; label.id=`sqopt_${i}_${j}`;
+      label.innerHTML=`<input type="radio" name="sqq_${i}" value="${j}" onchange="stuQuizAnswers[${i}]=${j}"/> ${esc(opt)}`;
+      div.appendChild(label);
     });
+    el.appendChild(div);
+  });
+  const btn=document.createElement('button'); btn.className='btn-primary'; btn.textContent='Submit Quiz';
+  btn.onclick=submitStuQuiz; el.appendChild(btn);
+}
+function submitStuQuiz(){
+  let score=0;
+  stuQuizQuestions.forEach((q,i)=>{
+    const chosen=stuQuizAnswers[i];
+    for(let j=0;j<q.options.length;j++){
+      const el=document.getElementById(`sqopt_${i}_${j}`);
+      if(el){el.style.pointerEvents='none';if(j===q.ans)el.classList.add('correct');else if(j===chosen&&j!==q.ans)el.classList.add('wrong');}
+    }
+    if(chosen===q.ans)score++;
+  });
+  const el=document.getElementById('stuQuizContent');
+  const result=document.createElement('div'); result.className='card';
+  const pct=Math.round((score/stuQuizQuestions.length)*100);
+  result.innerHTML=`<h3>Result: ${score}/${stuQuizQuestions.length} (${pct}%)</h3>
+  <p class="info">${pct>=70?'Great work! 🎉':'Keep practising — review the highlighted questions.'}</p>`;
+  el.appendChild(result);
+}
+
+// ── STUDENT: ASSIGNMENTS ──────────────────────────────────────
+async function loadStuAssignments(){
+  if(!student.code)return;
+  const res=await api('/get_assignments',{classCode:student.code});
+  const el=document.getElementById('stuAssignmentsList'); el.innerHTML='';
+  if(!res.success||!res.assignments.length){el.innerHTML='<p class="info">No assignments yet.</p>';return;}
+  for(const a of res.assignments){
+    const sub=await api('/get_my_submission',{assignmentId:a.id,studentEmail:student.email});
+    const mySubmission=sub.submission;
+    const days=daysUntil(a.due_date);
+    const dueSoon=days<=3&&days>=0&&!mySubmission;
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+      <div>
+        <strong>${esc(a.title)}</strong>${dueSoon?`<span class="due-soon">⚠️ Due in ${days}d</span>`:''}
+        <p class="info" style="margin-top:4px">${esc(a.description)}</p>
+        <p class="info">Due: ${a.due_date||'No deadline'} · Max: ${a.max_score} pts</p>
+        ${mySubmission&&mySubmission.score>=0?`<span class="badge badge-green">Graded: ${mySubmission.score}/${a.max_score}</span> <span class="info">${esc(mySubmission.feedback)}</span>`:''}
+      </div>
+    </div>
+    ${!mySubmission?`
+    <textarea id="subtext_${a.id}" placeholder="Write your submission here…" style="min-height:100px;margin-top:10px"></textarea>
+    <button class="btn-sm" onclick="submitAssignment('${a.id}')">Submit</button>`
+    :`<div style="margin-top:8px;padding:8px;background:var(--bg);border-radius:6px;font-size:.88rem"><strong>Your submission:</strong> ${esc(mySubmission.content)}</div>`}`;
+    el.appendChild(card);
   }
-  result.push({type:"summary",title:"Key Takeaways",bullets:["Review all sections of these notes","Download the full AI lecture notes for offline study","Complete the practice questions in your student portal","Ask your teacher if anything is unclear","Revisit difficult sections before your next assessment"],note:"That concludes today's lecture on "+topic+". Download the notes, review what you found difficult, and do not hesitate to ask your teacher questions. Well done."});
-  return result;
 }
-function buildSlide(title,bodyLines){
-  const bullets=[];
-  for(const line of bodyLines){
-    const c=line.replace(/^[\s•\-\*\d\.]+/,"").trim();
-    if(c.length>20){bullets.push(c.length>150?c.substring(0,150)+"...":c);}
-    if(bullets.length>=5)break;
+async function submitAssignment(aid){
+  const content=document.getElementById('subtext_'+aid).value; if(!content)return;
+  const res=await api('/submit_assignment',{assignmentId:aid,classCode:student.code,studentEmail:student.email,studentName:student.name,content});
+  if(res.success){alert('Submitted!');loadStuAssignments();}
+}
+
+// ── STUDENT: TESTS ────────────────────────────────────────────
+async function loadStuTests(){
+  if(!student.code)return;
+  const res=await api('/get_tests',{classCode:student.code});
+  const el=document.getElementById('stuTestsList'); el.innerHTML='';
+  if(!res.success||!res.tests.length){el.innerHTML='<p class="info">No tests yet.</p>';return;}
+  for(const t of res.tests){
+    const myRes=await api('/get_my_test_result',{testId:t.id,studentEmail:student.email});
+    const done=myRes.result;
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <div><strong>${esc(t.title)}</strong> <span class="info">${t.questions.length} questions${t.time_limit?' · '+t.time_limit+' min':''}</span></div>
+      ${done?`<span class="badge badge-green">Done: ${done.score}/${done.total}</span>`
+      :`<button class="btn-sm" onclick="openTest('${t.id}','${esc(t.title)}',${JSON.stringify(t.questions).replace(/'/g,"&#39;")})">Start Test</button>`}
+    </div>`;
+    el.appendChild(card);
   }
-  return{type:"content",title:title.charAt(0).toUpperCase()+title.slice(1).toLowerCase(),bullets:bullets.length?bullets:["Key concepts covered in this section."],note:bodyLines.join(" ").replace(/\s+/g," ").substring(0,500)||"Let us explore "+title+" in detail."};
 }
-function buildFallbackSlides(topic,level,duration,style,objectives){
-  const objs=(objectives||"").split("\n").filter(Boolean);
-  return[
-    {type:"title",title:topic,sub:level+" Level · "+duration+" min · "+style,note:"Welcome to today's lesson on "+topic+". By the end of this session you will have a solid understanding of the core concepts. Let us begin."},
-    {type:"content",title:"Learning Objectives",bullets:objs.length?objs:["Understand core concepts","Apply the methods","Evaluate your understanding","Reflect on what you learned"],note:"Here are the learning objectives for today. These are the outcomes we are working towards by the end of class."},
-    {type:"content",title:"Why It Matters",bullets:["Real-world relevance of "+topic,"Where it is applied in industry today","What problem it solves for practitioners","Why this is taught at "+level.toLowerCase()+" level"],note:"Let us start by asking why "+topic+" matters. Understanding the context makes everything else easier to learn."},
-    {type:"content",title:"Core Concepts",bullets:["The fundamental principles behind "+topic,"Key terms and definitions you must know","How the different ideas connect to each other","The logic behind the method not just the steps"],note:"Now let us break down the core concepts of "+topic+". Focus on understanding the logic before worrying about formulas or procedures."},
-    {type:"content",title:"Examples and Analogies",bullets:["Think of "+topic+" like sorting a drawer — rules first then action","A flowchart where every decision depends on real observed data","How it appears in a real professional or research setting","Check yourself: does the output match your intuition?"],note:"The best way to understand "+topic+" is through concrete examples. Let us walk through a simple analogy and then connect it to real practice."},
-    {type:"content",title:"Guided Activity",bullets:["Apply what you just learned to a small practice problem","Work in pairs and talk through your reasoning out loud","It is fine to be wrong — focus on your thinking process","Be ready to explain your approach to the class"],note:"Now it is your turn. Take a few minutes to apply the concepts we just covered. The process matters more than getting the right answer immediately."},
-    {type:"content",title:"Common Mistakes",bullets:["Skipping assumptions — always check them first","Confusing correlation with causation","Over-complicating when a simpler approach works better","Not checking whether results make intuitive sense","Memorising steps without understanding the reason"],note:"Let us talk about the most common mistakes people make with "+topic+". Knowing what can go wrong is just as important as knowing the correct procedure."},
-    {type:"summary",title:"Summary",bullets:["Core idea: take information apply a method interpret the result","Start with intuition before moving to formal methods","Practise with real examples to build genuine confidence","Exit ticket: write one thing you learned today in your own words"],note:"That is the end of today's lesson on "+topic+". Write down one thing you learned in your own words. You have done excellent work today."}
-  ];
+function openTest(tid,title,questions){
+  if(typeof questions==='string')questions=JSON.parse(questions);
+  let html=`<div class="card"><h3>📊 ${esc(title)}</h3>`;
+  questions.forEach((q,i)=>{
+    html+=`<div class="quiz-q"><p><strong>Q${i+1}.</strong> ${esc(q.q)}</p>`;
+    q.options.forEach((opt,j)=>{
+      html+=`<label class="quiz-option"><input type="radio" name="tq_${i}" value="${j}"/> ${esc(opt)}</label>`;
+    });
+    html+='</div>';
+  });
+  html+=`<button class="btn-primary" onclick="submitTest('${tid}',${JSON.stringify(questions).replace(/"/g,'&quot;')})">Submit Test</button></div>`;
+  document.getElementById('modalContent').innerHTML=html;
+  document.getElementById('modal').style.display='flex';
 }
-
-/* ─── SLIDESHOW ENGINE ─── */
-function launchSlideshow(){
-  if(!currentPlan){alert("Generate a lesson plan first.");return;}
-  slides=aiNotesContent?parseNotesIntoSlides(aiNotesContent,currentPlan.topic):buildFallbackSlides(currentPlan.topic,currentPlan.level,currentPlan.duration,currentPlan.style,currentPlan.objectives);
-  slideIdx=0;
-  document.getElementById("ssTopic").textContent=currentPlan.topic+" · "+slides.length+" slides";
-  document.getElementById("ssOverlay").classList.add("open");
-  loadVoices();
-  // Give DOM time to render then size the slide
-  setTimeout(()=>{resizeSlide();renderSlide(0);},50);
-}
-
-function renderSlide(idx){
-  if(!slides[idx])return;
-  const s=slides[idx];
-  const slide=document.getElementById("ssSlide");
-  const header=document.getElementById("ssHeader");
-  const body=document.getElementById("ssSlideBody");
-  slide.className="ss-slide";
-  if(s.type==="title"){
-    slide.classList.add("type-title");
-    header.style.display="none";
-    body.style.cssText="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8% 10%;flex:1;overflow:hidden;";
-    body.innerHTML=`<div style="color:#74c69d;font-weight:700;letter-spacing:0.1em;margin-bottom:0.8em;font-size:0.9em">🎓 LECTUREAI</div><div style="font-family:'DM Serif Display',serif;color:white;line-height:1.2;margin-bottom:0.6em;font-size:2em">${s.title}</div><div style="color:#74c69d;opacity:0.9;font-size:0.8em">${s.sub||""}</div>`;
-  }else{
-    header.style.display="flex";
-    body.style.cssText="flex:1;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:0.5em 0.8em;";
-    document.getElementById("ssSlideTitle").textContent=s.title;
-    body.innerHTML=(s.bullets||[]).map(b=>`<div class="ss-bullet"><div class="ss-bullet-dot">▸</div><div>${b}</div></div>`).join("");
-  }
-  document.getElementById("ssSlideNum").textContent=(idx+1)+"/"+slides.length;
-  document.getElementById("ssProgFill").style.width=(((idx+1)/slides.length)*100)+"%";
-  if(showNarration){document.getElementById("ssNarration").style.display="block";document.getElementById("ssNarration").textContent=s.note||"";}
-  resizeSlide();
-  speak(s.note);
+async function submitTest(tid,questions){
+  if(typeof questions==='string')questions=JSON.parse(questions);
+  const answers={};
+  questions.forEach((_,i)=>{
+    const sel=document.querySelector(`input[name="tq_${i}"]:checked`);
+    if(sel)answers[i]=parseInt(sel.value);
+  });
+  const res=await api('/submit_test',{testId:tid,classCode:student.code,studentEmail:student.email,studentName:student.name,answers,questions});
+  if(res.success){
+    document.getElementById('modal').style.display='none';
+    alert(`Done! Score: ${res.score}/${res.total}`);
+    loadStuTests();
+  }else alert(res.error||'Error');
 }
 
-function prevSlide(){if(window.speechSynthesis)window.speechSynthesis.cancel();stopAuto();slideIdx=Math.max(0,slideIdx-1);renderSlide(slideIdx);}
-function nextSlide(){if(window.speechSynthesis)window.speechSynthesis.cancel();if(slideIdx<slides.length-1){slideIdx++;renderSlide(slideIdx);}else{stopAuto();setBadge("✅ Done",true);}}
-function replaySlide(){if(window.speechSynthesis)window.speechSynthesis.cancel();speak(slides[slideIdx]?.note||"");}
-function toggleAuto(){if(isAuto)stopAuto();else{isAuto=true;document.getElementById("autoBtn").textContent="⏸ Pause";}}
-function stopAuto(){isAuto=false;document.getElementById("autoBtn").textContent="▶ Auto";if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}}
-
-function closeSlideshow(){
-  if(window.speechSynthesis)window.speechSynthesis.cancel();
-  stopAuto();
-  document.getElementById("ssOverlay").classList.remove("open");
-  // Exit fullscreen if active
-  try{
-    if(document.fullscreenElement)document.exitFullscreen();
-    else if(document.webkitFullscreenElement)document.webkitExitFullscreen();
-    else if(document.mozFullScreenElement)document.mozCancelFullScreen();
-    else if(document.msFullscreenElement)document.msExitFullscreen();
-  }catch(e){}
+// ── DISCUSSION (student) ──────────────────────────────────────
+async function postDiscussion(){
+  const q=v('discussQuestion'); if(!q)return;
+  const res=await api('/discussion/post',{classCode:student.code,studentName:student.name,studentEmail:student.email,question:q});
+  if(res.success){document.getElementById('discussMsg').textContent='Posted!';document.getElementById('discussQuestion').value='';loadStudentDiscuss();}
+}
+async function loadStudentDiscuss(){
+  const res=await api('/discussion/get',{classCode:student.code});
+  const el=document.getElementById('studentDiscussionList'); el.innerHTML='';
+  if(!res.success||!res.posts.length){el.innerHTML='<p class="info">No posts yet.</p>';return;}
+  res.posts.forEach(p=>{
+    const d=document.createElement('div'); d.className='discuss-post';
+    d.innerHTML=`<div class="meta">${esc(p.student_name)} · ${p.created_at}</div>
+    <div class="question">${esc(p.question)}</div>
+    ${p.reply?`<div class="reply">📩 Teacher: ${esc(p.reply)}</div>`:'<div class="info" style="margin-top:6px">Awaiting reply…</div>'}`;
+    el.appendChild(d);
+  });
 }
 
-function toggleFullscreen(){
-  const el=document.documentElement; // fullscreen the entire page
-  const isFs=document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement;
-  if(!isFs){
-    if(el.requestFullscreen)el.requestFullscreen();
-    else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
-    else if(el.mozRequestFullScreen)el.mozRequestFullScreen();
-    else if(el.msRequestFullscreen)el.msRequestFullscreen();
-    document.getElementById("fsBtn").textContent="⊡ Exit Full";
-  }else{
-    if(document.exitFullscreen)document.exitFullscreen();
-    else if(document.webkitExitFullscreen)document.webkitExitFullscreen();
-    else if(document.mozCancelFullScreen)document.mozCancelFullScreen();
-    else if(document.msExitFullscreen)document.msExitFullscreen();
-    document.getElementById("fsBtn").textContent="⛶ Full";
-  }
-  setTimeout(resizeSlide,300);
-}
-
-document.addEventListener("fullscreenchange",()=>setTimeout(resizeSlide,200));
-document.addEventListener("webkitfullscreenchange",()=>setTimeout(resizeSlide,200));
-
-function setBadge(text,idle){const b=document.getElementById("ssBadge");b.textContent=text;b.className="ss-badge"+(idle?" idle":"");}
-function toggleNarration(){showNarration=!showNarration;const n=document.getElementById("ssNarration");n.style.display=showNarration?"block":"none";if(showNarration&&slides[slideIdx])n.textContent=slides[slideIdx].note||"";}
-
-function speak(text){
-  if(!window.speechSynthesis||!text)return;
-  window.speechSynthesis.cancel();
-  setBadge("🔊 Speaking...",false);
-  const u=new SpeechSynthesisUtterance(text);
-  u.rate=0.93;u.pitch=1.0;
-  if(selectedVoice)u.voice=selectedVoice;
-  u.onend=()=>{setBadge("⏸ Done",true);if(isAuto)autoTimer=setTimeout(nextSlide,1800);};
-  u.onerror=()=>setBadge("⏸ Done",true);
-  window.speechSynthesis.speak(u);
-}
-function loadVoices(){
-  if(!window.speechSynthesis){document.getElementById("voiceSelect").innerHTML="<option>Not supported</option>";return;}
-  const populate=()=>{
-    voices=window.speechSynthesis.getVoices();
-    const sel=document.getElementById("voiceSelect");
-    if(!voices.length){sel.innerHTML="<option>Loading...</option>";return;}
-    sel.innerHTML=voices.map((v,i)=>`<option value="${i}">${v.name}</option>`).join("");
-    const eng=voices.findIndex(v=>v.lang&&v.lang.startsWith("en"));
-    if(eng>=0){sel.value=eng;selectedVoice=voices[eng];}
-  };
-  if(window.speechSynthesis.getVoices().length)populate();
-  else{window.speechSynthesis.onvoiceschanged=populate;populate();}
-}
-function changeVoice(idx){selectedVoice=voices[parseInt(idx)]||null;}
-
-document.addEventListener("keydown",e=>{
-  if(!document.getElementById("ssOverlay").classList.contains("open"))return;
-  if(e.key==="ArrowRight"||e.key==="ArrowDown")nextSlide();
-  else if(e.key==="ArrowLeft"||e.key==="ArrowUp")prevSlide();
-  else if(e.key==="Escape")closeSlideshow();
-  else if(e.key==="f"||e.key==="F")toggleFullscreen();
-  else if(e.key===" "){e.preventDefault();toggleAuto();}
+// ── MODAL ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  const modal=document.createElement('div');
+  modal.id='modal';
+  modal.style.cssText='display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;overflow-y:auto;padding:20px;justify-content:center;align-items:flex-start;';
+  const inner=document.createElement('div');
+  inner.id='modalContent';
+  inner.style.cssText='background:var(--card);border-radius:16px;max-width:700px;width:100%;padding:20px;position:relative;';
+  const close=document.createElement('button');
+  close.textContent='✕ Close';
+  close.className='btn-danger';
+  close.style.cssText='position:sticky;top:0;float:right;margin-bottom:10px;';
+  close.onclick=()=>{modal.style.display='none';};
+  inner.prepend(close);
+  modal.appendChild(inner);
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.style.display='none';});
 });
-
-/* ─── POWERPOINT ─── */
-async function generateSlides(){
-  if(!currentPlan){alert("Generate a lesson plan first.");return;}
-  const btn=document.getElementById("slidesBtn");const st=document.getElementById("slidesStatus");
-  btn.disabled=true;btn.textContent="Generating...";st.textContent="Building your PowerPoint...";
-  try{
-    const res=await fetch("/generate_slides",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...currentPlan,notes:aiNotesContent})});
-    if(!res.ok)throw new Error("Server error");
-    const blob=await res.blob();const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");a.href=url;a.download="LectureAI_"+currentPlan.topic.replace(/\s+/g,"_")+".pptx";a.click();
-    st.textContent=aiNotesContent?"✅ Downloaded! Built from AI Notes.":"✅ Downloaded!";
-  }catch(e){st.textContent="❌ Could not generate. Try again.";}
-  finally{btn.disabled=false;btn.textContent="📊 Download PowerPoint";}
-}
-
-/* ─── ASSIGNMENTS ─── */
-async function createAssignment(){const title=document.getElementById("assignTitle").value.trim();const desc=document.getElementById("assignDesc").value.trim();const due=document.getElementById("assignDue").value;const max=document.getElementById("assignMax").value;if(!title||!desc){alert("Fill in title and description.");return;}try{const res=await fetch("/create_assignment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:getCode(),teacherEmail:currentUser.email,title,description:desc,dueDate:due,maxScore:max})});const data=await res.json();if(data.success){document.getElementById("assignTitle").value="";document.getElementById("assignDesc").value="";loadTeacherAssignments();}else alert("Error: "+data.error);}catch(e){alert("Could not save.");}}
-async function loadTeacherAssignments(){const code=getCode();if(!code)return;try{const res=await fetch("/get_assignments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:code})});const data=await res.json();const el=document.getElementById("assignList");if(!data.assignments||!data.assignments.length){el.innerHTML='<div class="info">No assignments posted yet.</div>';return;}el.innerHTML=data.assignments.map(a=>`<div class="acard"><h3>${a.title}</h3><div class="meta">Due: ${a.due_date||"No deadline"} · Max: ${a.max_score}</div><p style="font-size:0.85rem;color:#444">${a.description}</p><div style="display:flex;gap:0.5rem;margin-top:0.7rem;flex-wrap:wrap"><button class="bsm" onclick="viewSubs('${a.id}','${a.title.replace(/'/g,"\\'")}',${a.max_score})">📥 Submissions</button><button class="bred" onclick="deleteAssignment('${a.id}')">🗑️ Delete</button></div><div id="subs_${a.id}" style="display:none;margin-top:0.8rem"></div></div>`).join("");}catch(e){}}
-async function viewSubs(aid,title,maxScore){const el=document.getElementById("subs_"+aid);el.style.display=el.style.display==="none"?"block":"none";if(el.style.display==="none")return;el.innerHTML='<p style="font-size:0.85rem;color:#888">Loading...</p>';try{const res=await fetch("/get_submissions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assignmentId:aid})});const data=await res.json();if(!data.submissions||!data.submissions.length){el.innerHTML='<p style="font-size:0.85rem;color:#888">No submissions yet.</p>';return;}el.innerHTML=`<b style="font-size:0.9rem">${title}</b>`+data.submissions.map(s=>`<div class="subcrd"><div class="sn">${s.student_name} <span style="color:#888;font-size:0.78rem">· ${s.submitted_at}</span></div><div class="sc">${s.content}</div><div class="grow"><input type="number" id="sc_${s.id}" value="${s.score>=0?s.score:""}" placeholder="Score" style="width:70px"/><span style="font-size:0.85rem;color:#888">/${maxScore}</span><input id="fb_${s.id}" placeholder="Feedback" style="flex:1"/><button class="bsm" onclick="gradeSub('${s.id}','${aid}')">Save</button></div>${s.score>=0?`<div style="font-size:0.82rem;margin-top:0.3rem;color:#1a6640">✅ Graded: ${s.score}/${maxScore}${s.feedback?" · "+s.feedback:""}</div>`:""}</div>`).join("");}catch(e){el.innerHTML='<p style="color:#e74c3c;font-size:0.85rem">Could not load.</p>';}}
-async function gradeSub(subId,aid){const score=document.getElementById("sc_"+subId).value;const feedback=document.getElementById("fb_"+subId).value;if(score===""){alert("Enter a score.");return;}try{await fetch("/grade_submission",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({submissionId:subId,score:parseInt(score),feedback})});viewSubs(aid,"",100);}catch(e){alert("Could not save.");}}
-async function deleteAssignment(aid){if(!confirm("Delete this assignment?"))return;try{await fetch("/delete_assignment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:aid})});loadTeacherAssignments();}catch(e){}}
-
-/* ─── TESTS ─── */
-function addTestQuestion(){testQCount++;const qid=testQCount;document.getElementById("testQuestions").innerHTML+=`<div class="qitem" id="tq_${qid}"><div class="qnum">Question ${qid}</div><div class="fg"><label>Question</label><input id="qtxt_${qid}" placeholder="Type the question"/></div><div class="fg"><label>Option A</label><input id="qopt_${qid}_0"/></div><div class="fg"><label>Option B</label><input id="qopt_${qid}_1"/></div><div class="fg"><label>Option C</label><input id="qopt_${qid}_2"/></div><div class="fg"><label>Option D</label><input id="qopt_${qid}_3"/></div><div class="fg"><label>Correct Answer</label><select id="qans_${qid}"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select></div><button class="bred" onclick="document.getElementById('tq_${qid}').remove()" style="margin-top:0.3rem">Remove</button></div>`;}
-async function publishTest(){const title=document.getElementById("testTitle").value.trim();const timeLimit=parseInt(document.getElementById("testTimeLimit").value)||0;if(!title){alert("Enter a test title.");return;}const questions=[];document.querySelectorAll("[id^='qtxt_']").forEach(el=>{const qid=el.id.split("_")[1];const q=el.value.trim();if(!q)return;const opts=[0,1,2,3].map(i=>(document.getElementById(`qopt_${qid}_${i}`)||{value:""}).value.trim());const ans=parseInt((document.getElementById(`qans_${qid}`)||{value:"0"}).value);questions.push({q,options:opts,ans});});if(!questions.length){alert("Add at least one question.");return;}try{const res=await fetch("/create_test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:getCode(),teacherEmail:currentUser.email,title,questions,timeLimit})});const data=await res.json();if(data.success){document.getElementById("testTitle").value="";document.getElementById("testQuestions").innerHTML="";testQCount=0;loadTeacherTests();alert("Test published!");}}catch(e){alert("Could not publish.");}}
-async function loadTeacherTests(){const code=getCode();if(!code)return;try{const res=await fetch("/get_tests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode:code})});const data=await res.json();const el=document.getElementById("testList");if(!data.tests||!data.tests.length){el.innerHTML='<div class="info">No tests yet.</div>';return;}window._tests=data.tests;el.innerHTML=data.tests.map(t=>`<div class="tscard"><h3>${t.title}</h3><div class="meta">${t.questions.length} questions · ${t.time_limit?t.time_limit+" min":"No limit"}</div><div style="display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap"><button class="bsm" onclick="viewTestResults('${t.id}')">📊 Results</button><button class="bred" onclick="deleteTest('${t.id}')">🗑️ Delete</button></div><div id="tres_${t.id}" style="display:none;margin-top:0.8rem"></div></div>`).join("");}catch(e){}}
-async function viewTestResults(tid){const el=document.getElementById("tres_"+tid);el.style.display=el.style.display==="none"?"block":"none";if(el.style.display==="none")return;el.innerHTML='<p style="font-size:0.85rem;color:#888">Loading...</p>';try{const res=await fetch("/get_test_results",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({testId:tid})});const data=await res.json();if(!data.results||!data.results.length){el.innerHTML='<p style="font-size:0.85rem;color:#888">No submissions yet.</p>';return;}el.innerHTML=`<table class="rtable"><tr><th>Student</th><th>Score</th><th>%</th><th>Date</th></tr>${data.results.map(r=>`<tr><td>${r.student_name}</td><td>${r.score}/${r.total}</td><td>${Math.round(r.score/r.total*100)}%</td><td>${r.submitted_at}</td></tr>`).join("")}</table>`;}catch(e){el.innerHTML='<p style="color:#e74c3c;font-size:0.85rem">Could not load.</p>';}}
-async function deleteTest(tid){if(!confirm("Delete this test?"))return;try{await fetch("/delete_test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:tid})});loadTeacherTests();}catch(e){}}
-
-/* ─── STUDENT ASSIGNMENTS ─── */
-async function loadStudentAssignments(classCode){try{const res=await fetch("/get_assignments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode})});const data=await res.json();const el=document.getElementById("stuAssignList");if(!data.assignments||!data.assignments.length){el.innerHTML='<div class="info">No assignments yet.</div>';return;}el.innerHTML=data.assignments.map(a=>`<div class="acard"><h3>${a.title}</h3><div class="meta">Due: ${a.due_date||"No deadline"} · Max: ${a.max_score}</div><p style="font-size:0.85rem;color:#444;margin-bottom:0.7rem">${a.description}</p><div id="mysub_${a.id}"></div><textarea id="subContent_${a.id}" rows="4" placeholder="Type your answer..."></textarea><button class="btn" onclick="submitAssignment('${a.id}','${classCode}')">📤 Submit</button><div id="subSt_${a.id}" style="font-size:0.85rem;margin-top:0.4rem"></div></div>`).join("");data.assignments.forEach(a=>loadMySub(a.id));}catch(e){document.getElementById("stuAssignList").innerHTML='<div class="info">Could not load assignments.</div>';}}
-async function loadMySub(aid){try{const res=await fetch("/get_my_submission",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assignmentId:aid,studentEmail:currentUser.email})});const data=await res.json();if(data.submission){const s=data.submission;document.getElementById("mysub_"+aid).innerHTML=`<div style="background:#f0faf4;border:1px solid #74c69d;border-radius:8px;padding:0.7rem;margin-bottom:0.6rem;font-size:0.85rem">✅ Submitted${s.score>=0?` · Score: <strong>${s.score}</strong>${s.feedback?" · "+s.feedback:""}`:""}</div>`;const ta=document.getElementById("subContent_"+aid);if(ta)ta.value=s.content;}}catch(e){}}
-async function submitAssignment(aid,classCode){const content=document.getElementById("subContent_"+aid).value.trim();if(!content){alert("Write your answer first.");return;}const st=document.getElementById("subSt_"+aid);st.textContent="Submitting...";try{const res=await fetch("/submit_assignment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({assignmentId:aid,classCode,studentEmail:currentUser.email,studentName:currentUser.name,content})});const data=await res.json();if(data.success){st.textContent="✅ Submitted!";st.style.color="#1a6640";loadMySub(aid);}else{st.textContent="❌ "+data.error;st.style.color="#e74c3c";}}catch(e){st.textContent="❌ Could not submit.";st.style.color="#e74c3c";}}
-
-/* ─── STUDENT TESTS ─── */
-async function loadStudentTests(classCode){try{const res=await fetch("/get_tests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({classCode})});const data=await res.json();const el=document.getElementById("stuTestList");if(!data.tests||!data.tests.length){el.innerHTML='<div class="info">No tests yet.</div>';return;}window._tests=data.tests;el.innerHTML=data.tests.map(t=>`<div class="tscard"><h3>${t.title}</h3><div class="meta">${t.questions.length} questions · ${t.time_limit?t.time_limit+" min":"No limit"}</div><div id="mytr_${t.id}"></div><button class="btn" onclick="startStudentTest('${t.id}')">▶ Start</button></div><div id="testArea_${t.id}" style="display:none"></div>`).join("");data.tests.forEach(t=>loadMyTestResult(t.id));}catch(e){document.getElementById("stuTestList").innerHTML='<div class="info">Could not load tests.</div>';}}
-async function loadMyTestResult(tid){try{const res=await fetch("/get_my_test_result",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({testId:tid,studentEmail:currentUser.email})});const data=await res.json();if(data.result){const el=document.getElementById("mytr_"+tid);if(el)el.innerHTML=`<div style="background:#f0faf4;border:1px solid #74c69d;border-radius:8px;padding:0.6rem;font-size:0.85rem;margin:0.4rem 0">✅ Score: <strong>${data.result.score}/${data.result.total}</strong> (${Math.round(data.result.score/data.result.total*100)}%)</div>`;}}catch(e){}}
-function startStudentTest(tid){const test=window._tests&&window._tests.find(t=>t.id===tid);if(!test)return;activeTestData=test;activeTestAnswers={};const area=document.getElementById("testArea_"+tid);area.style.display="block";area.innerHTML=`<div class="card cpu"><b style="color:#8e44ad">${test.title}</b><br>${test.time_limit>0?`<div id="tdisp_${tid}" style="font-size:0.88rem;color:#e74c3c;font-weight:600;margin:0.5rem 0">⏱ ${test.time_limit}:00</div>`:""}${test.questions.map((q,i)=>`<div class="qzcard"><p style="font-weight:600;font-size:0.95rem;margin-bottom:0.7rem">${i+1}. ${q.q}</p>${q.options.map((o,j)=>`<button class="qzopt" id="sto_${tid}_${i}_${j}" onclick="selTA('${tid}',${i},${j})">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`).join("")}<button class="bpu" onclick="submitStuTest('${tid}')" style="margin-top:0.5rem">📤 Submit Test</button></div>`;if(test.time_limit>0)startTTimer(tid,test.time_limit);}
-function selTA(tid,qi,ai){activeTestAnswers[qi]=ai;const q=activeTestData.questions[qi];for(let j=0;j<q.options.length;j++){const b=document.getElementById(`sto_${tid}_${qi}_${j}`);if(b){b.style.borderColor=j===ai?"#2d6a4f":"#ddd";b.style.background=j===ai?"#f0faf4":"white";}}}
-function startTTimer(tid,mins){let secs=mins*60;const disp=document.getElementById("tdisp_"+tid);testTimer=setInterval(()=>{secs--;const m2=Math.floor(secs/60),s2=secs%60;if(disp)disp.textContent=`⏱ ${m2}:${s2.toString().padStart(2,"0")}`;if(secs<=0){clearInterval(testTimer);submitStuTest(tid);}},1000);}
-async function submitStuTest(tid){if(testTimer){clearInterval(testTimer);testTimer=null;}const test=activeTestData;if(!test)return;const ua=test.questions.length-Object.keys(activeTestAnswers).length;if(ua>0&&!confirm(`${ua} unanswered. Submit anyway?`))return;const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);try{const res=await fetch("/submit_test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({testId:tid,classCode:saved?JSON.parse(saved).code:"",studentEmail:currentUser.email,studentName:currentUser.name,answers:activeTestAnswers,questions:test.questions})});const data=await res.json();if(data.success){const pct=Math.round(data.score/data.total*100);document.getElementById("testArea_"+tid).innerHTML=`<div class="qzscore"><div class="big">${data.score}/${data.total}</div><div style="font-size:1rem;color:#555;margin-top:0.3rem">${pct}% — ${pct>=80?"Excellent! 🌟":pct>=60?"Good effort! 👍":"Keep practising 📚"}</div></div>`;loadMyTestResult(tid);}else alert(data.error||"Could not submit.");}catch(e){alert("Could not submit.");}}
-
-/* ─── QUIZ ─── */
-function startQuiz(){const qs=QUIZ_Q[quizTopic]||QUIZ_Q["default"];quizAnswers={};document.getElementById("quizScoreBox").style.display="none";document.getElementById("quizArea").innerHTML=qs.map((q,i)=>`<div class="qzcard"><p style="font-weight:600;font-size:0.95rem;margin-bottom:0.7rem">${i+1}. ${q.q}</p>${q.opts.map((o,j)=>`<button class="qzopt" id="qo${i}_${j}" onclick="answerQuiz(${i},${j})">${o}</button>`).join("")}<div class="qzfb" id="qfb${i}" style="display:none"></div></div>`).join("");document.getElementById("startQuizBtn").textContent="Restart";}
-function answerQuiz(qi,ai){const qs=QUIZ_Q[quizTopic]||QUIZ_Q["default"];const q=qs[qi];quizAnswers[qi]=ai;for(let j=0;j<q.opts.length;j++){const b=document.getElementById(`qo${qi}_${j}`);b.classList.add("disabled");if(j===q.ans)b.classList.add("correct");else if(j===ai)b.classList.add("wrong");}const fb=document.getElementById(`qfb${qi}`);fb.style.display="block";fb.className="qzfb "+(ai===q.ans?"pass":"fail");fb.textContent=(ai===q.ans?"✅ Correct! ":"❌ Incorrect. ")+q.exp;if(Object.keys(quizAnswers).length===qs.length){const score=qs.filter((q2,i)=>quizAnswers[i]===q2.ans).length;const pct=Math.round(score/qs.length*100);document.getElementById("quizScoreDisplay").textContent=score+"/"+qs.length;document.getElementById("quizScoreMsg").textContent=pct+"% — "+(pct>=80?"Excellent! 🌟":pct>=60?"Good effort!":"Keep practising 📚");document.getElementById("quizScoreBox").style.display="block";}}
-
-/* ─── STUDENT NOTES ─── */
-function buildStudentNotes(topic,level){const lines=["LECTURE NOTES: "+topic,"Level: "+level,"","OVERVIEW",topic+" is a fundamental concept providing a systematic method for analysing information.","","LECTURE STRUCTURE",...SEGS.map((s,i)=>(i+1)+". "+s.name+"\n   "+s.desc(topic,"your approach")),"","ANALOGIES",...ANALOGIES.map(a=>a(topic)),"","REFLECTION QUESTIONS",...REFLECTIONS.map(r=>r(topic)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(topic)+"\n   Hint: "+p.hint),"","STUDY TIPS",...SRL];document.getElementById("notesPreviewBox").textContent=lines.join("\n");}
-function downloadStudentNotes(){const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);const topic=saved?JSON.parse(saved).topic||"topic":"topic";const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(document.getElementById("notesPreviewBox").textContent);a.download="Notes_"+topic.replace(/\s+/g,"_")+".txt";a.click();}
-
-/* ─── LIVE CLASS ─── */
-function setRes(id,text,spkId){document.getElementById(id).textContent=text;if(spkId){const el=document.getElementById(spkId);if(el)el.style.display="inline-block";}}
-function setLoad(id){document.getElementById(id).innerHTML='<span class="loading">Thinking...</span>';}
-async function handleTeacherQuestion(){const q=document.getElementById("teacherQ").value.trim();if(!q){alert("Type a question.");return;}setLoad("teacherQResult");try{const r=await fetch("/layer2/question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setRes("teacherQResult",d.result||d.error,"speakTQ");}catch(e){setRes("teacherQResult","Could not reach server.","speakTQ");}}
-async function handleConfusion(){const c=document.getElementById("confusionInput").value.trim();if(!c){alert("Describe the confusion.");return;}setLoad("confusionResult");try{const r=await fetch("/layer2/confusion",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({confusion:c,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setRes("confusionResult",d.result||d.error,"speakCon");}catch(e){setRes("confusionResult","Could not reach server.","speakCon");}}
-async function handleConceptCheck(){const q=document.getElementById("conceptQ").value.trim();const pct=document.getElementById("correctPct").value;if(!q){alert("Type the question.");return;}setLoad("conceptResult");try{const r=await fetch("/layer2/conceptcheck",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,correct_pct:pct,topic:currentPlan.topic,level:currentPlan.level})});const d=await r.json();setRes("conceptResult",d.result||d.error,"speakCC");}catch(e){setRes("conceptResult","Could not reach server.","speakCC");}}
-async function handlePacing(){const mins=document.getElementById("minsElapsed").value;const seg=document.getElementById("currentSeg").value.trim();if(!mins||!seg){alert("Fill in both fields.");return;}setLoad("pacingResult");try{const r=await fetch("/layer2/pacing",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mins_elapsed:mins,current_segment:seg,topic:currentPlan.topic,level:currentPlan.level,total_duration:currentPlan.duration})});const d=await r.json();setRes("pacingResult",d.result||d.error,"speakPac");}catch(e){setRes("pacingResult","Could not reach server.","speakPac");}}
-async function handleStudentQuestion(){const question=document.getElementById("stuQuestion").value.trim();if(!question){alert("Type your question.");return;}const saved=localStorage.getItem("lai_stuclass_"+currentUser.email);if(!saved){alert("Connect to a class first.");return;}const cls=JSON.parse(saved);setLoad("stuQuestionResult");try{const res=await fetch("/layer2/student_question",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question,name:currentUser.name,age:currentUser.age||"unknown",year:currentUser.year||"unknown",background:currentUser.background||"unknown",topic:cls.topic||"the current topic",level:cls.level||"Intermediate"})});const data=await res.json();const answer=data.result||data.error;setRes("stuQuestionResult",answer,"speakStuQ");const reports=getReports();reports.push({classCode:cls.code,teacherEmail:cls.teacherEmail,studentName:currentUser.name,question,answer,timestamp:new Date().toLocaleString()});saveReports(reports);}catch(e){setRes("stuQuestionResult","Could not reach server.","speakStuQ");}}
-
-/* ─── VOICE INPUT ─── */
-function startVoice(targetId){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert("Voice input not supported. Use Chrome.");return;}if(activeRec){activeRec.stop();activeRec=null;return;}const r=new SR();r.lang="en-US";r.interimResults=false;activeRec=r;document.querySelectorAll(".vbtn").forEach(b=>{if(b.getAttribute("onclick")==="startVoice('"+targetId+"')"){b.classList.add("listening");b.textContent="🎤 Listening...";}});r.onresult=e=>{document.getElementById(targetId).value=e.results[0][0].transcript;};r.onend=()=>{document.querySelectorAll(".vbtn").forEach(b=>{b.classList.remove("listening");if(b.getAttribute("onclick")==="startVoice('"+targetId+"')")b.textContent="🎤 Speak";});activeRec=null;};r.start();}
-function speakText(id){const text=document.getElementById(id).textContent;if(!text||!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=0.93;u.pitch=1.0;if(selectedVoice)u.voice=selectedVoice;window.speechSynthesis.speak(u);}
-
-/* ─── VIDEO SCRIPT ─── */
-async function generateVideoScript(){if(!currentPlan){alert("Generate a lesson plan first.");return;}const btn=document.getElementById("videoBtn");const st=document.getElementById("videoStatus");btn.disabled=true;btn.textContent="Writing...";st.textContent="Generating...";try{const res=await fetch("/generate_video_script",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic:currentPlan.topic,level:currentPlan.level})});const data=await res.json();document.getElementById("scriptBox").textContent=data.result||data.error;document.getElementById("scriptBox").style.display="block";document.getElementById("copyScriptBtn").style.display="inline-block";st.textContent="✅ Done!";}catch(e){st.textContent="❌ Could not generate.";}finally{btn.disabled=false;btn.textContent="🎬 Generate Script";}}
-function copyScript(){navigator.clipboard&&navigator.clipboard.writeText(document.getElementById("scriptBox").textContent).then(()=>alert("Copied!"));}
-
-/* ─── REPORTS ─── */
-function loadReports(){const saved=localStorage.getItem("lai_code_"+currentUser.email);if(!saved)return;const code=JSON.parse(saved).code;const reports=getReports().filter(r=>r.classCode===code);const empty=document.getElementById("reportsEmpty");const list=document.getElementById("reportsList");if(!reports.length){empty.style.display="block";list.innerHTML="";return;}empty.style.display="none";list.innerHTML=reports.map(r=>`<div class="rcrd"><div style="font-size:0.8rem;color:#888">${r.studentName} · ${r.timestamp}</div><div style="font-weight:600;font-size:0.9rem;margin:0.3rem 0">"${r.question}"</div><div style="font-size:0.82rem;color:#555;line-height:1.5">${r.answer.substring(0,200)}${r.answer.length>200?"...":""}</div></div>`).join("");}
-function clearReports(){if(!confirm("Clear all reports?"))return;const saved=localStorage.getItem("lai_code_"+currentUser.email);if(!saved)return;saveReports(getReports().filter(r=>r.classCode!==JSON.parse(saved).code));loadReports();}
-
-/* ─── RUBRIC ─── */
-function updateScore(){let total=0;RUBRIC.forEach((_,i)=>{const v=parseInt(document.getElementById("r"+i).value);document.getElementById("rv"+i).textContent=v;total+=v;});const pct=Math.round(total/(RUBRIC.length*5)*100);document.getElementById("totalScore").textContent=total+"/"+(RUBRIC.length*5);document.getElementById("totalPct").textContent=pct+"%";document.getElementById("rating").textContent=pct>=80?"Excellent ⭐":pct>=60?"Good 👍":"Needs Work ⚠️";}
-
-/* ─── EXPORT ─── */
-function buildExport(){if(!currentPlan)return;const t=currentPlan.topic;const lines=["LESSON PLAN: "+t,"Generated: "+currentPlan.generatedAt,"Level: "+currentPlan.level+" | Duration: "+currentPlan.duration+" min | Style: "+currentPlan.style,"","LEARNING OBJECTIVES",currentPlan.objectives,"","OUTLINE",...SEGS.map((s,i)=>(i+1)+". "+s.name+" ["+s.icap+"]\n   "+s.desc(t,currentPlan.style)),"","ANALOGIES",...ANALOGIES.map(a=>a(t)),"","ACTIVITIES",...ACTIVITIES.map(a=>"["+a.icap+"] "+a.title+": "+a.p(t)),"","REFLECTIONS",...REFLECTIONS.map(r=>r(t)),"","PRACTICE QUESTIONS",...PRACTICE.map(p=>"["+p.diff+"] "+p.q(t)+"\n   Hint: "+p.hint),"","SRL PROMPTS",...SRL];document.getElementById("exportPreview").textContent=lines.join("\n");}
-function downloadTxt(){if(!currentPlan)return;const a=document.createElement("a");a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(document.getElementById("exportPreview").textContent);a.download="LessonPlan_"+currentPlan.topic.replace(/\s+/g,"_")+".txt";a.click();}
-
-/* ─── TAB SWITCHING ─── */
-function switchTab(id){const tIds=["builder","liveclass","studsupport","assignments","tests","reports","video","rubric","export"];document.querySelectorAll("#teacherTabs .tab").forEach((t,i)=>t.classList.toggle("active",tIds[i]===id));document.querySelectorAll("#studentTabs .tab").forEach(t=>t.classList.toggle("active",id==="studenthome"));document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));const el=document.getElementById(id);if(el)el.classList.add("active");if(id==="reports")loadReports();}
-
-/* ─── AUTO LOGIN ─── */
-window.onload=function(){const saved=localStorage.getItem("lai_session");if(saved){currentUser=JSON.parse(saved);document.getElementById("authScreen").style.display="none";document.getElementById("mainApp").style.display="block";initApp();}};
 </script>
 </body>
 </html>
