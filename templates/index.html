@@ -69,6 +69,14 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
 .icap-constructive{background:#f4a261;color:#fff}
 .icap-interactive{background:#e63946;color:#fff}
 
+/* LANGUAGE SELECTOR */
+.lang-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.lang-btn{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:10px 8px;font-size:.88rem;cursor:pointer;transition:.2s;text-align:center;font-family:inherit;color:var(--text)}
+.lang-btn:hover{border-color:var(--g);background:rgba(45,106,79,.05);transform:translateY(-1px)}
+.lang-btn.active{border-color:var(--g);background:var(--g);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(45,106,79,.25)}
+@media(max-width:600px){.lang-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:400px){.lang-grid{grid-template-columns:repeat(2,1fr)}}
+
 /* NOTES */
 #notesOutput,#stuNotesOutput{white-space:pre-wrap;line-height:1.75;font-size:.93rem;padding:20px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);min-height:80px}
 .result-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;white-space:pre-wrap;font-size:.9rem;line-height:1.6;margin-top:10px}
@@ -249,34 +257,39 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
 
   <!-- ═══ LESSON TAB ═══ -->
   <div class="tab-pane active" id="tab-lesson">
+    <!-- LANGUAGE SELECTOR - Prominent card -->
+    <div class="card" style="border:2px solid var(--g);background:linear-gradient(135deg,rgba(45,106,79,.06),rgba(116,198,157,.06))">
+      <h3>🌍 Choose Your Language</h3>
+      <p class="info" style="margin-bottom:12px">All AI-generated content (notes, slides, slideshow, quizzes) will be produced in your selected language</p>
+      <div class="lang-grid" id="langGrid">
+        <button class="lang-btn active" onclick="selectLang(this,'English')">🇬🇧 English</button>
+        <button class="lang-btn" onclick="selectLang(this,'French')">🇫🇷 Français</button>
+        <button class="lang-btn" onclick="selectLang(this,'Spanish')">🇪🇸 Español</button>
+        <button class="lang-btn" onclick="selectLang(this,'Arabic')">🇸🇦 العربية</button>
+        <button class="lang-btn" onclick="selectLang(this,'Chinese')">🇨🇳 中文</button>
+        <button class="lang-btn" onclick="selectLang(this,'Portuguese')">🇵🇹 Português</button>
+        <button class="lang-btn" onclick="selectLang(this,'Yoruba')">🇳🇬 Yorùbá</button>
+        <button class="lang-btn" onclick="selectLang(this,'Hausa')">🇳🇬 Hausa</button>
+        <button class="lang-btn" onclick="selectLang(this,'Igbo')">🇳🇬 Igbo</button>
+        <button class="lang-btn" onclick="selectLang(this,'Swahili')">🇰🇪 Kiswahili</button>
+        <button class="lang-btn" onclick="selectLang(this,'Hindi')">🇮🇳 हिन्दी</button>
+        <button class="lang-btn" onclick="selectLang(this,'German')">🇩🇪 Deutsch</button>
+        <button class="lang-btn" onclick="selectLang(this,'Japanese')">🇯🇵 日本語</button>
+        <button class="lang-btn" onclick="selectLang(this,'Korean')">🇰🇷 한국어</button>
+        <button class="lang-btn" onclick="selectLang(this,'Russian')">🇷🇺 Русский</button>
+        <button class="lang-btn" onclick="selectLang(this,'Italian')">🇮🇹 Italiano</button>
+      </div>
+      <p style="margin-top:10px;font-size:.88rem"><strong>Selected:</strong> <span id="currentLangDisplay" style="color:var(--g);font-weight:700">🇬🇧 English</span></p>
+    </div>
+
     <div class="card">
       <h3>⚙️ Lesson Settings</h3>
       <input id="tTopicEdit" type="text" placeholder="Topic"/>
       <div class="grid-2">
         <select id="tLevelEdit"><option>Introductory</option><option selected>Intermediate</option><option>Advanced</option></select>
-        <select id="tLanguage">
-          <option value="English">🇬🇧 English</option>
-          <option value="French">🇫🇷 Français</option>
-          <option value="Spanish">🇪🇸 Español</option>
-          <option value="Arabic">🇸🇦 العربية</option>
-          <option value="Chinese">🇨🇳 中文</option>
-          <option value="Portuguese">🇵🇹 Português</option>
-          <option value="Yoruba">🇳🇬 Yorùbá</option>
-          <option value="Hausa">🇳🇬 Hausa</option>
-          <option value="Igbo">🇳🇬 Igbo</option>
-          <option value="Swahili">🇰🇪 Kiswahili</option>
-          <option value="Hindi">🇮🇳 हिन्दी</option>
-          <option value="German">🇩🇪 Deutsch</option>
-          <option value="Japanese">🇯🇵 日本語</option>
-          <option value="Korean">🇰🇷 한국어</option>
-          <option value="Russian">🇷🇺 Русский</option>
-          <option value="Italian">🇮🇹 Italiano</option>
-        </select>
-      </div>
-      <div class="grid-2">
-        <input id="tDuration" type="number" placeholder="Duration (minutes)" value="75"/>
         <select id="tStyle"><option>Lecture-based</option><option>Socratic</option><option>Problem-based</option><option>Flipped</option><option>Project-based</option></select>
       </div>
+      <input id="tDuration" type="number" placeholder="Duration (minutes)" value="75"/>
       <textarea id="tObjectives" placeholder="Learning objectives (one per line)"></textarea>
       <button class="btn-primary" onclick="generateNotes()">🤖 Generate ICAP-Aligned Lecture Notes <span id="notesLoader" style="display:none" class="loader"></span></button>
       <p class="info" style="margin-top:8px">Notes follow the ICAP Framework: Passive → Active → Constructive → Interactive</p>
@@ -514,6 +527,32 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
     <span id="sWelcome" style="font-weight:700;font-size:1.1rem"></span>
     <span style="margin-left:10px">Class: <span id="sClassCode" class="code-badge"></span></span>
   </div>
+
+  <!-- STUDENT LANGUAGE SELECTOR -->
+  <div class="card" style="border:2px solid var(--g);background:linear-gradient(135deg,rgba(45,106,79,.06),rgba(116,198,157,.06));margin-bottom:16px">
+    <h3>🌍 Choose Your Language</h3>
+    <p class="info">AI responses, quizzes, and study plans will be in your chosen language</p>
+    <div class="lang-grid" id="stuLangGrid">
+      <button class="lang-btn active" onclick="selectStuLang(this,'English')">🇬🇧 English</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'French')">🇫🇷 Français</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Spanish')">🇪🇸 Español</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Arabic')">🇸🇦 العربية</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Chinese')">🇨🇳 中文</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Portuguese')">🇵🇹 Português</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Yoruba')">🇳🇬 Yorùbá</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Hausa')">🇳🇬 Hausa</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Igbo')">🇳🇬 Igbo</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Swahili')">🇰🇪 Kiswahili</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Hindi')">🇮🇳 हिन्दी</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'German')">🇩🇪 Deutsch</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Japanese')">🇯🇵 日本語</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Korean')">🇰🇷 한국어</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Russian')">🇷🇺 Русский</button>
+      <button class="lang-btn" onclick="selectStuLang(this,'Italian')">🇮🇹 Italiano</button>
+    </div>
+    <p style="margin-top:10px;font-size:.88rem"><strong>Selected:</strong> <span id="stuCurrentLangDisplay" style="color:var(--g);font-weight:700">🇬🇧 English</span></p>
+  </div>
+
   <div class="tabs" id="sTabs">
     <button class="tab-btn active" onclick="switchStuTab('ask')">🙋 Ask</button>
     <button class="tab-btn" onclick="switchStuTab('notes')">📄 Notes</button>
@@ -616,6 +655,31 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
 const API = "";
 let teacher = {}, student = {}, timerInterval = null, timerSecs = 0, timerRunning = false;
 let reactionPollInterval = null;
+let selectedLanguage = 'English';
+
+// ── LANGUAGE SELECTOR ──
+function selectLang(btn, lang){
+  selectedLanguage = lang;
+  // Update teacher buttons
+  document.querySelectorAll('#langGrid .lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('currentLangDisplay').textContent = btn.textContent;
+  // Update student buttons too if visible
+  document.querySelectorAll('#stuLangGrid .lang-btn').forEach(b => b.classList.remove('active'));
+  const stuMatch = document.querySelector(`#stuLangGrid .lang-btn[onclick*="'${lang}'"]`);
+  if(stuMatch) stuMatch.classList.add('active');
+  const stuDisp = document.getElementById('stuCurrentLangDisplay');
+  if(stuDisp) stuDisp.textContent = btn.textContent;
+  if(teacher.code) teacher.language = lang;
+  if(student.code) student.language = lang;
+}
+function selectStuLang(btn, lang){
+  selectedLanguage = lang;
+  document.querySelectorAll('#stuLangGrid .lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('stuCurrentLangDisplay').textContent = btn.textContent;
+  if(student.code) student.language = lang;
+}
 
 // ══ SLIDESHOW STATE ══
 let slideshowData = [];
@@ -761,7 +825,7 @@ async function generateNotes(){
   const duration=v('tDuration')||75;
   const objectives=v('tObjectives');
   const style=document.getElementById('tStyle').value;
-  const language=document.getElementById('tLanguage').value;
+  const language=selectedLanguage;
   if(!topic)return alert('Enter a topic first');
   loading('notesLoader',true);
   const res=await api('/generate_notes',{topic,level,duration,objectives,style,language,classCode:teacher.code});
@@ -770,7 +834,7 @@ async function generateNotes(){
     teacher.notes=res.notes; teacher.topic=topic; teacher.level=level; teacher.language=language;
     renderICAPNotes(res.notes);
     document.getElementById('notesCard').style.display='';
-  }else alert('Error: '+res.error);
+  }else alert('Error: '+(res.error||'Failed to generate notes'));
 }
 
 function renderICAPNotes(notes){
@@ -844,7 +908,7 @@ async function generateSlideshow(){
 
   loading('slideshowLoader',true);
   document.getElementById('slideshowMsg').textContent = 'Generating slides with AI narration...';
-  const language = teacher.language || document.getElementById('tLanguage').value;
+  const language = selectedLanguage;
 
   let slides = null;
 
