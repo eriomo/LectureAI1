@@ -4,95 +4,146 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>LectureAI – Human-AI Co-Orchestration</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--g:#2d6a4f;--g2:#1b4332;--ga:#74c69d;--w:#fff;--bg:#f7f5f2;--card:#fff;--text:#1a1a1a;--border:#e0ddd8;--red:#e63946;--amber:#f4a261}
-body.dark{--bg:#121212;--card:#1e1e1e;--text:#e0e0e0;--border:#333;--w:#e0e0e0}
+:root{--g:#2d6a4f;--g2:#1b4332;--ga:#74c69d;--w:#fff;--bg:#f5f3ef;--card:#fff;--text:#1a1a1a;--border:#e0ddd8;--red:#e63946;--amber:#f4a261;--blue:#0d6efd;--radius:12px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+body.dark{--bg:#0f0f0f;--card:#1a1a1a;--text:#e0e0e0;--border:#2a2a2a;--w:#e0e0e0;--shadow:0 2px 12px rgba(0,0,0,.3)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s}
-header{background:var(--g2);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-header h1{font-size:1.4rem;letter-spacing:.5px}header span{font-size:.8rem;opacity:.7;margin-left:8px}
-.header-right{display:flex;align-items:center;gap:12px}
-#darkToggle{background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:.85rem}
-#darkToggle:hover{background:rgba(255,255,255,.25)}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s;line-height:1.5}
+header{background:linear-gradient(135deg,var(--g2),var(--g));color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.15)}
+header h1{font-size:1.35rem;font-weight:700;letter-spacing:.3px}
+header h1 span{font-weight:400;font-size:.78rem;opacity:.7;margin-left:6px}
+.header-right{display:flex;align-items:center;gap:10px}
+#darkToggle{background:rgba(255,255,255,.12);border:none;color:#fff;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.82rem;transition:.2s}
+#darkToggle:hover{background:rgba(255,255,255,.22)}
 .screen{display:none;max-width:1100px;margin:0 auto;padding:20px}
 .screen.active{display:block}
+
 /* ROLE SELECT */
-#roleScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:24px}
-#roleScreen h2{font-size:1.6rem;color:var(--text)}
+#roleScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:28px}
+#roleScreen h2{font-size:1.8rem;color:var(--text);font-weight:700}
+#roleScreen>p{color:#888;font-size:.95rem}
 .role-cards{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
-.role-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:36px 40px;cursor:pointer;text-align:center;transition:.2s;min-width:200px}
-.role-card:hover{border-color:var(--g);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1)}
-.role-card .icon{font-size:3rem;margin-bottom:12px}
-.role-card h3{font-size:1.2rem;color:var(--g)}
+.role-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:36px 44px;cursor:pointer;text-align:center;transition:.25s;min-width:220px;box-shadow:var(--shadow)}
+.role-card:hover{border-color:var(--g);transform:translateY(-4px);box-shadow:0 12px 32px rgba(45,106,79,.15)}
+.role-card .icon{font-size:3.2rem;margin-bottom:14px}
+.role-card h3{font-size:1.15rem;color:var(--g);font-weight:600}
+
 /* AUTH */
-.auth-box{background:var(--card);border-radius:16px;padding:36px;max-width:440px;margin:60px auto;box-shadow:0 4px 20px rgba(0,0,0,.08)}
-.auth-box h2{margin-bottom:20px;color:var(--g)}
-input,textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:.95rem;background:var(--card);color:var(--text);margin-bottom:14px}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--g)}
+.auth-box{background:var(--card);border-radius:16px;padding:36px;max-width:440px;margin:60px auto;box-shadow:0 6px 24px rgba(0,0,0,.08)}
+.auth-box h2{margin-bottom:20px;color:var(--g);font-weight:700}
+input,textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:.92rem;background:var(--card);color:var(--text);margin-bottom:14px;font-family:inherit;transition:border .2s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 3px rgba(45,106,79,.1)}
 textarea{resize:vertical;min-height:80px}
-button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:.95rem;transition:.2s}
+button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:.92rem;font-family:inherit;font-weight:500;transition:.2s}
 .btn-primary{background:var(--g);color:#fff;width:100%}
-.btn-primary:hover{background:var(--g2)}
-.btn-sm{background:var(--g);color:#fff;padding:6px 14px;font-size:.85rem;border-radius:6px}
+.btn-primary:hover{background:var(--g2);transform:translateY(-1px)}
+.btn-sm{background:var(--g);color:#fff;padding:7px 16px;font-size:.84rem;border-radius:8px}
 .btn-sm:hover{background:var(--g2)}
-.btn-danger{background:var(--red);color:#fff;padding:6px 14px;font-size:.85rem;border-radius:6px}
-.btn-outline{background:transparent;border:1.5px solid var(--g);color:var(--g);padding:6px 14px;font-size:.85rem;border-radius:6px}
+.btn-danger{background:var(--red);color:#fff;padding:7px 16px;font-size:.84rem;border-radius:8px}
+.btn-outline{background:transparent;border:1.5px solid var(--g);color:var(--g);padding:7px 16px;font-size:.84rem;border-radius:8px}
 .btn-outline:hover{background:var(--g);color:#fff}
-.btn-amber{background:var(--amber);color:#fff;padding:6px 14px;font-size:.85rem;border-radius:6px}
+.btn-amber{background:var(--amber);color:#fff;padding:7px 16px;font-size:.84rem;border-radius:8px}
+
 /* TABS */
-.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:4px}
-.tab-btn{background:transparent;border:none;padding:8px 16px;font-size:.9rem;color:var(--text);opacity:.6;border-radius:6px 6px 0 0;cursor:pointer;transition:.15s}
+.tabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:4px;border-bottom:2px solid var(--border)}
+.tab-btn{background:transparent;border:none;padding:9px 16px;font-size:.85rem;color:var(--text);opacity:.55;border-radius:8px 8px 0 0;cursor:pointer;transition:.15s;font-weight:500;font-family:inherit}
 .tab-btn.active{background:var(--g);color:#fff;opacity:1}
-.tab-btn:hover:not(.active){opacity:1;background:var(--border)}
+.tab-btn:hover:not(.active){opacity:1;background:rgba(45,106,79,.08)}
 .tab-pane{display:none}.tab-pane.active{display:block}
+
 /* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
-.card h3{margin-bottom:12px;color:var(--g);font-size:1.05rem}
-.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.75rem;font-weight:600}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.card h3{margin-bottom:12px;color:var(--g);font-size:1.05rem;font-weight:600}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600}
 .badge-green{background:#d1fae5;color:#065f46}
 .badge-red{background:#fee2e2;color:#991b1b}
 .badge-amber{background:#fef3c7;color:#92400e}
+.badge-blue{background:#dbeafe;color:#1e40af}
 .due-soon{background:#fee2e2;color:var(--red);padding:3px 8px;border-radius:12px;font-size:.75rem;font-weight:700;margin-left:8px}
+
+/* ICAP Badges */
+.icap-badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:.7rem;font-weight:700;letter-spacing:.5px;margin-bottom:6px}
+.icap-passive{background:#6c757d;color:#fff}
+.icap-active{background:#0d6efd;color:#fff}
+.icap-constructive{background:#f4a261;color:#fff}
+.icap-interactive{background:#e63946;color:#fff}
+
 /* NOTES */
-#notesOutput{white-space:pre-wrap;line-height:1.7;font-size:.95rem;padding:16px;background:var(--bg);border-radius:8px;border:1px solid var(--border);min-height:80px}
-/* RESULTS */
+#notesOutput,#stuNotesOutput{white-space:pre-wrap;line-height:1.75;font-size:.93rem;padding:20px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);min-height:80px}
 .result-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;white-space:pre-wrap;font-size:.9rem;line-height:1.6;margin-top:10px}
+
 /* QUIZ */
 .quiz-q{margin-bottom:20px}
 .quiz-q p{font-weight:600;margin-bottom:8px}
-.quiz-option{display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;padding:8px 10px;border-radius:6px;border:1.5px solid var(--border);transition:.15s}
+.quiz-option{display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);transition:.15s}
 .quiz-option:hover{border-color:var(--g)}
 .quiz-option.correct{background:#d1fae5;border-color:var(--g)}
 .quiz-option.wrong{background:#fee2e2;border-color:var(--red)}
+
 /* REACTIONS */
 .reaction-bar{display:flex;gap:12px;margin:12px 0}
 .react-btn{font-size:1.5rem;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;cursor:pointer;transition:.2s}
 .react-btn:hover,.react-btn.active{background:var(--g);border-color:var(--g)}
 .reaction-count{display:flex;gap:16px;margin-top:8px;font-size:1.1rem}
 .reaction-count span{background:var(--bg);padding:6px 12px;border-radius:8px;border:1px solid var(--border)}
+
 /* ATTENDANCE */
 .att-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
-/* HISTORY PANEL */
+
+/* HISTORY */
 #historyPanel{display:none;position:fixed;top:0;right:0;width:340px;height:100vh;background:var(--card);border-left:2px solid var(--border);z-index:200;overflow-y:auto;padding:20px;box-shadow:-4px 0 20px rgba(0,0,0,.12)}
 #historyPanel h3{color:var(--g);margin-bottom:14px}
 .hist-item{padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;font-size:.85rem}
 .hist-item:hover{border-color:var(--g);background:var(--bg)}
 .hist-item .hist-topic{font-weight:600;color:var(--g)}
+
 /* DISCUSS */
 .discuss-post{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
 .discuss-post .meta{font-size:.78rem;color:#888;margin-bottom:6px}
 .discuss-post .question{font-weight:600;margin-bottom:8px}
 .discuss-post .reply{background:var(--card);border-left:3px solid var(--g);padding:8px 12px;margin-top:8px;border-radius:4px;font-size:.88rem}
+
+/* ═══ SLIDESHOW PLAYER ═══ */
+.slideshow-container{position:relative;background:#0a0a0a;border-radius:var(--radius);overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.slideshow-container.fullscreen{position:fixed;inset:0;border-radius:0;z-index:9999}
+.slide-viewport{position:relative;width:100%;padding-top:56.25%;overflow:hidden}
+.slide-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:5% 8%;color:#fff;transition:opacity .4s}
+.slide-content.type-title{background:linear-gradient(135deg,#1b4332,#2d6a4f);text-align:center}
+.slide-content.type-content{background:linear-gradient(135deg,#1a1a2e,#16213e)}
+.slide-content.type-example{background:linear-gradient(135deg,#1a1a1a,#2d2d2d)}
+.slide-content.type-activity{background:linear-gradient(135deg,#3d0c11,#5c1a1a)}
+.slide-content.type-summary{background:linear-gradient(135deg,#0d3b27,#1b4332)}
+.slide-content h2{font-size:clamp(1.4rem,3vw,2.4rem);margin-bottom:.8rem;font-weight:700;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+.slide-content .slide-icap{font-size:.7rem;font-weight:700;padding:4px 12px;border-radius:4px;display:inline-block;margin-bottom:12px;letter-spacing:.8px}
+.slide-content ul{list-style:none;padding:0}
+.slide-content ul li{font-size:clamp(.85rem,1.8vw,1.1rem);padding:6px 0 6px 20px;position:relative;opacity:.92;line-height:1.6}
+.slide-content ul li::before{content:'';position:absolute;left:0;top:14px;width:8px;height:8px;background:var(--ga);border-radius:50%}
+.slide-narration{font-size:.82rem;color:#aaa;padding:8px 16px;border-top:1px solid #333;display:none;font-style:italic}
+.slide-controls{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#111;gap:8px;flex-wrap:wrap}
+.slide-controls button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;padding:8px 16px;border-radius:8px;font-size:.82rem;cursor:pointer;transition:.2s;font-family:inherit}
+.slide-controls button:hover{background:rgba(255,255,255,.18)}
+.slide-controls button.active-ctrl{background:var(--g);border-color:var(--g)}
+.slide-progress{height:4px;background:#333;border-radius:2px;flex:1;margin:0 12px;overflow:hidden;min-width:80px}
+.slide-progress-bar{height:100%;background:var(--ga);transition:width .3s;border-radius:2px}
+.slide-counter{color:#999;font-size:.82rem;min-width:60px;text-align:center;font-family:'JetBrains Mono',monospace}
+.voice-selector{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:#0d0d0d;border-top:1px solid #222}
+.voice-selector label{color:#aaa;font-size:.8rem}
+.voice-selector select{background:#222;color:#fff;border:1px solid #444;border-radius:6px;padding:5px 10px;font-size:.8rem;font-family:inherit}
+.voice-selector input[type=range]{width:80px;accent-color:var(--ga)}
+
 /* LOADER */
 .loader{display:inline-block;width:18px;height:18px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-left:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
+
 /* MISC */
-.info{font-size:.85rem;color:#666;margin-bottom:10px}
+.info{font-size:.85rem;color:#888;margin-bottom:10px}
 .sep{height:1px;background:var(--border);margin:16px 0}
 .success-msg{color:var(--g);font-size:.85rem;margin-top:6px}
 .error-msg{color:var(--red);font-size:.85rem;margin-top:6px}
-.code-badge{font-family:monospace;background:var(--g);color:#fff;padding:2px 8px;border-radius:6px;font-size:1.1rem;letter-spacing:2px}
-@media(max-width:600px){.role-cards{flex-direction:column}.tabs{gap:2px}.tab-btn{font-size:.8rem;padding:6px 10px}}
+.code-badge{font-family:'JetBrains Mono',monospace;background:var(--g);color:#fff;padding:3px 10px;border-radius:6px;font-size:1rem;letter-spacing:2px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.role-cards{flex-direction:column}.tabs{gap:2px}.tab-btn{font-size:.78rem;padding:7px 10px}.grid-2{grid-template-columns:1fr}.slide-controls{flex-wrap:wrap}.voice-selector{flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -104,7 +155,7 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
   </div>
 </header>
 
-<!-- HISTORY PANEL (teacher) -->
+<!-- HISTORY PANEL -->
 <div id="historyPanel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
     <h3>📂 Lesson History</h3>
@@ -113,28 +164,28 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
   <div id="historyList"></div>
 </div>
 
-<!-- ROLE SELECT -->
+<!-- ═══ ROLE SELECT ═══ -->
 <div id="roleScreen" class="screen active">
   <h2>Welcome to LectureAI</h2>
-  <p class="info">Select your role to continue</p>
+  <p>Human-AI Co-Orchestration in Education · Powered by ICAP</p>
   <div class="role-cards">
     <div class="role-card" onclick="showRole('teacher')">
-      <div class="icon">👩‍🏫</div><h3>I'm a Teacher</h3><p style="font-size:.85rem;color:#666;margin-top:6px">Create lessons, manage class</p>
+      <div class="icon">👩‍🏫</div><h3>I'm a Teacher</h3><p style="font-size:.85rem;color:#888;margin-top:6px">Create lessons, manage class, present</p>
     </div>
     <div class="role-card" onclick="showRole('student')">
-      <div class="icon">🎒</div><h3>I'm a Student</h3><p style="font-size:.85rem;color:#666;margin-top:6px">Join a class, learn &amp; submit work</p>
+      <div class="icon">🎒</div><h3>I'm a Student</h3><p style="font-size:.85rem;color:#888;margin-top:6px">Join a class, learn &amp; submit work</p>
     </div>
   </div>
 </div>
 
-<!-- TEACHER AUTH -->
+<!-- ═══ TEACHER AUTH ═══ -->
 <div id="teacherAuthScreen" class="screen">
   <div class="auth-box">
     <h2>👩‍🏫 Teacher Login</h2>
     <input id="tEmail" type="email" placeholder="Your email address"/>
     <input id="tName" type="text" placeholder="Your full name"/>
-    <input id="tCode" type="text" placeholder="Class code (e.g. BIO101) — create or re-enter yours"/>
-    <input id="tTopic" type="text" placeholder="Course topic (e.g. Cell Biology)"/>
+    <input id="tCode" type="text" placeholder="Class code (e.g. BIO101)"/>
+    <input id="tTopic" type="text" placeholder="Course topic (e.g. Linear Regression)"/>
     <select id="tLevel"><option>Introductory</option><option selected>Intermediate</option><option>Advanced</option></select>
     <button class="btn-primary" onclick="teacherLogin()">Enter Dashboard</button>
     <button class="btn-outline" style="width:100%;margin-top:8px" onclick="showScreen('roleScreen')">← Back</button>
@@ -142,7 +193,7 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
   </div>
 </div>
 
-<!-- STUDENT AUTH -->
+<!-- ═══ STUDENT AUTH ═══ -->
 <div id="studentAuthScreen" class="screen">
   <div class="auth-box">
     <h2>🎒 Student Login</h2>
@@ -150,7 +201,7 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
     <input id="sName" type="text" placeholder="Your full name"/>
     <input id="sCode" type="text" placeholder="Class code from your teacher"/>
     <input id="sYear" type="text" placeholder="Year / Programme (e.g. Year 2, Biology)"/>
-    <input id="sBackground" type="text" placeholder="Prior knowledge (e.g. basic chemistry)"/>
+    <input id="sBackground" type="text" placeholder="Prior knowledge (e.g. basic statistics)"/>
     <button class="btn-primary" onclick="studentLogin()">Join Class</button>
     <button class="btn-outline" style="width:100%;margin-top:8px" onclick="showScreen('roleScreen')">← Back</button>
     <p id="sAuthMsg" class="error-msg"></p>
@@ -159,11 +210,11 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
 
 <!-- ═══════════════════════════════════════════════════
      TEACHER DASHBOARD
-══════════════════════════════════════════════════════ -->
+═══════════════════════════════════════════════════════ -->
 <div id="teacherDashboard" class="screen">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
     <div>
-      <span id="tWelcome" style="font-weight:600;font-size:1.1rem"></span>
+      <span id="tWelcome" style="font-weight:700;font-size:1.1rem"></span>
       <span style="margin-left:10px">Class: <span id="tClassCode" class="code-badge"></span></span>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -171,53 +222,128 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
       <button class="btn-sm" onclick="saveToHistory()">💾 Save Plan</button>
     </div>
   </div>
+
   <div class="tabs" id="tTabs">
     <button class="tab-btn active" onclick="switchTab('lesson')">📋 Lesson</button>
+    <button class="tab-btn" onclick="switchTab('slideshow')">🎬 Slideshow</button>
     <button class="tab-btn" onclick="switchTab('live')">🎙️ Live</button>
     <button class="tab-btn" onclick="switchTab('support')">🤝 Support</button>
-    <button class="tab-btn" onclick="switchTab('assignments')">📝 Assignments</button>
+    <button class="tab-btn" onclick="switchTab('assignments')">📝 Assign</button>
     <button class="tab-btn" onclick="switchTab('tests')">📊 Tests</button>
     <button class="tab-btn" onclick="switchTab('reports')">📈 Reports</button>
-    <button class="tab-btn" onclick="switchTab('script')">🎬 Script</button>
+    <button class="tab-btn" onclick="switchTab('script')">🎥 Script</button>
     <button class="tab-btn" onclick="switchTab('rubric')">📐 Rubric</button>
     <button class="tab-btn" onclick="switchTab('export')">📤 Export</button>
     <button class="tab-btn" onclick="switchTab('discuss')">💬 Discuss</button>
   </div>
 
-  <!-- LESSON TAB -->
+  <!-- ═══ LESSON TAB ═══ -->
   <div class="tab-pane active" id="tab-lesson">
     <div class="card">
       <h3>⚙️ Lesson Settings</h3>
       <input id="tTopicEdit" type="text" placeholder="Topic"/>
-      <select id="tLevelEdit"><option>Introductory</option><option selected>Intermediate</option><option>Advanced</option></select>
-      <input id="tDuration" type="number" placeholder="Duration (minutes)" value="75"/>
-      <select id="tStyle"><option>Lecture-based</option><option>Socratic</option><option>Problem-based</option><option>Flipped</option><option>Project-based</option></select>
+      <div class="grid-2">
+        <select id="tLevelEdit"><option>Introductory</option><option selected>Intermediate</option><option>Advanced</option></select>
+        <select id="tLanguage">
+          <option value="English">🇬🇧 English</option>
+          <option value="French">🇫🇷 Français</option>
+          <option value="Spanish">🇪🇸 Español</option>
+          <option value="Arabic">🇸🇦 العربية</option>
+          <option value="Chinese">🇨🇳 中文</option>
+          <option value="Portuguese">🇵🇹 Português</option>
+          <option value="Yoruba">🇳🇬 Yorùbá</option>
+          <option value="Hausa">🇳🇬 Hausa</option>
+          <option value="Igbo">🇳🇬 Igbo</option>
+          <option value="Swahili">🇰🇪 Kiswahili</option>
+          <option value="Hindi">🇮🇳 हिन्दी</option>
+          <option value="German">🇩🇪 Deutsch</option>
+          <option value="Japanese">🇯🇵 日本語</option>
+          <option value="Korean">🇰🇷 한국어</option>
+          <option value="Russian">🇷🇺 Русский</option>
+          <option value="Italian">🇮🇹 Italiano</option>
+        </select>
+      </div>
+      <div class="grid-2">
+        <input id="tDuration" type="number" placeholder="Duration (minutes)" value="75"/>
+        <select id="tStyle"><option>Lecture-based</option><option>Socratic</option><option>Problem-based</option><option>Flipped</option><option>Project-based</option></select>
+      </div>
       <textarea id="tObjectives" placeholder="Learning objectives (one per line)"></textarea>
-      <button class="btn-primary" onclick="generateNotes()">🤖 Generate Lesson Notes <span id="notesLoader" style="display:none" class="loader"></span></button>
+      <button class="btn-primary" onclick="generateNotes()">🤖 Generate ICAP-Aligned Lecture Notes <span id="notesLoader" style="display:none" class="loader"></span></button>
+      <p class="info" style="margin-top:8px">Notes follow the ICAP Framework: Passive → Active → Constructive → Interactive</p>
     </div>
     <div class="card" id="notesCard" style="display:none">
-      <h3>📄 Lesson Notes</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <h3 style="margin:0">📄 ICAP-Aligned Lecture Notes</h3>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          <span class="icap-badge icap-passive">PASSIVE</span>
+          <span class="icap-badge icap-active">ACTIVE</span>
+          <span class="icap-badge icap-constructive">CONSTRUCTIVE</span>
+          <span class="icap-badge icap-interactive">INTERACTIVE</span>
+        </div>
+      </div>
       <div id="notesOutput"></div>
     </div>
   </div>
 
-  <!-- LIVE TAB -->
+  <!-- ═══ SLIDESHOW TAB ═══ -->
+  <div class="tab-pane" id="tab-slideshow">
+    <div class="card">
+      <h3>🎬 AI Lecture Slideshow</h3>
+      <p class="info">Generate an interactive slideshow with AI narration using your lesson notes. Choose a voice and control playback.</p>
+      <button class="btn-primary" onclick="generateSlideshow()" id="genSlideshowBtn">🎬 Generate AI Slideshow <span id="slideshowLoader" style="display:none" class="loader"></span></button>
+      <p id="slideshowMsg" class="info" style="margin-top:8px"></p>
+    </div>
+    <div id="slideshowPlayer" style="display:none">
+      <div class="slideshow-container" id="slideshowContainer">
+        <div class="slide-viewport">
+          <div class="slide-content" id="slideContent">
+            <h2 id="slideTitle">Loading...</h2>
+            <ul id="slideBullets"></ul>
+          </div>
+        </div>
+        <div class="slide-narration" id="slideNarration"></div>
+        <div class="voice-selector">
+          <label>🔊 Voice:</label>
+          <select id="voiceSelect" onchange="updateVoice()"></select>
+          <label>Speed:</label>
+          <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1" onchange="updateSpeed()"/>
+          <span id="speedLabel" style="color:#aaa;font-size:.8rem;min-width:30px">1x</span>
+          <label style="margin-left:8px"><input type="checkbox" id="showNarration" onchange="toggleNarrationDisplay()"/> Show text</label>
+        </div>
+        <div class="slide-controls">
+          <div style="display:flex;gap:6px">
+            <button onclick="prevSlide()" title="Previous">⏮ Prev</button>
+            <button onclick="playSlideshow()" id="playBtn" title="Play">▶ Play</button>
+            <button onclick="pauseSlideshow()" id="pauseBtn" style="display:none" title="Pause">⏸ Pause</button>
+            <button onclick="resumeSlideshow()" id="resumeBtn" style="display:none" title="Resume">▶ Resume</button>
+            <button onclick="nextSlide()" title="Next">Next ⏭</button>
+          </div>
+          <div class="slide-progress"><div class="slide-progress-bar" id="slideProgressBar"></div></div>
+          <span class="slide-counter" id="slideCounter">0 / 0</span>
+          <div style="display:flex;gap:6px">
+            <button onclick="stopSlideshow()" title="Stop">⏹ Stop</button>
+            <button onclick="toggleFullscreen()" title="Fullscreen">⛶ Fullscreen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ LIVE TAB ═══ -->
   <div class="tab-pane" id="tab-live">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;flex-wrap:wrap">
-      <!-- Timer -->
+    <div class="grid-2">
       <div class="card">
         <h3>⏱️ Class Timer</h3>
-        <div style="font-size:2.5rem;font-weight:700;color:var(--g);margin:10px 0" id="timerDisplay">00:00</div>
+        <div style="font-size:2.5rem;font-weight:700;color:var(--g);margin:10px 0;font-family:'JetBrains Mono',monospace" id="timerDisplay">00:00</div>
         <div style="display:flex;gap:8px">
           <button class="btn-sm" onclick="startTimer()">▶ Start</button>
           <button class="btn-sm" onclick="pauseTimer()">⏸ Pause</button>
           <button class="btn-outline" onclick="resetTimer()">↺ Reset</button>
         </div>
       </div>
-      <!-- Emoji Reactions Panel -->
       <div class="card">
         <h3>😊 Live Reactions</h3>
-        <p class="info">Students send reactions; updates every 10 sec</p>
+        <p class="info">Students send reactions; updates every 10s</p>
         <div class="reaction-count" id="teacherReactions">
           <span>👍 <b id="r_thumbs">0</b></span>
           <span>😕 <b id="r_confused">0</b></span>
@@ -225,10 +351,9 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
         </div>
       </div>
     </div>
-    <!-- Question & Pacing -->
     <div class="card">
       <h3>❓ Quick Q&amp;A</h3>
-      <textarea id="liveQ" placeholder="Paste a student question or concept you want to address…" style="min-height:70px"></textarea>
+      <textarea id="liveQ" placeholder="Paste a student question or concept to address…" style="min-height:70px"></textarea>
       <button class="btn-sm" onclick="liveQuestion()">Get AI Response</button>
       <div id="liveQResult" class="result-box" style="display:none"></div>
     </div>
@@ -245,10 +370,9 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
         <input id="paceElapsed" type="number" placeholder="Elapsed min" value="30"/>
         <input id="paceCurrent" type="text" placeholder="Current segment"/>
       </div>
-      <button class="btn-sm" onclick="pacingCheck()">Check Pacing</button>
+      <button class="btn-sm" style="margin-top:8px" onclick="pacingCheck()">Check Pacing</button>
       <div id="pacingResult" class="result-box" style="display:none"></div>
     </div>
-    <!-- Attendance Tracker -->
     <div class="card">
       <h3>📋 Attendance Tracker</h3>
       <p class="info">Date: <span id="attTodayDate"></span></p>
@@ -281,7 +405,7 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
       <h3>➕ Create Assignment</h3>
       <input id="asgTitle" type="text" placeholder="Assignment title"/>
       <textarea id="asgDesc" placeholder="Instructions / description" style="min-height:70px"></textarea>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="grid-2">
         <input id="asgDue" type="date"/>
         <input id="asgMax" type="number" placeholder="Max score" value="100"/>
       </div>
@@ -316,9 +440,7 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
     <div class="card">
       <h3>📈 Engagement Overview</h3>
       <button class="btn-sm" onclick="loadReports()">🔄 Refresh Stats</button>
-      <div id="reportsContent" style="margin-top:14px">
-        <p class="info">Click Refresh to load stats</p>
-      </div>
+      <div id="reportsContent" style="margin-top:14px"><p class="info">Click Refresh to load stats</p></div>
     </div>
     <div class="card">
       <h3>📊 Concept Check</h3>
@@ -332,7 +454,7 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
   <!-- SCRIPT TAB -->
   <div class="tab-pane" id="tab-script">
     <div class="card">
-      <h3>🎬 Video Script Generator</h3>
+      <h3>🎥 Video Script Generator</h3>
       <p class="info">Generate a 5-minute narrated script for your topic</p>
       <button class="btn-primary" onclick="generateScript()">Generate Script <span id="scriptLoader" style="display:none" class="loader"></span></button>
       <div id="scriptResult" class="result-box" style="display:none;margin-top:14px"></div>
@@ -343,7 +465,7 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
   <div class="tab-pane" id="tab-rubric">
     <div class="card">
       <h3>📐 AI Rubric Builder</h3>
-      <textarea id="rubricTask" placeholder="Describe the assignment or task to generate a rubric for…" style="min-height:80px"></textarea>
+      <textarea id="rubricTask" placeholder="Describe the assignment or task…" style="min-height:80px"></textarea>
       <select id="rubricType"><option>Essay</option><option>Project</option><option>Presentation</option><option>Lab Report</option><option>Code</option></select>
       <button class="btn-primary" onclick="generateRubric()">Generate Rubric <span id="rubricLoader" style="display:none" class="loader"></span></button>
       <div id="rubricResult" class="result-box" style="display:none;margin-top:14px"></div>
@@ -354,12 +476,12 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
   <div class="tab-pane" id="tab-export">
     <div class="card">
       <h3>📤 Export Slides (PowerPoint)</h3>
-      <p class="info">Downloads a fully styled .pptx based on your lesson notes</p>
-      <button class="btn-primary" onclick="exportSlides()">⬇ Download Slides <span id="exportLoader" style="display:none" class="loader"></span></button>
+      <p class="info">Downloads a fully styled ICAP-tagged .pptx with 12+ slides based on your lesson notes</p>
+      <button class="btn-primary" onclick="exportSlides()">⬇ Download ICAP Slides <span id="exportLoader" style="display:none" class="loader"></span></button>
     </div>
   </div>
 
-  <!-- DISCUSS TAB (teacher) -->
+  <!-- DISCUSS TAB -->
   <div class="tab-pane" id="tab-discuss">
     <div class="card">
       <h3>💬 Discussion Board</h3>
@@ -368,21 +490,21 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
       <div id="teacherDiscussionList" style="margin-top:14px"></div>
     </div>
   </div>
-</div><!-- /teacherDashboard -->
-
+</div>
 
 <!-- ═══════════════════════════════════════════════════
      STUDENT DASHBOARD
-══════════════════════════════════════════════════════ -->
+═══════════════════════════════════════════════════════ -->
 <div id="studentDashboard" class="screen">
   <div style="margin-bottom:16px">
-    <span id="sWelcome" style="font-weight:600;font-size:1.1rem"></span>
+    <span id="sWelcome" style="font-weight:700;font-size:1.1rem"></span>
     <span style="margin-left:10px">Class: <span id="sClassCode" class="code-badge"></span></span>
   </div>
   <div class="tabs" id="sTabs">
     <button class="tab-btn active" onclick="switchStuTab('ask')">🙋 Ask</button>
     <button class="tab-btn" onclick="switchStuTab('notes')">📄 Notes</button>
     <button class="tab-btn" onclick="switchStuTab('quiz')">🧠 Quiz</button>
+    <button class="tab-btn" onclick="switchStuTab('plan')">📅 Study Plan</button>
     <button class="tab-btn" onclick="switchStuTab('work')">📝 Work</button>
     <button class="tab-btn" onclick="switchStuTab('tests')">📊 Tests</button>
     <button class="tab-btn" onclick="switchStuTab('discuss')">💬 Discuss</button>
@@ -396,7 +518,6 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
       <button class="btn-sm" onclick="studentAsk()">Ask AI <span id="askLoader" style="display:none" class="loader"></span></button>
       <div id="askResult" class="result-box" style="display:none;margin-top:10px"></div>
     </div>
-    <!-- Emoji Reactions -->
     <div class="card">
       <h3>😊 How do you feel about this lesson?</h3>
       <p class="info">Send a reaction to your teacher</p>
@@ -416,7 +537,6 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
       <button class="btn-sm" onclick="loadStuNotes()">Load Notes</button>
       <div id="stuNotesOutput" class="result-box" style="margin-top:12px;display:none"></div>
     </div>
-    <!-- Personal Notes -->
     <div class="card">
       <h3>✏️ My Personal Notes</h3>
       <p class="info">These are private — saved to your browser only</p>
@@ -431,6 +551,16 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
       <h3>🧠 Quick Quiz (AI Generated)</h3>
       <button class="btn-sm" onclick="loadStuQuiz()">Generate Quiz <span id="stuQuizLoader" style="display:none" class="loader"></span></button>
       <div id="stuQuizContent" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- STUDY PLAN TAB -->
+  <div class="tab-pane" id="stab-plan">
+    <div class="card">
+      <h3>📅 AI Study Plan Generator</h3>
+      <p class="info">Get a personalized 7-day study plan based on your background and the lecture topic</p>
+      <button class="btn-primary" onclick="generateStudyPlan()">📅 Generate My Study Plan <span id="planLoader" style="display:none" class="loader"></span></button>
+      <div id="studyPlanOutput" class="result-box" style="display:none;margin-top:14px"></div>
     </div>
   </div>
 
@@ -452,7 +582,7 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
     </div>
   </div>
 
-  <!-- DISCUSS TAB (student) -->
+  <!-- DISCUSS TAB -->
   <div class="tab-pane" id="stab-discuss">
     <div class="card">
       <h3>💬 Post a Question</h3>
@@ -466,14 +596,23 @@ button{cursor:pointer;border:none;border-radius:8px;padding:10px 20px;font-size:
       <div id="studentDiscussionList" style="margin-top:14px"></div>
     </div>
   </div>
-</div><!-- /studentDashboard -->
+</div>
 
 <script>
 const API = "";
 let teacher = {}, student = {}, timerInterval = null, timerSecs = 0, timerRunning = false;
 let reactionPollInterval = null;
 
-// ── DARK MODE ─────────────────────────────────────────────────
+// ══ SLIDESHOW STATE ══
+let slideshowData = [];
+let currentSlide = 0;
+let isPlaying = false;
+let isPaused = false;
+let speechUtterance = null;
+let selectedVoice = null;
+let speechRate = 1;
+
+// ── DARK MODE ──
 function toggleDark(){
   document.body.classList.toggle('dark');
   const btn = document.getElementById('darkToggle');
@@ -482,22 +621,21 @@ function toggleDark(){
 }
 (function(){if(localStorage.getItem('darkMode')==='1'){document.body.classList.add('dark');document.getElementById('darkToggle').textContent='☀️ Light';}})();
 
-// ── SCREENS ───────────────────────────────────────────────────
+// ── SCREENS ──
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-function showRole(role){
-  showScreen(role==='teacher'?'teacherAuthScreen':'studentAuthScreen');
-}
+function showRole(role){ showScreen(role==='teacher'?'teacherAuthScreen':'studentAuthScreen'); }
 function logout(){
   teacher={}; student={};
   clearInterval(reactionPollInterval);
+  stopSlideshow();
   document.getElementById('logoutBtn').style.display='none';
   showScreen('roleScreen');
 }
 
-// ── TEACHER LOGIN ─────────────────────────────────────────────
+// ── TEACHER LOGIN ──
 async function teacherLogin(){
   const email=v('tEmail'),name=v('tName'),code=v('tCode').toUpperCase().trim();
   const topic=v('tTopicEdit')||v('tTopic'), level=document.getElementById('tLevelEdit').value||document.getElementById('tLevel').value;
@@ -512,12 +650,12 @@ async function teacherLogin(){
     document.getElementById('logoutBtn').style.display='';
     showScreen('teacherDashboard');
     loadAssignments(); loadTests();
-    startReactionPoll();
+    startReactionPoll(); initVoices();
     document.getElementById('attTodayDate').textContent=new Date().toLocaleDateString();
   }
 }
 
-// ── STUDENT LOGIN ─────────────────────────────────────────────
+// ── STUDENT LOGIN ──
 async function studentLogin(){
   const email=v('sEmail'),name=v('sName'),code=v('sCode').toUpperCase().trim();
   const year=v('sYear'), background=v('sBackground');
@@ -530,11 +668,10 @@ async function studentLogin(){
   document.getElementById('sClassCode').textContent=code;
   document.getElementById('logoutBtn').style.display='';
   showScreen('studentDashboard');
-  loadStuAssignments(); loadStuTests();
-  loadPersonalNotes();
+  loadStuAssignments(); loadStuTests(); loadPersonalNotes();
 }
 
-// ── TABS ──────────────────────────────────────────────────────
+// ── TABS ──
 function switchTab(id){
   document.querySelectorAll('#tTabs .tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('#teacherDashboard .tab-pane').forEach(p=>p.classList.remove('active'));
@@ -550,40 +687,240 @@ function switchStuTab(id){
   document.getElementById('stab-'+id).classList.add('active');
 }
 
-// ── UTILS ─────────────────────────────────────────────────────
+// ── UTILS ──
 function v(id){return (document.getElementById(id)||{}).value||'';}
 async function api(path,body){
-  try{
-    const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    return await r.json();
-  }catch(e){return {error:e.message};}
+  try{const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return await r.json();}
+  catch(e){return {error:e.message};}
 }
 function loading(id,show){const el=document.getElementById(id);if(el)el.style.display=show?'inline-block':'none';}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function daysUntil(dateStr){
-  if(!dateStr)return 999;
-  const diff=new Date(dateStr)-new Date();
-  return Math.ceil(diff/(1000*60*60*24));
-}
+function daysUntil(dateStr){if(!dateStr)return 999;return Math.ceil((new Date(dateStr)-new Date())/(1000*60*60*24));}
 
-// ── LESSON NOTES ──────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+//  ICAP-ALIGNED LESSON NOTES
+// ══════════════════════════════════════════════════════════
 async function generateNotes(){
   const topic=v('tTopicEdit')||teacher.topic;
   const level=document.getElementById('tLevelEdit').value||teacher.level;
   const duration=v('tDuration')||75;
-  const objectives=v('tObjectives'); const style=document.getElementById('tStyle').value;
+  const objectives=v('tObjectives');
+  const style=document.getElementById('tStyle').value;
+  const language=document.getElementById('tLanguage').value;
   if(!topic)return alert('Enter a topic first');
   loading('notesLoader',true);
-  const res=await api('/generate_notes',{topic,level,duration,objectives,style,classCode:teacher.code});
+  const res=await api('/generate_notes',{topic,level,duration,objectives,style,language,classCode:teacher.code});
   loading('notesLoader',false);
   if(res.success){
-    teacher.notes=res.notes; teacher.topic=topic; teacher.level=level;
-    document.getElementById('notesOutput').textContent=res.notes;
+    teacher.notes=res.notes; teacher.topic=topic; teacher.level=level; teacher.language=language;
+    renderICAPNotes(res.notes);
     document.getElementById('notesCard').style.display='';
   }else alert('Error: '+res.error);
 }
 
-// ── HISTORY ───────────────────────────────────────────────────
+function renderICAPNotes(notes){
+  const el = document.getElementById('notesOutput');
+  // Color-code ICAP tags
+  let html = esc(notes);
+  html = html.replace(/\[PASSIVE\]/g,'<span class="icap-badge icap-passive">PASSIVE</span>');
+  html = html.replace(/\[ACTIVE\]/g,'<span class="icap-badge icap-active">ACTIVE</span>');
+  html = html.replace(/\[CONSTRUCTIVE\]/g,'<span class="icap-badge icap-constructive">CONSTRUCTIVE</span>');
+  html = html.replace(/\[INTERACTIVE\]/g,'<span class="icap-badge icap-interactive">INTERACTIVE</span>');
+  // Bold headers
+  html = html.replace(/^(\d+\.\s+.+)$/gm,'<strong style="font-size:1.1em;color:var(--g)">$1</strong>');
+  // Bold markdown
+  html = html.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  el.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════
+//  AI SLIDESHOW WITH TTS VOICE CONTROLS
+// ══════════════════════════════════════════════════════════
+function initVoices(){
+  const sel = document.getElementById('voiceSelect');
+  function populateVoices(){
+    const voices = speechSynthesis.getVoices();
+    sel.innerHTML = '';
+    voices.forEach((v,i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${v.name} (${v.lang})`;
+      sel.appendChild(opt);
+    });
+    // Default to an English voice
+    const engIdx = voices.findIndex(v => v.lang.startsWith('en'));
+    if(engIdx >= 0) sel.value = engIdx;
+    updateVoice();
+  }
+  populateVoices();
+  speechSynthesis.onvoiceschanged = populateVoices;
+}
+
+function updateVoice(){
+  const voices = speechSynthesis.getVoices();
+  const idx = parseInt(document.getElementById('voiceSelect').value);
+  selectedVoice = voices[idx] || null;
+}
+function updateSpeed(){
+  speechRate = parseFloat(document.getElementById('voiceSpeed').value);
+  document.getElementById('speedLabel').textContent = speechRate + 'x';
+}
+function toggleNarrationDisplay(){
+  const el = document.getElementById('slideNarration');
+  el.style.display = document.getElementById('showNarration').checked ? 'block' : 'none';
+}
+
+async function generateSlideshow(){
+  if(!teacher.notes && !teacher.topic) return alert('Generate lesson notes first from the Lesson tab');
+  loading('slideshowLoader',true);
+  document.getElementById('slideshowMsg').textContent = 'Generating slides with AI narration...';
+  const language = teacher.language || document.getElementById('tLanguage').value;
+  const res = await api('/generate_slideshow_data',{
+    topic: teacher.topic, level: teacher.level,
+    duration: v('tDuration')||75, notes: teacher.notes||'',
+    language: language
+  });
+  loading('slideshowLoader',false);
+  if(res.success && res.slides && res.slides.length){
+    slideshowData = res.slides;
+    currentSlide = 0;
+    document.getElementById('slideshowPlayer').style.display = '';
+    document.getElementById('slideshowMsg').textContent = `✓ ${res.slides.length} slides generated! Use the controls below to present.`;
+    renderSlide(0);
+    updateSlideControls();
+  } else {
+    document.getElementById('slideshowMsg').textContent = 'Error: ' + (res.error || 'Could not generate slides');
+  }
+}
+
+function renderSlide(idx){
+  if(idx < 0 || idx >= slideshowData.length) return;
+  currentSlide = idx;
+  const slide = slideshowData[idx];
+  const content = document.getElementById('slideContent');
+  const title = document.getElementById('slideTitle');
+  const bullets = document.getElementById('slideBullets');
+  const narration = document.getElementById('slideNarration');
+
+  // Set type class
+  content.className = 'slide-content type-' + (slide.type || 'content');
+
+  // ICAP badge + title
+  const icapMap = {
+    passive:'icap-passive', active:'icap-active',
+    constructive:'icap-constructive', interactive:'icap-interactive'
+  };
+  const icapClass = icapMap[slide.icap] || '';
+  const icapLabel = (slide.icap||'').toUpperCase();
+
+  let titleHTML = '';
+  if(slide.icap && slide.type !== 'title'){
+    titleHTML += `<span class="slide-icap ${icapClass}">${icapLabel}</span>`;
+  }
+  titleHTML += slide.title || '';
+  title.innerHTML = titleHTML;
+
+  // Bullets
+  bullets.innerHTML = '';
+  if(slide.bullets){
+    slide.bullets.forEach(b => {
+      const li = document.createElement('li');
+      li.textContent = b;
+      bullets.appendChild(li);
+    });
+  }
+
+  // Narration text
+  narration.textContent = slide.narration || '';
+
+  // Progress
+  const pct = ((idx+1) / slideshowData.length) * 100;
+  document.getElementById('slideProgressBar').style.width = pct + '%';
+  document.getElementById('slideCounter').textContent = `${idx+1} / ${slideshowData.length}`;
+}
+
+function speakSlide(idx){
+  if(idx >= slideshowData.length) {
+    stopSlideshow();
+    return;
+  }
+  speechSynthesis.cancel();
+  renderSlide(idx);
+  const slide = slideshowData[idx];
+  const text = slide.narration || slide.bullets?.join('. ') || slide.title || '';
+  if(!text){ autoAdvance(); return; }
+
+  speechUtterance = new SpeechSynthesisUtterance(text);
+  if(selectedVoice) speechUtterance.voice = selectedVoice;
+  speechUtterance.rate = speechRate;
+  speechUtterance.onend = () => { if(isPlaying && !isPaused) autoAdvance(); };
+  speechSynthesis.speak(speechUtterance);
+}
+
+function autoAdvance(){
+  if(currentSlide < slideshowData.length - 1){
+    currentSlide++;
+    speakSlide(currentSlide);
+  } else {
+    stopSlideshow();
+  }
+}
+
+function playSlideshow(){
+  if(!slideshowData.length) return;
+  isPlaying = true; isPaused = false;
+  updateSlideControls();
+  speakSlide(currentSlide);
+}
+
+function pauseSlideshow(){
+  isPaused = true;
+  speechSynthesis.pause();
+  updateSlideControls();
+}
+
+function resumeSlideshow(){
+  isPaused = false;
+  speechSynthesis.resume();
+  updateSlideControls();
+}
+
+function stopSlideshow(){
+  isPlaying = false; isPaused = false;
+  speechSynthesis.cancel();
+  updateSlideControls();
+}
+
+function nextSlide(){
+  if(currentSlide < slideshowData.length - 1){
+    speechSynthesis.cancel();
+    currentSlide++;
+    if(isPlaying && !isPaused) speakSlide(currentSlide);
+    else renderSlide(currentSlide);
+  }
+}
+
+function prevSlide(){
+  if(currentSlide > 0){
+    speechSynthesis.cancel();
+    currentSlide--;
+    if(isPlaying && !isPaused) speakSlide(currentSlide);
+    else renderSlide(currentSlide);
+  }
+}
+
+function updateSlideControls(){
+  document.getElementById('playBtn').style.display = (!isPlaying) ? '' : 'none';
+  document.getElementById('pauseBtn').style.display = (isPlaying && !isPaused) ? '' : 'none';
+  document.getElementById('resumeBtn').style.display = (isPlaying && isPaused) ? '' : 'none';
+}
+
+function toggleFullscreen(){
+  const el = document.getElementById('slideshowContainer');
+  el.classList.toggle('fullscreen');
+}
+
+// ── HISTORY ──
 function saveToHistory(){
   if(!teacher.notes)return alert('Generate notes first');
   const history=JSON.parse(localStorage.getItem('lectureHistory')||'[]');
@@ -594,17 +931,16 @@ function saveToHistory(){
 }
 function openHistory(){
   const history=JSON.parse(localStorage.getItem('lectureHistory')||'[]');
-  const list=document.getElementById('historyList');
-  list.innerHTML='';
+  const list=document.getElementById('historyList');list.innerHTML='';
   if(!history.length){list.innerHTML='<p class="info">No saved plans yet.</p>';document.getElementById('historyPanel').style.display='';return;}
   history.forEach((h,i)=>{
-    const d=document.createElement('div'); d.className='hist-item';
+    const d=document.createElement('div');d.className='hist-item';
     d.innerHTML=`<div class="hist-topic">${esc(h.topic)}</div><div style="font-size:.75rem;color:#888">${h.level} · ${h.date}</div>`;
     d.onclick=()=>{teacher.notes=h.notes;teacher.topic=h.topic;teacher.level=h.level;
-      document.getElementById('notesOutput').textContent=h.notes;
+      renderICAPNotes(h.notes);
       document.getElementById('notesCard').style.display='';
       document.getElementById('tTopicEdit').value=h.topic;
-      closeHistory(); switchTab.call({currentTarget:document.querySelector('#tTabs .tab-btn')},'lesson');
+      closeHistory();
       document.querySelectorAll('#tTabs .tab-btn').forEach((b,j)=>{b.classList.toggle('active',j===0);});
       document.querySelectorAll('#teacherDashboard .tab-pane').forEach(p=>p.classList.remove('active'));
       document.getElementById('tab-lesson').classList.add('active');
@@ -615,43 +951,39 @@ function openHistory(){
 }
 function closeHistory(){document.getElementById('historyPanel').style.display='none';}
 
-// ── TIMER ─────────────────────────────────────────────────────
+// ── TIMER ──
 function startTimer(){if(!timerRunning){timerRunning=true;timerInterval=setInterval(()=>{timerSecs++;updateTimerDisplay();},1000);}}
 function pauseTimer(){timerRunning=false;clearInterval(timerInterval);}
 function resetTimer(){pauseTimer();timerSecs=0;updateTimerDisplay();}
 function updateTimerDisplay(){const m=String(Math.floor(timerSecs/60)).padStart(2,'0'),s=String(timerSecs%60).padStart(2,'0');document.getElementById('timerDisplay').textContent=`${m}:${s}`;}
 
-// ── LIVE TOOLS ────────────────────────────────────────────────
+// ── LIVE TOOLS ──
 async function liveQuestion(){
-  const q=v('liveQ'); if(!q)return;
+  const q=v('liveQ');if(!q)return;
   const res=await api('/layer2/question',{topic:teacher.topic,level:teacher.level,question:q});
-  const el=document.getElementById('liveQResult'); el.style.display=''; el.textContent=res.result||res.error;
+  const el=document.getElementById('liveQResult');el.style.display='';el.textContent=res.result||res.error;
 }
 async function confusionRescue(){
-  const c=v('confusionDesc'); if(!c)return;
+  const c=v('confusionDesc');if(!c)return;
   const res=await api('/layer2/confusion',{topic:teacher.topic,level:teacher.level,confusion:c});
-  const el=document.getElementById('confusionResult'); el.style.display=''; el.textContent=res.result||res.error;
+  const el=document.getElementById('confusionResult');el.style.display='';el.textContent=res.result||res.error;
 }
 async function pacingCheck(){
   const res=await api('/layer2/pacing',{topic:teacher.topic,total_duration:v('paceTotal'),mins_elapsed:v('paceElapsed'),current_segment:v('paceCurrent')});
-  const el=document.getElementById('pacingResult'); el.style.display=''; el.textContent=res.result||res.error;
+  const el=document.getElementById('pacingResult');el.style.display='';el.textContent=res.result||res.error;
 }
 async function conceptCheck(){
   const q=v('conceptQ'),pct=v('conceptPct');
   const res=await api('/layer2/conceptcheck',{topic:teacher.topic,level:teacher.level,question:q,correct_pct:pct});
-  const el=document.getElementById('conceptResult'); el.style.display=''; el.textContent=res.result||res.error;
+  const el=document.getElementById('conceptResult');el.style.display='';el.textContent=res.result||res.error;
 }
 async function supportAnswer(){
   const res=await api('/layer2/student_question',{topic:teacher.topic||student.topic,level:document.getElementById('suppLevel').value,name:v('suppStudentName'),year:v('suppStudentYear'),background:v('suppStudentBg'),question:v('suppQ')});
-  const el=document.getElementById('suppResult'); el.style.display=''; el.textContent=res.result||res.error;
+  const el=document.getElementById('suppResult');el.style.display='';el.textContent=res.result||res.error;
 }
 
-// ── EMOJI REACTIONS ───────────────────────────────────────────
-function startReactionPoll(){
-  clearInterval(reactionPollInterval);
-  pollReactions();
-  reactionPollInterval=setInterval(pollReactions,10000);
-}
+// ── EMOJI REACTIONS ──
+function startReactionPoll(){clearInterval(reactionPollInterval);pollReactions();reactionPollInterval=setInterval(pollReactions,10000);}
 async function pollReactions(){
   if(!teacher.code)return;
   const res=await api('/get_reactions',{classCode:teacher.code});
@@ -670,18 +1002,18 @@ async function sendReaction(emoji){
   setTimeout(()=>{document.getElementById('reactionMsg').textContent='';},2000);
 }
 
-// ── ATTENDANCE ────────────────────────────────────────────────
+// ── ATTENDANCE ──
 let attendanceRows=[];
 function addAttendanceRow(){
-  const name=v('attStudentName').trim(); if(!name)return;
+  const name=v('attStudentName').trim();if(!name)return;
   attendanceRows.push({name,present:true});
   document.getElementById('attStudentName').value='';
   renderAttendance();
 }
 function renderAttendance(){
-  const list=document.getElementById('attList'); list.innerHTML='';
+  const list=document.getElementById('attList');list.innerHTML='';
   attendanceRows.forEach((r,i)=>{
-    const d=document.createElement('div'); d.className='att-row';
+    const d=document.createElement('div');d.className='att-row';
     d.innerHTML=`<span>${esc(r.name)}</span>
     <div style="display:flex;gap:8px;align-items:center">
       <span class="badge ${r.present?'badge-green':'badge-red'}">${r.present?'Present':'Absent'}</span>
@@ -707,7 +1039,7 @@ async function loadAttendance(){
   }
 }
 
-// ── ASSIGNMENTS (teacher) ─────────────────────────────────────
+// ── ASSIGNMENTS (teacher) ──
 async function createAssignment(){
   const title=v('asgTitle'),desc=v('asgDesc'),due=v('asgDue'),max=v('asgMax');
   if(!title)return;
@@ -718,9 +1050,9 @@ async function loadAssignments(){
   if(!teacher.code)return;
   const res=await api('/get_assignments',{classCode:teacher.code});
   if(!res.success)return;
-  const el=document.getElementById('assignmentsList'); el.innerHTML='';
+  const el=document.getElementById('assignmentsList');el.innerHTML='';
   res.assignments.forEach(a=>{
-    const card=document.createElement('div'); card.className='card';
+    const card=document.createElement('div');card.className='card';
     card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
       <div><strong>${esc(a.title)}</strong><br><span class="info">${esc(a.description)}</span><br>
       <span class="info">Due: ${a.due_date||'No deadline'} · Max: ${a.max_score} pts</span></div>
@@ -731,40 +1063,31 @@ async function loadAssignments(){
     el.appendChild(card);
   });
 }
-async function deleteAssignment(id){
-  if(!confirm('Delete this assignment?'))return;
-  await api('/delete_assignment',{id});
-  loadAssignments();
-}
+async function deleteAssignment(id){if(!confirm('Delete this assignment?'))return;await api('/delete_assignment',{id});loadAssignments();}
 async function viewSubmissions(aid,title,description,maxScore){
   const res=await api('/get_submissions',{assignmentId:aid});
-  if(!res.success)return;
-  const subs=res.submissions;
-  let html=`<div class="card"><h3>📋 Submissions for: ${esc(title)}</h3>`;
-  if(!subs.length){html+='<p class="info">No submissions yet.</p>';}
-  subs.forEach(s=>{
-    const scored=s.score>=0;
-    html+=`<div style="border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px">
-      <strong>${esc(s.student_name)}</strong> <span class="info">${esc(s.student_email)}</span>
-      <span class="info" style="margin-left:8px">${s.submitted_at}</span>
-      ${scored?`<span class="badge badge-green" style="margin-left:8px">${s.score}/${maxScore}</span>`:''}
-      <p style="margin:8px 0;font-size:.9rem">${esc(s.content)}</p>
-      ${s.feedback?`<p style="color:var(--g);font-size:.85rem">Feedback: ${esc(s.feedback)}</p>`:''}
-      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-        <button class="btn-amber" onclick="getAIFeedback('${s.id}','${esc(title)}','${esc(description)}',${maxScore},'${esc(s.content).replace(/'/g,"\\'")}')">🤖 AI Feedback</button>
-        <input type="number" id="score_${s.id}" placeholder="Score" value="${scored?s.score:''}" style="width:80px;margin:0"/>
-        <input type="text" id="fb_${s.id}" placeholder="Feedback" value="${esc(s.feedback)}" style="width:200px;margin:0"/>
-        <button class="btn-sm" onclick="gradeSubmission('${s.id}','${aid}')">💾 Grade</button>
+  let html=`<div class="card"><h3>📋 Submissions: ${title}</h3>`;
+  if(!res.success||!res.submissions.length){html+='<p class="info">No submissions yet.</p></div>';
+    document.getElementById('modalContent').innerHTML=html;document.getElementById('modal').style.display='flex';return;}
+  res.submissions.forEach(s=>{
+    html+=`<div style="padding:12px;border-bottom:1px solid var(--border)">
+      <strong>${esc(s.student_name)}</strong> <span class="info">${s.submitted_at}</span>
+      ${s.score>=0?`<span class="badge badge-green" style="margin-left:8px">Graded: ${s.score}</span>`:''}
+      <p style="margin:6px 0;font-size:.9rem">${esc(s.content)}</p>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px">
+        <input type="number" id="score_${s.id}" placeholder="Score" value="${s.score>=0?s.score:''}" style="width:80px;margin:0"/>
+        <input type="text" id="fb_${s.id}" placeholder="Feedback" value="${esc(s.feedback)}" style="flex:1;margin:0"/>
+        <button class="btn-sm" onclick="gradeSubmission('${s.id}','${aid}')">Grade</button>
+        <button class="btn-amber" onclick="getAIFeedback('${s.id}','${esc(title)}','${esc(description)}',${maxScore},'${esc(s.content).replace(/'/g,"\\'")}')">🤖 AI</button>
       </div>
       <div id="aifb_${s.id}" class="result-box" style="display:none;margin-top:8px"></div>
     </div>`;
   });
   html+='</div>';
-  const modal=document.getElementById('modalContent'); modal.innerHTML=html;
-  document.getElementById('modal').style.display='flex';
+  document.getElementById('modalContent').innerHTML=html;document.getElementById('modal').style.display='flex';
 }
 async function getAIFeedback(sid,title,description,maxScore,content){
-  const el=document.getElementById('aifb_'+sid); el.style.display=''; el.textContent='Getting AI feedback…';
+  const el=document.getElementById('aifb_'+sid);el.style.display='';el.textContent='Getting AI feedback…';
   const res=await api('/ai_feedback',{title,description,maxScore,content});
   el.textContent=res.success?('🤖 '+res.feedback):('Error: '+res.error);
 }
@@ -775,13 +1098,13 @@ async function gradeSubmission(sid,aid){
   alert('Graded!');
 }
 
-// ── TESTS (teacher) ───────────────────────────────────────────
+// ── TESTS (teacher) ──
 let testQuestions=[];
 function addQuestion(prefill){
   const q=prefill||{q:'',options:['','','',''],ans:0,exp:''};
-  const i=testQuestions.length; testQuestions.push(q);
+  const i=testQuestions.length;testQuestions.push(q);
   const builder=document.getElementById('testQuestionsBuilder');
-  const div=document.createElement('div'); div.className='card'; div.id='tq_'+i;
+  const div=document.createElement('div');div.className='card';div.id='tq_'+i;
   div.innerHTML=`<div style="display:flex;justify-content:space-between"><strong>Q${i+1}</strong><button class="btn-danger" onclick="removeQuestion(${i})">✕</button></div>
   <input type="text" id="tqq_${i}" value="${esc(q.q)}" placeholder="Question text" oninput="testQuestions[${i}].q=this.value"/>
   ${q.options.map((opt,j)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
@@ -792,13 +1115,9 @@ function addQuestion(prefill){
   builder.appendChild(div);
 }
 function removeQuestion(i){testQuestions.splice(i,1);rebuildTestQuestions();}
-function rebuildTestQuestions(){
-  const all=[...testQuestions]; testQuestions=[];
-  document.getElementById('testQuestionsBuilder').innerHTML='';
-  all.forEach(q=>addQuestion(q));
-}
+function rebuildTestQuestions(){const all=[...testQuestions];testQuestions=[];document.getElementById('testQuestionsBuilder').innerHTML='';all.forEach(q=>addQuestion(q));}
 async function createTest(){
-  const title=v('testTitle'); if(!title||!testQuestions.length)return alert('Add a title and at least one question');
+  const title=v('testTitle');if(!title||!testQuestions.length)return alert('Add a title and at least one question');
   const res=await api('/create_test',{classCode:teacher.code,teacherEmail:teacher.email,title,questions:testQuestions,timeLimit:v('testTimeLimit')||0});
   if(res.success){document.getElementById('testMsg').textContent='Test published!';testQuestions=[];document.getElementById('testQuestionsBuilder').innerHTML='';document.getElementById('testTitle').value='';loadTests();}
 }
@@ -806,9 +1125,9 @@ async function loadTests(){
   if(!teacher.code)return;
   const res=await api('/get_tests',{classCode:teacher.code});
   if(!res.success)return;
-  const el=document.getElementById('testsList'); el.innerHTML='';
+  const el=document.getElementById('testsList');el.innerHTML='';
   res.tests.forEach(t=>{
-    const card=document.createElement('div'); card.className='card';
+    const card=document.createElement('div');card.className='card';
     card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center">
       <div><strong>${esc(t.title)}</strong> <span class="info">${t.questions.length} questions · ${t.time_limit?t.time_limit+' min':'No time limit'}</span></div>
       <div style="display:flex;gap:6px">
@@ -822,90 +1141,71 @@ async function deleteTest(id){if(!confirm('Delete?'))return;await api('/delete_t
 async function viewTestResults(tid,title){
   const res=await api('/get_test_results',{testId:tid});
   if(!res.success)return;
-  let html=`<div class="card"><h3>📊 Results: ${esc(title)}</h3>`;
+  let html=`<div class="card"><h3>📊 Results: ${title}</h3>`;
   if(!res.results.length){html+='<p class="info">No submissions yet.</p>';}
   res.results.forEach(r=>{
     const pct=r.total>0?Math.round((r.score/r.total)*100):0;
     html+=`<div style="padding:8px;border-bottom:1px solid var(--border)">
       <strong>${esc(r.student_name)}</strong> — ${r.score}/${r.total} (${pct}%)
-      <span class="badge ${pct>=70?'badge-green':'badge-red'}" style="margin-left:8px">${pct>=70?'Pass':'Fail'}</span>
-    </div>`;
+      <span class="badge ${pct>=70?'badge-green':'badge-red'}" style="margin-left:8px">${pct>=70?'Pass':'Fail'}</span></div>`;
   });
   html+='</div>';
-  document.getElementById('modalContent').innerHTML=html;
-  document.getElementById('modal').style.display='flex';
+  document.getElementById('modalContent').innerHTML=html;document.getElementById('modal').style.display='flex';
 }
 
-// ── AI QUIZ GENERATOR ─────────────────────────────────────────
+// ── AI QUIZ GENERATOR ──
 async function generateAIQuiz(){
-  loading('quizGenLoader',true);
-  document.getElementById('quizGenMsg').textContent='Generating…';
+  loading('quizGenLoader',true);document.getElementById('quizGenMsg').textContent='Generating…';
   const res=await api('/generate_quiz',{topic:teacher.topic,level:teacher.level,notes:teacher.notes||''});
   loading('quizGenLoader',false);
   if(res.success&&res.questions.length){
-    testQuestions=[]; document.getElementById('testQuestionsBuilder').innerHTML='';
+    testQuestions=[];document.getElementById('testQuestionsBuilder').innerHTML='';
     res.questions.forEach(q=>addQuestion(q));
-    document.getElementById('quizGenMsg').textContent=`✓ ${res.questions.length} questions added to the builder below!`;
+    document.getElementById('quizGenMsg').textContent=`✓ ${res.questions.length} questions added below!`;
     document.getElementById('testTitle').value=`Quiz: ${teacher.topic}`;
-  }else{
-    document.getElementById('quizGenMsg').textContent='Error: '+res.error;
-  }
+  }else document.getElementById('quizGenMsg').textContent='Error: '+res.error;
 }
 
-// ── REPORTS ───────────────────────────────────────────────────
+// ── REPORTS ──
 async function loadReports(){
-  const [asgs,tests]=await Promise.all([
-    api('/get_assignments',{classCode:teacher.code}),
-    api('/get_tests',{classCode:teacher.code})
-  ]);
+  const [asgs,tests]=await Promise.all([api('/get_assignments',{classCode:teacher.code}),api('/get_tests',{classCode:teacher.code})]);
   let html='';
   if(asgs.success){
-    let totalSubs=0, totalGraded=0, totalScore=0;
-    for(const a of asgs.assignments){
-      const sr=await api('/get_submissions',{assignmentId:a.id});
-      if(sr.success){
-        totalSubs+=sr.submissions.length;
-        sr.submissions.forEach(s=>{if(s.score>=0){totalGraded++;totalScore+=s.score;}});
-      }
-    }
+    let totalSubs=0,totalGraded=0,totalScore=0;
+    for(const a of asgs.assignments){const sr=await api('/get_submissions',{assignmentId:a.id});if(sr.success){totalSubs+=sr.submissions.length;sr.submissions.forEach(s=>{if(s.score>=0){totalGraded++;totalScore+=s.score;}});}}
     html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
       <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${asgs.assignments.length}</div><div class="info">Assignments</div></div>
       <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${totalSubs}</div><div class="info">Submissions</div></div>
-      <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${totalGraded>0?Math.round(totalScore/totalGraded)+'%':'—'}</div><div class="info">Avg Score</div></div>
-    </div>`;
+      <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${totalGraded>0?Math.round(totalScore/totalGraded)+'%':'—'}</div><div class="info">Avg Score</div></div></div>`;
   }
   if(tests.success){
-    let totalAttempts=0, totalScore=0, totalQ=0;
-    for(const t of tests.tests){
-      const tr=await api('/get_test_results',{testId:t.id});
-      if(tr.success){totalAttempts+=tr.results.length;tr.results.forEach(r=>{totalScore+=r.score;totalQ+=r.total;});}
-    }
+    let totalAttempts=0,totalScore=0,totalQ=0;
+    for(const t of tests.tests){const tr=await api('/get_test_results',{testId:t.id});if(tr.success){totalAttempts+=tr.results.length;tr.results.forEach(r=>{totalScore+=r.score;totalQ+=r.total;});}}
     html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
       <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${tests.tests.length}</div><div class="info">Tests</div></div>
       <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${totalAttempts}</div><div class="info">Quiz Attempts</div></div>
-      <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${totalQ>0?Math.round((totalScore/totalQ)*100)+'%':'—'}</div><div class="info">Avg Quiz Score</div></div>
-    </div>`;
+      <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:700;color:var(--g)">${totalQ>0?Math.round((totalScore/totalQ)*100)+'%':'—'}</div><div class="info">Avg Quiz Score</div></div></div>`;
   }
   document.getElementById('reportsContent').innerHTML=html||'<p class="info">No data yet.</p>';
 }
 
-// ── SCRIPT & RUBRIC ───────────────────────────────────────────
+// ── SCRIPT & RUBRIC ──
 async function generateScript(){
   loading('scriptLoader',true);
   const res=await api('/generate_video_script',{topic:teacher.topic,level:teacher.level});
   loading('scriptLoader',false);
-  const el=document.getElementById('scriptResult'); el.style.display=''; el.textContent=res.result||res.error;
+  const el=document.getElementById('scriptResult');el.style.display='';el.textContent=res.result||res.error;
 }
 async function generateRubric(){
   loading('rubricLoader',true);
-  const task=v('rubricTask'); const type=document.getElementById('rubricType').value;
+  const task=v('rubricTask');const type=document.getElementById('rubricType').value;
   const p=`Create a detailed grading rubric for a ${type} assignment: "${task}". Include 4-5 criteria with Excellent/Good/Adequate/Poor descriptors and point ranges.`;
   const res=await api('/layer2/question',{topic:task,level:'General',question:p});
   loading('rubricLoader',false);
-  const el=document.getElementById('rubricResult'); el.style.display=''; el.textContent=res.result||res.error;
+  const el=document.getElementById('rubricResult');el.style.display='';el.textContent=res.result||res.error;
 }
 
-// ── EXPORT SLIDES ─────────────────────────────────────────────
+// ── EXPORT SLIDES ──
 async function exportSlides(){
   loading('exportLoader',true);
   const body={topic:teacher.topic,level:teacher.level,duration:v('tDuration')||75,objectives:v('tObjectives'),style:document.getElementById('tStyle').value,notes:teacher.notes||''};
@@ -915,79 +1215,85 @@ async function exportSlides(){
   else alert('Export failed');
 }
 
-// ── DISCUSSION (teacher) ──────────────────────────────────────
+// ── DISCUSSION (teacher) ──
 async function loadTeacherDiscuss(){
   const res=await api('/discussion/get',{classCode:teacher.code});
-  const el=document.getElementById('teacherDiscussionList'); el.innerHTML='';
+  const el=document.getElementById('teacherDiscussionList');el.innerHTML='';
   if(!res.success||!res.posts.length){el.innerHTML='<p class="info">No posts yet.</p>';return;}
   res.posts.forEach(p=>{
-    const d=document.createElement('div'); d.className='discuss-post';
+    const d=document.createElement('div');d.className='discuss-post';
     d.innerHTML=`<div class="meta">${esc(p.student_name)} · ${p.created_at}</div>
     <div class="question">${esc(p.question)}</div>
     ${p.reply?`<div class="reply">📩 ${esc(p.reply)} <span style="font-size:.75rem;color:#888">— ${esc(p.replied_by)}</span></div>`:''}
     ${!p.reply?`<div style="display:flex;gap:8px;margin-top:8px">
       <input type="text" id="reply_${p.id}" placeholder="Your reply…" style="margin:0;flex:1"/>
-      <button class="btn-sm" onclick="replyDiscussion('${p.id}')">Reply</button>
-    </div>`:''}`;
+      <button class="btn-sm" onclick="replyDiscussion('${p.id}')">Reply</button></div>`:''}`;
     el.appendChild(d);
   });
 }
 async function replyDiscussion(id){
-  const reply=document.getElementById('reply_'+id).value; if(!reply)return;
-  await api('/discussion/reply',{id,reply,repliedBy:teacher.name});
-  loadTeacherDiscuss();
+  const reply=document.getElementById('reply_'+id).value;if(!reply)return;
+  await api('/discussion/reply',{id,reply,repliedBy:teacher.name});loadTeacherDiscuss();
 }
 
-// ── STUDENT: ASK ──────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+//  STUDENT FUNCTIONS
+// ══════════════════════════════════════════════════════════
 async function studentAsk(){
-  const q=v('stuQ'); if(!q)return;
+  const q=v('stuQ');if(!q)return;
   loading('askLoader',true);
   const res=await api('/layer2/student_question',{topic:student.topic,level:student.level,name:student.name,year:student.year,background:student.background,question:q});
   loading('askLoader',false);
-  const el=document.getElementById('askResult'); el.style.display=''; el.textContent=res.result||res.error;
+  const el=document.getElementById('askResult');el.style.display='';el.textContent=res.result||res.error;
 }
 
-// ── STUDENT: NOTES ────────────────────────────────────────────
 async function loadStuNotes(){
   const res=await api('/get_notes',{classCode:student.code});
-  const el=document.getElementById('stuNotesOutput'); el.style.display='';
-  el.textContent=res.success?(res.notes||'No notes generated yet.'):'Could not load notes.';
-}
-function savePersonalNotes(){localStorage.setItem('personalNotes_'+student.code,document.getElementById('personalNotes').value);}
-function loadPersonalNotes(){
-  const saved=localStorage.getItem('personalNotes_'+student.code);
-  if(saved)document.getElementById('personalNotes').value=saved;
-}
-function downloadPersonalNotes(){
-  const notes=document.getElementById('personalNotes').value;
-  if(!notes)return alert('Nothing to download');
-  const blob=new Blob([notes],{type:'text/plain'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=`My_Notes_${student.code}_${new Date().toLocaleDateString().replace(/\//g,'-')}.txt`;
-  a.click();
+  const el=document.getElementById('stuNotesOutput');el.style.display='';
+  if(res.success && res.notes){
+    let html = esc(res.notes);
+    html = html.replace(/\[PASSIVE\]/g,'<span class="icap-badge icap-passive">PASSIVE</span>');
+    html = html.replace(/\[ACTIVE\]/g,'<span class="icap-badge icap-active">ACTIVE</span>');
+    html = html.replace(/\[CONSTRUCTIVE\]/g,'<span class="icap-badge icap-constructive">CONSTRUCTIVE</span>');
+    html = html.replace(/\[INTERACTIVE\]/g,'<span class="icap-badge icap-interactive">INTERACTIVE</span>');
+    html = html.replace(/^(\d+\.\s+.+)$/gm,'<strong style="font-size:1.1em;color:var(--g)">$1</strong>');
+    html = html.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+    el.innerHTML = html;
+  } else {
+    el.textContent = 'No notes generated yet.';
+  }
 }
 
-// ── STUDENT: QUIZ ─────────────────────────────────────────────
-let stuQuizQuestions=[], stuQuizAnswers={};
+function savePersonalNotes(){localStorage.setItem('personalNotes_'+student.code,document.getElementById('personalNotes').value);}
+function loadPersonalNotes(){const saved=localStorage.getItem('personalNotes_'+student.code);if(saved)document.getElementById('personalNotes').value=saved;}
+function downloadPersonalNotes(){
+  const notes=document.getElementById('personalNotes').value;if(!notes)return alert('Nothing to download');
+  const blob=new Blob([notes],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`My_Notes_${student.code}_${new Date().toLocaleDateString().replace(/\//g,'-')}.txt`;a.click();
+}
+
+// ── STUDENT: QUIZ ──
+let stuQuizQuestions=[],stuQuizAnswers={};
 async function loadStuQuiz(){
   loading('stuQuizLoader',true);
   const res=await api('/generate_quiz',{topic:student.topic,level:student.level,notes:''});
   loading('stuQuizLoader',false);
-  const el=document.getElementById('stuQuizContent'); el.innerHTML='';
+  const el=document.getElementById('stuQuizContent');el.innerHTML='';
   if(!res.success){el.innerHTML='<p class="error-msg">Could not generate quiz.</p>';return;}
-  stuQuizQuestions=res.questions; stuQuizAnswers={};
+  stuQuizQuestions=res.questions;stuQuizAnswers={};
   res.questions.forEach((q,i)=>{
-    const div=document.createElement('div'); div.className='quiz-q';
+    const div=document.createElement('div');div.className='quiz-q';
     div.innerHTML=`<p>Q${i+1}. ${esc(q.q)}</p>`;
     q.options.forEach((opt,j)=>{
-      const label=document.createElement('label'); label.className='quiz-option'; label.id=`sqopt_${i}_${j}`;
+      const label=document.createElement('label');label.className='quiz-option';label.id=`sqopt_${i}_${j}`;
       label.innerHTML=`<input type="radio" name="sqq_${i}" value="${j}" onchange="stuQuizAnswers[${i}]=${j}"/> ${esc(opt)}`;
       div.appendChild(label);
     });
     el.appendChild(div);
   });
-  const btn=document.createElement('button'); btn.className='btn-primary'; btn.textContent='Submit Quiz';
-  btn.onclick=submitStuQuiz; el.appendChild(btn);
+  const btn=document.createElement('button');btn.className='btn-primary';btn.textContent='Submit Quiz';
+  btn.onclick=submitStuQuiz;el.appendChild(btn);
 }
 function submitStuQuiz(){
   let score=0;
@@ -1000,105 +1306,102 @@ function submitStuQuiz(){
     if(chosen===q.ans)score++;
   });
   const el=document.getElementById('stuQuizContent');
-  const result=document.createElement('div'); result.className='card';
+  const result=document.createElement('div');result.className='card';
   const pct=Math.round((score/stuQuizQuestions.length)*100);
   result.innerHTML=`<h3>Result: ${score}/${stuQuizQuestions.length} (${pct}%)</h3>
   <p class="info">${pct>=70?'Great work! 🎉':'Keep practising — review the highlighted questions.'}</p>`;
   el.appendChild(result);
 }
 
-// ── STUDENT: ASSIGNMENTS ──────────────────────────────────────
+// ── STUDENT: STUDY PLAN ──
+async function generateStudyPlan(){
+  loading('planLoader',true);
+  const res=await api('/generate_study_plan',{topic:student.topic,level:student.level,background:student.background,language:'English'});
+  loading('planLoader',false);
+  const el=document.getElementById('studyPlanOutput');el.style.display='';
+  el.textContent=res.success?res.plan:(res.error||'Could not generate plan.');
+}
+
+// ── STUDENT: ASSIGNMENTS ──
 async function loadStuAssignments(){
   if(!student.code)return;
   const res=await api('/get_assignments',{classCode:student.code});
-  const el=document.getElementById('stuAssignmentsList'); el.innerHTML='';
+  const el=document.getElementById('stuAssignmentsList');el.innerHTML='';
   if(!res.success||!res.assignments.length){el.innerHTML='<p class="info">No assignments yet.</p>';return;}
   for(const a of res.assignments){
     const sub=await api('/get_my_submission',{assignmentId:a.id,studentEmail:student.email});
     const mySubmission=sub.submission;
     const days=daysUntil(a.due_date);
     const dueSoon=days<=3&&days>=0&&!mySubmission;
-    const card=document.createElement('div'); card.className='card';
+    const card=document.createElement('div');card.className='card';
     card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
       <div>
         <strong>${esc(a.title)}</strong>${dueSoon?`<span class="due-soon">⚠️ Due in ${days}d</span>`:''}
         <p class="info" style="margin-top:4px">${esc(a.description)}</p>
         <p class="info">Due: ${a.due_date||'No deadline'} · Max: ${a.max_score} pts</p>
         ${mySubmission&&mySubmission.score>=0?`<span class="badge badge-green">Graded: ${mySubmission.score}/${a.max_score}</span> <span class="info">${esc(mySubmission.feedback)}</span>`:''}
-      </div>
-    </div>
-    ${!mySubmission?`
-    <textarea id="subtext_${a.id}" placeholder="Write your submission here…" style="min-height:100px;margin-top:10px"></textarea>
+      </div></div>
+    ${!mySubmission?`<textarea id="subtext_${a.id}" placeholder="Write your submission here…" style="min-height:100px;margin-top:10px"></textarea>
     <button class="btn-sm" onclick="submitAssignment('${a.id}')">Submit</button>`
     :`<div style="margin-top:8px;padding:8px;background:var(--bg);border-radius:6px;font-size:.88rem"><strong>Your submission:</strong> ${esc(mySubmission.content)}</div>`}`;
     el.appendChild(card);
   }
 }
 async function submitAssignment(aid){
-  const content=document.getElementById('subtext_'+aid).value; if(!content)return;
+  const content=document.getElementById('subtext_'+aid).value;if(!content)return;
   const res=await api('/submit_assignment',{assignmentId:aid,classCode:student.code,studentEmail:student.email,studentName:student.name,content});
   if(res.success){alert('Submitted!');loadStuAssignments();}
 }
 
-// ── STUDENT: TESTS ────────────────────────────────────────────
+// ── STUDENT: TESTS ──
 async function loadStuTests(){
   if(!student.code)return;
   const res=await api('/get_tests',{classCode:student.code});
-  const el=document.getElementById('stuTestsList'); el.innerHTML='';
+  const el=document.getElementById('stuTestsList');el.innerHTML='';
   if(!res.success||!res.tests.length){el.innerHTML='<p class="info">No tests yet.</p>';return;}
   for(const t of res.tests){
     const myRes=await api('/get_my_test_result',{testId:t.id,studentEmail:student.email});
     const done=myRes.result;
-    const card=document.createElement('div'); card.className='card';
+    const card=document.createElement('div');card.className='card';
     card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
       <div><strong>${esc(t.title)}</strong> <span class="info">${t.questions.length} questions${t.time_limit?' · '+t.time_limit+' min':''}</span></div>
       ${done?`<span class="badge badge-green">Done: ${done.score}/${done.total}</span>`
-      :`<button class="btn-sm" onclick="openTest('${t.id}','${esc(t.title)}',${JSON.stringify(t.questions).replace(/'/g,"&#39;")})">Start Test</button>`}
-    </div>`;
+      :`<button class="btn-sm" onclick='openTest("${t.id}","${esc(t.title)}",${JSON.stringify(t.questions).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>Start Test</button>`}</div>`;
     el.appendChild(card);
   }
 }
 function openTest(tid,title,questions){
   if(typeof questions==='string')questions=JSON.parse(questions);
-  let html=`<div class="card"><h3>📊 ${esc(title)}</h3>`;
+  let html=`<div class="card"><h3>📊 ${title}</h3>`;
   questions.forEach((q,i)=>{
     html+=`<div class="quiz-q"><p><strong>Q${i+1}.</strong> ${esc(q.q)}</p>`;
-    q.options.forEach((opt,j)=>{
-      html+=`<label class="quiz-option"><input type="radio" name="tq_${i}" value="${j}"/> ${esc(opt)}</label>`;
-    });
+    q.options.forEach((opt,j)=>{html+=`<label class="quiz-option"><input type="radio" name="tq_${i}" value="${j}"/> ${esc(opt)}</label>`;});
     html+='</div>';
   });
-  html+=`<button class="btn-primary" onclick="submitTest('${tid}',${JSON.stringify(questions).replace(/"/g,'&quot;')})">Submit Test</button></div>`;
-  document.getElementById('modalContent').innerHTML=html;
-  document.getElementById('modal').style.display='flex';
+  html+=`<button class="btn-primary" onclick='submitTest("${tid}",${JSON.stringify(questions).replace(/'/g,"&#39;").replace(/"/g,"&quot;")})'>Submit Test</button></div>`;
+  document.getElementById('modalContent').innerHTML=html;document.getElementById('modal').style.display='flex';
 }
 async function submitTest(tid,questions){
   if(typeof questions==='string')questions=JSON.parse(questions);
   const answers={};
-  questions.forEach((_,i)=>{
-    const sel=document.querySelector(`input[name="tq_${i}"]:checked`);
-    if(sel)answers[i]=parseInt(sel.value);
-  });
+  questions.forEach((_,i)=>{const sel=document.querySelector(`input[name="tq_${i}"]:checked`);if(sel)answers[i]=parseInt(sel.value);});
   const res=await api('/submit_test',{testId:tid,classCode:student.code,studentEmail:student.email,studentName:student.name,answers,questions});
-  if(res.success){
-    document.getElementById('modal').style.display='none';
-    alert(`Done! Score: ${res.score}/${res.total}`);
-    loadStuTests();
-  }else alert(res.error||'Error');
+  if(res.success){document.getElementById('modal').style.display='none';alert(`Done! Score: ${res.score}/${res.total}`);loadStuTests();}
+  else alert(res.error||'Error');
 }
 
-// ── DISCUSSION (student) ──────────────────────────────────────
+// ── DISCUSSION (student) ──
 async function postDiscussion(){
-  const q=v('discussQuestion'); if(!q)return;
+  const q=v('discussQuestion');if(!q)return;
   const res=await api('/discussion/post',{classCode:student.code,studentName:student.name,studentEmail:student.email,question:q});
   if(res.success){document.getElementById('discussMsg').textContent='Posted!';document.getElementById('discussQuestion').value='';loadStudentDiscuss();}
 }
 async function loadStudentDiscuss(){
   const res=await api('/discussion/get',{classCode:student.code});
-  const el=document.getElementById('studentDiscussionList'); el.innerHTML='';
+  const el=document.getElementById('studentDiscussionList');el.innerHTML='';
   if(!res.success||!res.posts.length){el.innerHTML='<p class="info">No posts yet.</p>';return;}
   res.posts.forEach(p=>{
-    const d=document.createElement('div'); d.className='discuss-post';
+    const d=document.createElement('div');d.className='discuss-post';
     d.innerHTML=`<div class="meta">${esc(p.student_name)} · ${p.created_at}</div>
     <div class="question">${esc(p.question)}</div>
     ${p.reply?`<div class="reply">📩 Teacher: ${esc(p.reply)}</div>`:'<div class="info" style="margin-top:6px">Awaiting reply…</div>'}`;
@@ -1106,23 +1409,27 @@ async function loadStudentDiscuss(){
   });
 }
 
-// ── MODAL ─────────────────────────────────────────────────────
+// ── MODAL ──
 document.addEventListener('DOMContentLoaded',()=>{
-  const modal=document.createElement('div');
-  modal.id='modal';
+  const modal=document.createElement('div');modal.id='modal';
   modal.style.cssText='display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;overflow-y:auto;padding:20px;justify-content:center;align-items:flex-start;';
-  const inner=document.createElement('div');
-  inner.id='modalContent';
+  const inner=document.createElement('div');inner.id='modalContent';
   inner.style.cssText='background:var(--card);border-radius:16px;max-width:700px;width:100%;padding:20px;position:relative;';
-  const close=document.createElement('button');
-  close.textContent='✕ Close';
-  close.className='btn-danger';
+  const close=document.createElement('button');close.textContent='✕ Close';close.className='btn-danger';
   close.style.cssText='position:sticky;top:0;float:right;margin-bottom:10px;';
   close.onclick=()=>{modal.style.display='none';};
-  inner.prepend(close);
-  modal.appendChild(inner);
-  document.body.appendChild(modal);
+  inner.prepend(close);modal.appendChild(inner);document.body.appendChild(modal);
   modal.addEventListener('click',e=>{if(e.target===modal)modal.style.display='none';});
+});
+
+// ── Keyboard shortcuts for slideshow ──
+document.addEventListener('keydown', e => {
+  if(!slideshowData.length) return;
+  if(e.key === 'ArrowRight') nextSlide();
+  if(e.key === 'ArrowLeft') prevSlide();
+  if(e.key === ' ') { e.preventDefault(); if(isPlaying && !isPaused) pauseSlideshow(); else if(isPaused) resumeSlideshow(); else playSlideshow(); }
+  if(e.key === 'Escape') { const el=document.getElementById('slideshowContainer'); if(el.classList.contains('fullscreen')) el.classList.remove('fullscreen'); }
+  if(e.key === 'f' || e.key === 'F') toggleFullscreen();
 });
 </script>
 </body>
