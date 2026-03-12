@@ -77,7 +77,7 @@ def save_class():
     try:
         d = request.json
         code = d.get("code", "").upper().strip()
-        if not code: return jsonify({"success": False, "error": "No code"})
+        if not code: return jsonify({"success": False, "error": "No code provided"})
         init_db(); conn = get_db()
         conn.execute("""INSERT INTO classes (code,teacher_email,teacher_name,topic,level,data)
             VALUES(?,?,?,?,?,?) ON CONFLICT(code) DO UPDATE SET
@@ -85,9 +85,18 @@ def save_class():
             topic=excluded.topic, level=excluded.level, data=excluded.data""",
             (code, d.get("teacherEmail",""), d.get("teacherName",""),
              d.get("topic",""), d.get("level",""), json.dumps(d)))
-        conn.commit(); conn.close()
-        return jsonify({"success": True})
+        conn.commit()
+        # Verify it was saved
+        row = conn.execute("SELECT code FROM classes WHERE code=?", (code,)).fetchone()
+        conn.close()
+        if row:
+            print(f"[LectureAI] Class saved OK: {code}")
+            return jsonify({"success": True, "code": code})
+        else:
+            print(f"[LectureAI] Class save FAILED verification: {code}")
+            return jsonify({"success": False, "error": "Save failed verification"})
     except Exception as e:
+        print(f"[LectureAI] save_class error: {e}")
         return jsonify({"success": False, "error": str(e)})
 
 @app.route("/get_class", methods=["POST"])
@@ -95,14 +104,35 @@ def get_class():
     try:
         d = request.json
         code = d.get("code", "").upper().strip()
-        if not code: return jsonify({"success": False, "error": "No code"})
+        if not code: return jsonify({"success": False, "error": "No code provided"})
         init_db(); conn = get_db()
         row = conn.execute("SELECT data FROM classes WHERE code=?", (code,)).fetchone()
+        # Also get count of all classes for debugging
+        count = conn.execute("SELECT COUNT(*) as cnt FROM classes").fetchone()
         conn.close()
-        if row: return jsonify({"success": True, "class": json.loads(row["data"])})
+        if row:
+            print(f"[LectureAI] Class found: {code}")
+            return jsonify({"success": True, "class": json.loads(row["data"])})
+        print(f"[LectureAI] Class NOT found: '{code}' (total classes in DB: {count['cnt']})")
         return jsonify({"success": False, "error": "Code not found"})
     except Exception as e:
+        print(f"[LectureAI] get_class error: {e}")
         return jsonify({"success": False, "error": str(e)})
+
+# Debug endpoint to check DB status
+@app.route("/debug_db")
+def debug_db():
+    try:
+        init_db(); conn = get_db()
+        classes = conn.execute("SELECT code, topic, teacher_name FROM classes").fetchall()
+        conn.close()
+        return jsonify({
+            "db_path": DB_PATH,
+            "db_exists": os.path.exists(DB_PATH),
+            "classes": [{"code": r["code"], "topic": r["topic"], "teacher": r["teacher_name"]} for r in classes]
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)})
 
 # ── Assignments ───────────────────────────────────────────────
 @app.route("/create_assignment", methods=["POST"])
