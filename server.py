@@ -389,27 +389,52 @@ def generate_notes():
         style = d.get("style","Lecture-based")
         language = d.get("language","English")
 
-        p = f"""You are an expert university lecturer designing a comprehensive {duration}-minute {level}-level lecture on "{topic}" using a {style} approach.
+        p = f"""You are an expert university lecturer writing comprehensive, well-structured lecture notes on "{topic}" for {level}-level students. Duration: {duration} minutes. Style: {style}.
 
 IMPORTANT: Write the ENTIRE response in {language}.
 
 Learning objectives:
 {objectives if objectives else f"Cover {topic} comprehensively for {level}-level learners."}
 
-Structure the notes using the ICAP pedagogical framework (Chi & Wylie, 2014). Label each section with its ICAP tag. Use EXACTLY these headers:
+Structure the notes in exactly this order. Use the ICAP tags exactly as shown — they are used for colour coding only and must be kept:
 
 [PASSIVE] 1. INTRODUCTION AND CONTEXT
-[PASSIVE] 2. CORE DEFINITIONS AND TERMINOLOGY
-[ACTIVE] 3. DETAILED CONCEPT EXPLANATIONS
-[ACTIVE] 4. WORKED EXAMPLES WITH ANNOTATIONS
-[CONSTRUCTIVE] 5. CRITICAL THINKING CHALLENGES
-[CONSTRUCTIVE] 6. COMMON MISCONCEPTIONS
-[INTERACTIVE] 7. COLLABORATIVE ACTIVITIES
-[INTERACTIVE] 8. REAL-WORLD APPLICATION PROJECT
-[PASSIVE] 9. SUMMARY AND KEY TAKEAWAYS
-[CONSTRUCTIVE] 10. SELF-ASSESSMENT AND REFLECTION
+Why this topic matters. Historical background. Real-world relevance. A compelling hook. At least 3 detailed paragraphs.
 
-Be thorough — at least 2,500 words total. Each section should be detailed enough to study from independently."""
+[PASSIVE] 2. CORE DEFINITIONS AND TERMINOLOGY
+Define every key term precisely with examples. At least 6-8 terms. Use **Term**: definition format for each.
+
+[ACTIVE] 3. CORE CONCEPT EXPLANATIONS
+Deep dive into each major concept. Step-by-step reasoning. Multiple representations. At least 3-4 major concepts, each with 2+ paragraphs and bullet points.
+
+[ACTIVE] 4. WORKED EXAMPLES
+Use "Example:" to start each worked example. At least 3 fully worked examples of increasing difficulty. Show every step and explain WHY.
+
+[CONSTRUCTIVE] 5. CRITICAL THINKING & ANALYSIS
+Open-ended analysis questions. "What if" scenarios. Mini case study. At least 4 prompts requiring deep thought.
+
+[CONSTRUCTIVE] 6. COMMON MISCONCEPTIONS
+At least 5 common errors. For each: why students make it, then the correct understanding.
+
+[INTERACTIVE] 7. COLLABORATIVE ACTIVITIES
+Pair/group activities with specific prompts. Think-pair-share. Peer teaching exercise.
+
+[INTERACTIVE] 8. REAL-WORLD APPLICATION
+A substantial real-world scenario to solve collaboratively. Include reflection questions.
+
+[PASSIVE] 9. SUMMARY & KEY TAKEAWAYS
+Bullet-point recap of every major concept. A cheat sheet of key formulas/rules. Connection to next topic.
+
+[CONSTRUCTIVE] 10. SELF-ASSESSMENT
+5 self-check questions (recall, application, analysis). A "one-minute paper" prompt. Suggested further reading.
+
+Formatting rules:
+- Use **bold** for key terms
+- Use bullet points with - for lists
+- Start worked examples with "Example:"
+- Write in clear, engaging academic language
+- Aim for at least 2,500 words total
+- Do NOT add any extra labels or tags beyond the [ICAP] ones shown above"""
 
         result = ask_groq(p, max_tokens=4000)
 
