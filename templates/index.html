@@ -47,14 +47,71 @@ body.light{
 
 /* ── App shell ── */
 .app-shell{display:flex;flex-direction:column;height:100dvh;overflow:hidden;}
-.app-body{display:flex;flex:1;overflow:hidden;min-height:0;}
-.main-col{display:flex;flex-direction:column;flex:1;min-width:0;overflow:hidden;min-height:0;}
+.app-body{display:flex;flex:1;min-height:0;}
+.sidebar{
+  width:240px;flex-shrink:0;
+  background:var(--card);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow-y:auto;overflow-x:hidden;
+  transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  z-index:100;
+}
+.main-col{display:flex;flex-direction:column;flex:1;min-width:0;min-height:0;}
 .topbar{height:56px;flex-shrink:0;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:8px;z-index:10;}
-.content-area{flex:1;height:0;overflow-y:auto!important;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:auto;padding:24px 20px 80px;}
-.sidebar{width:250px;flex-shrink:0;overflow-y:auto;position:fixed;top:0;bottom:0;left:0;z-index:100;background:var(--card);border-right:1px solid var(--border);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);}
-.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;backdrop-filter:blur(2px);}
+.content-area{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  padding:24px 20px 32px;
+}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;backdrop-filter:blur(2px);}
 .bottom-tabs{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;z-index:100;border-top:1px solid var(--border);background:var(--card);}
 .bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:transparent;cursor:pointer;padding:6px 2px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;transition:color 0.15s;}
+.hamburger-btn{display:none!important;}
+
+/* Desktop: sidebar always visible */
+@media(min-width:769px){
+  .sidebar{position:relative;top:auto;bottom:auto;left:auto;transform:none!important;}
+  .bottom-tabs{display:none!important;}
+  .hamburger-btn{display:none!important;}
+  .mobile-only{display:none!important;}
+  .desktop-only{display:flex!important;}
+  .sidebar-overlay{display:none!important;}
+  .content-area{padding:24px 24px 32px;}
+}
+
+/* Mobile: sidebar hidden, hamburger + bottom tabs show */
+@media(max-width:768px){
+  .sidebar{
+    position:fixed;top:0;bottom:0;left:0;
+    transform:translateX(-100%);
+    width:260px;
+    box-shadow:4px 0 20px rgba(0,0,0,0.3);
+  }
+  .sidebar.open{transform:translateX(0);}
+  .hamburger-btn{display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;}
+  .bottom-tabs{display:flex!important;}
+  .hide-mobile{display:none!important;}
+  .desktop-only{display:none!important;}
+  .sidebar-overlay.open{display:block!important;}
+  .two-col{grid-template-columns:1fr!important;gap:12px!important;}
+  .grid-2{grid-template-columns:1fr!important;}
+  .stat-grid{grid-template-columns:1fr 1fr!important;}
+  .zone-grid{grid-template-columns:1fr 1fr!important;gap:10px!important;}
+  .content-area{padding:16px 14px 80px!important;}
+  .topbar{height:52px!important;}
+  textarea,input,select{font-size:16px!important;}
+  .lang-grid{grid-template-columns:repeat(3,1fr)!important;}
+  .landing-wrap{overflow-x:hidden!important;}
+}
+@media(max-width:480px){
+  .zone-grid{grid-template-columns:1fr!important;}
+  .content-area{padding:12px 12px 80px!important;}
+  .lang-grid{grid-template-columns:repeat(2,1fr)!important;}
+  .stat-grid{grid-template-columns:1fr 1fr!important;}
+}
 
 /* ── Landing ── */
 .landing-wrap{overflow-y:auto;overflow-x:hidden;height:100%;height:100dvh;background:var(--bg);}
@@ -208,41 +265,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
 
 /* ── PWA standalone ── */
 @media(display-mode:standalone){
-  body{padding-top:env(safe-area-inset-top,0px);}
-  .app-shell{height:100dvh;padding-bottom:env(safe-area-inset-bottom,0px);}
-  .topbar{padding-top:env(safe-area-inset-top,0px);height:calc(56px + env(safe-area-inset-top,0px))!important;}
-  .bottom-tabs{height:calc(60px + env(safe-area-inset-bottom,0px))!important;padding-bottom:env(safe-area-inset-bottom,0px);}
-  .landing-section-install{display:none!important;}
-}
-
-/* ── Responsive ── */
-@media(max-width:768px){
-  .two-col{grid-template-columns:1fr!important;gap:12px!important;}
-  .grid-2{grid-template-columns:1fr!important;}
-  .stat-grid{grid-template-columns:1fr 1fr!important;}
-  .zone-grid{grid-template-columns:1fr 1fr!important;gap:10px!important;}
-  .content-area{padding:16px 14px 80px!important;}
-  .topbar{height:52px!important;}
-  textarea,input,select{font-size:16px!important;}
-  .bottom-tabs{display:flex!important;}
-  .hide-mobile{display:none!important;}
-  .lang-grid{grid-template-columns:repeat(3,1fr)!important;}
-  .hamburger-btn{display:flex!important;}
-  .desktop-only{display:none!important;}
-  /* Landing page mobile fixes */
-  .landing-wrap{overflow-x:hidden!important;}
-  .landing-section-cards{grid-template-columns:1fr!important;}
-}
-@media(min-width:769px){
-  .bottom-tabs{display:none!important;}
-  .hamburger-btn{display:none!important;}
-  .mobile-only{display:none!important;}
-}
-@media(max-width:480px){
-  .zone-grid{grid-template-columns:1fr!important;}
-  .content-area{padding:12px 12px 80px!important;}
-  .lang-grid{grid-template-columns:repeat(2,1fr)!important;}
-  .stat-grid{grid-template-columns:1fr 1fr!important;}
+  .app-shell{height:100dvh;}
 }
 
 /* ── Info/success/error messages ── */
@@ -569,7 +592,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
   <div class="app-body">
 
     <!-- Sidebar -->
-    <div class="sidebar" id="tSidebar" style="transform:translateX(-100%);">
+    <div class="sidebar" id="tSidebar">
       <div style="padding:18px 16px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:9px;">
           <div style="width:32px;height:32px;background:linear-gradient(135deg,#2d6a4f,#40916c);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:#fff;">L</div>
@@ -611,7 +634,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
       </div>
     </div>
 
-    <div class="sidebar-overlay" id="tOverlay" style="display:none;" onclick="closeSidebar('t')"></div>
+    <div class="sidebar-overlay" id="tOverlay" onclick="closeSidebar('t')"></div>
 
     <div class="main-col">
       <!-- Topbar -->
@@ -671,7 +694,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
   <div class="app-body">
 
     <!-- Sidebar (student) -->
-    <div class="sidebar" id="sSidebar" style="transform:translateX(-100%);">
+    <div class="sidebar" id="sSidebar">
       <div style="padding:18px 16px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:9px;">
           <div style="width:32px;height:32px;background:linear-gradient(135deg,#2d6a4f,#40916c);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:#fff;">L</div>
@@ -700,7 +723,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
       </div>
     </div>
 
-    <div class="sidebar-overlay" id="sOverlay" style="display:none;" onclick="closeSidebar('s')"></div>
+    <div class="sidebar-overlay" id="sOverlay" onclick="closeSidebar('s')"></div>
 
     <div class="main-col">
       <div class="topbar">
@@ -882,16 +905,16 @@ function toggleTheme() {
 // SIDEBAR
 // ══════════════════════════════════════════════
 function openSidebar(role) {
-  const id = role==='t'?'tSidebar':'sSidebar';
-  const ov = role==='t'?'tOverlay':'sOverlay';
-  document.getElementById(id).style.transform = 'translateX(0)';
-  document.getElementById(ov).style.display = '';
+  const sid = role==='t'?'tSidebar':'sSidebar';
+  const ov  = role==='t'?'tOverlay':'sOverlay';
+  document.getElementById(sid).classList.add('open');
+  document.getElementById(ov).classList.add('open');
 }
 function closeSidebar(role) {
-  const id = role==='t'?'tSidebar':'sSidebar';
-  const ov = role==='t'?'tOverlay':'sOverlay';
-  document.getElementById(id).style.transform = 'translateX(-100%)';
-  document.getElementById(ov).style.display = 'none';
+  const sid = role==='t'?'tSidebar':'sSidebar';
+  const ov  = role==='t'?'tOverlay':'sOverlay';
+  document.getElementById(sid).classList.remove('open');
+  document.getElementById(ov).classList.remove('open');
 }
 
 // ══════════════════════════════════════════════
@@ -983,7 +1006,7 @@ async function studentLogin() {
 // ══════════════════════════════════════════════
 function tGoPage(page) {
   tCurrentPage = page;
-  closeSidebar('t');
+  if(window.innerWidth <= 768) closeSidebar('t');
   const titles = {dashboard:'Dashboard',lesson:'Lesson Builder',slideshow:'AI Slideshow',live:'Live Teaching',assignments:'Assignments',tests:'Tests & Quizzes',reports:'Reports',support:'Student Support',discuss:'Discussion Board',script:'Video Script',rubric:'Rubric Builder',export:'Export Slides'};
   document.getElementById('tPageTitle').textContent = titles[page]||page;
 
@@ -1412,7 +1435,7 @@ function renderExport() {
 // ══════════════════════════════════════════════
 function sGoPage(page) {
   sCurrentPage = page;
-  closeSidebar('s');
+  if(window.innerWidth <= 768) closeSidebar('s');
   const titles = {dashboard:'Dashboard',ask:'Ask AI',notes:'Lesson Notes',quiz:'Practice Quiz',plan:'Study Plan',work:'Assignments',tests:'Tests',discuss:'Discussion',history:'Past Lectures'};
   document.getElementById('sPageTitle').textContent = titles[page]||page;
 
