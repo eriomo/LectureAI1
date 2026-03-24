@@ -80,6 +80,7 @@ body.light{
   .desktop-only{display:flex!important;}
   .sidebar-overlay{display:none!important;}
   .content-area{padding:24px 24px 32px;}
+  .sidebar-close-btn{display:none!important;}
 }
 
 /* Mobile: sidebar hidden, hamburger + bottom tabs show */
@@ -163,7 +164,8 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
 .lang-btn.active{border-color:var(--green);background:var(--green);color:#fff;font-weight:600;}
 
 /* ── Output box ── */
-.out-box{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:18px;min-height:120px;max-height:480px;overflow-y:auto;font-size:13.5px;line-height:1.8;color:var(--text);}
+.out-box{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:18px;min-height:80px;font-size:13.5px;line-height:1.8;color:var(--text);}
+.out-box.scrollable{max-height:400px;overflow-y:auto;}
 
 /* ── Slideshow ── */
 .slideshow-wrap{position:relative;background:#000;border-radius:14px;overflow:hidden;}
@@ -598,7 +600,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
           <div style="width:32px;height:32px;background:linear-gradient(135deg,#2d6a4f,#40916c);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:#fff;">L</div>
           <span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);">Lecture<span style="color:#74c69d;">AI</span></span>
         </div>
-        <button onclick="closeSidebar('t')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:4px;">×</button>
+        <button onclick="closeSidebar('t')" class="sidebar-close-btn" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:4px;">×</button>
       </div>
       <div style="padding:10px 14px 12px;border-bottom:1px solid var(--border);">
         <div style="font-size:13px;font-weight:600;color:var(--text);" id="tSidebarName"></div>
@@ -700,7 +702,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
           <div style="width:32px;height:32px;background:linear-gradient(135deg,#2d6a4f,#40916c);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:16px;color:#fff;">L</div>
           <span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);">Lecture<span style="color:#74c69d;">AI</span></span>
         </div>
-        <button onclick="closeSidebar('s')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:4px;">×</button>
+        <button onclick="closeSidebar('s')" class="sidebar-close-btn" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:4px;">×</button>
       </div>
       <div style="padding:10px 14px 12px;border-bottom:1px solid var(--border);">
         <div style="font-size:13px;font-weight:600;color:var(--text);" id="sSidebarName"></div>
@@ -905,12 +907,14 @@ function toggleTheme() {
 // SIDEBAR
 // ══════════════════════════════════════════════
 function openSidebar(role) {
+  if(window.innerWidth > 768) return; // desktop: always visible, nothing to do
   const sid = role==='t'?'tSidebar':'sSidebar';
   const ov  = role==='t'?'tOverlay':'sOverlay';
   document.getElementById(sid).classList.add('open');
   document.getElementById(ov).classList.add('open');
 }
 function closeSidebar(role) {
+  if(window.innerWidth > 768) return; // desktop: always visible, nothing to do
   const sid = role==='t'?'tSidebar':'sSidebar';
   const ov  = role==='t'?'tOverlay':'sOverlay';
   document.getElementById(sid).classList.remove('open');
@@ -1136,20 +1140,221 @@ function renderLesson() {
           <span class="icap-badge icap-interactive">INTERACTIVE</span>
         </div>
       </div>
-      <div id="notesOutput" class="out-box">${teacher.notes?renderICAPNotesHTML(teacher.notes):''}</div>
+      <div id="notesOutput" class="out-box notes-box">${teacher.notes?renderICAPNotesHTML(teacher.notes):''}</div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="showExportMenu(teacher.notes,teacher.topic)">Export Notes →</button>
+      </div>
     </div>
   </div>`;
 }
 
-function renderICAPNotesHTML(notes) {
-  let html = esc(notes);
-  html = html.replace(/\[PASSIVE\]/g,'<span class="icap-badge icap-passive">PASSIVE</span>');
-  html = html.replace(/\[ACTIVE\]/g,'<span class="icap-badge icap-active">ACTIVE</span>');
-  html = html.replace(/\[CONSTRUCTIVE\]/g,'<span class="icap-badge icap-constructive">CONSTRUCTIVE</span>');
-  html = html.replace(/\[INTERACTIVE\]/g,'<span class="icap-badge icap-interactive">INTERACTIVE</span>');
-  html = html.replace(/^(\d+\.\s+.+)$/gm,'<strong style="font-size:1.05em;color:#74c69d;">$1</strong>');
-  html = html.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+// ══════════════════════════════════════════════
+// PROFESSIONAL NOTES RENDERER
+// ══════════════════════════════════════════════
+function renderICAPNotesHTML(raw) {
+  if(!raw) return '';
+  const lines = raw.split('\n');
+  let html = '';
+  let inList = false;
+  let inExample = false;
+
+  const closeList = () => { if(inList){ html += '</ul>'; inList=false; } };
+
+  const ICAP_CONFIG = {
+    'PASSIVE':      { cls:'icap-passive',      label:'PASSIVE — Receiving',      color:'#6c757d' },
+    'ACTIVE':       { cls:'icap-active',       label:'ACTIVE — Manipulating',    color:'#0d6efd' },
+    'CONSTRUCTIVE': { cls:'icap-constructive', label:'CONSTRUCTIVE — Generating',color:'#f4a261' },
+    'INTERACTIVE':  { cls:'icap-interactive',  label:'INTERACTIVE — Dialoguing', color:'#e63946' },
+  };
+
+  for(let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    const trimmed = line.trim();
+    if(!trimmed) { closeList(); html += '<div style="height:8px;"></div>'; continue; }
+
+    // Detect ICAP section tag like [PASSIVE] 1. INTRODUCTION...
+    const icapMatch = trimmed.match(/^\[?(PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE)\]?\s*\d*\.?\s*(.+)/i);
+    if(icapMatch && /PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE/.test(trimmed.substring(0,20))) {
+      closeList();
+      const tag = icapMatch[1].toUpperCase();
+      const cfg = ICAP_CONFIG[tag] || ICAP_CONFIG['PASSIVE'];
+      const title = icapMatch[2]
+        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+        .replace(/`(.+?)`/g,'<code style="background:rgba(116,198,157,0.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:0.9em;">$1</code>');
+      html += `
+      <div style="margin:28px 0 16px;border-left:4px solid ${cfg.color};padding-left:14px;">
+        <span class="icap-badge ${cfg.cls}" style="font-size:10px;letter-spacing:1px;margin-bottom:8px;display:inline-block;">${cfg.label}</span>
+        <h2 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);margin:0;line-height:1.3;">${title}</h2>
+      </div>`;
+      continue;
+    }
+
+    // Numbered section header: "1. Introduction" or "2. Core Concepts"
+    const numberedHeader = trimmed.match(/^(\d+)\.\s+([A-Z].+)$/);
+    if(numberedHeader && trimmed.length < 100) {
+      closeList();
+      const heading = numberedHeader[2].replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+      html += `<h3 style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#74c69d;margin:20px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border);">${numberedHeader[1]}. ${heading}</h3>`;
+      continue;
+    }
+
+    // ALL CAPS headers (e.g. "LEARNING OBJECTIVES:")
+    if(/^[A-Z][A-Z\s\(\)\-:]{5,}$/.test(trimmed) && trimmed.length < 80) {
+      closeList();
+      html += `<h4 style="font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;">${trimmed.replace(/:$/,'')}</h4>`;
+      continue;
+    }
+
+    // Example blocks — lines starting with "Example:" or "Worked Example"
+    if(/^(example|worked example|case study|illustration)[\s:]/i.test(trimmed)) {
+      closeList();
+      const exText = trimmed.replace(/^(example|worked example|case study|illustration)[\s:]*/i,'').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+      html += `<div style="background:rgba(13,110,253,0.06);border:1px solid rgba(13,110,253,0.2);border-left:3px solid #0d6efd;border-radius:8px;padding:12px 16px;margin:12px 0;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:#0d6efd;margin-bottom:6px;text-transform:uppercase;">Example</div>
+        <div style="font-size:13.5px;line-height:1.75;color:var(--text);">${exText||''}</div>`;
+      inExample = true;
+      continue;
+    }
+    if(inExample && trimmed === '') { html += '</div>'; inExample=false; continue; }
+
+    // Bullet points: -, *, •, –
+    if(/^[-\*•–]\s+/.test(trimmed)) {
+      const content = trimmed.replace(/^[-\*•–]\s+/,'').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/`(.+?)`/g,'<code style="background:rgba(116,198,157,0.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:0.9em;">$1</code>');
+      if(!inList) { html += '<ul style="list-style:none;padding:0;margin:8px 0;">'; inList=true; }
+      html += `<li style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;font-size:13.5px;line-height:1.7;color:var(--dim);">
+        <span style="flex-shrink:0;margin-top:7px;width:6px;height:6px;background:#74c69d;border-radius:50%;display:inline-block;"></span>
+        <span>${content}</span></li>`;
+      continue;
+    }
+
+    // Sub-bullets: indented dashes
+    if(/^\s{2,}[-\*•]\s+/.test(line)) {
+      const content = line.trim().replace(/^[-\*•]\s+/,'').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+      if(!inList) { html += '<ul style="list-style:none;padding:0 0 0 16px;margin:4px 0;">'; inList=true; }
+      html += `<li style="display:flex;gap:8px;align-items:flex-start;padding:3px 0;font-size:13px;line-height:1.65;color:var(--muted);">
+        <span style="flex-shrink:0;margin-top:7px;width:4px;height:4px;background:rgba(116,198,157,0.5);border-radius:50%;display:inline-block;"></span>
+        <span>${content}</span></li>`;
+      continue;
+    }
+
+    // Bold headers mid-paragraph: **Key term**:
+    if(/^\*\*[^*]+\*\*:/.test(trimmed)) {
+      closeList();
+      const formatted = trimmed.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--text);">$1</strong>').replace(/`(.+?)`/g,'<code style="background:rgba(116,198,157,0.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:0.9em;">$1</code>');
+      html += `<p style="font-size:13.5px;line-height:1.8;color:var(--dim);margin:6px 0;">${formatted}</p>`;
+      continue;
+    }
+
+    // Regular paragraph
+    closeList();
+    if(inExample) {
+      const formatted = trimmed.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/`(.+?)`/g,'<code style="background:rgba(116,198,157,0.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:0.9em;">$1</code>');
+      html += `<div style="font-size:13.5px;line-height:1.75;color:var(--dim);margin:4px 0;">${formatted}</div>`;
+    } else {
+      const formatted = trimmed.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--text);">$1</strong>').replace(/`(.+?)`/g,'<code style="background:rgba(116,198,157,0.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:0.9em;">$1</code>');
+      html += `<p style="font-size:13.5px;line-height:1.85;color:var(--dim);margin:6px 0;">${formatted}</p>`;
+    }
+  }
+  closeList();
+  if(inExample) html += '</div>';
   return html;
+}
+
+// ══════════════════════════════════════════════
+// EXPORT FUNCTIONS
+// ══════════════════════════════════════════════
+function exportNotesTxt(notes, topic) {
+  const blob = new Blob([notes], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `LectureAI_Notes_${(topic||'lecture').replace(/\s+/g,'_')}.txt`;
+  a.click();
+}
+
+function exportNotesPDF(notes, topic) {
+  // Build a clean printable HTML page and print to PDF
+  const content = renderICAPNotesHTML(notes);
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html>
+<html><head><meta charset="UTF-8"/>
+<title>LectureAI Notes — ${esc(topic||'Lecture')}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:#fff;color:#1a1a1a;padding:40px 48px;max-width:820px;margin:0 auto;line-height:1.7;}
+  h1{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#1b4332;margin-bottom:4px;}
+  .sub{font-size:13px;color:#666;margin-bottom:32px;border-bottom:2px solid #2d6a4f;padding-bottom:12px;}
+  h2{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#1a1a1a;}
+  h3{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#2d6a4f;}
+  h4{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#888;}
+  .icap-badge{display:inline-block;padding:2px 9px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.8px;}
+  .icap-passive{background:#6c757d;color:#fff;}
+  .icap-active{background:#0d6efd;color:#fff;}
+  .icap-constructive{background:#f4a261;color:#fff;}
+  .icap-interactive{background:#e63946;color:#fff;}
+  ul{list-style:none;padding:0;margin:8px 0;}
+  li{display:flex;gap:10px;align-items:flex-start;padding:4px 0;font-size:13px;color:#333;}
+  p{font-size:13px;color:#444;margin:6px 0;}
+  strong{color:#1a1a1a;}
+  @media print{body{padding:20px;}}
+</style></head>
+<body>
+<h1>${esc(topic||'Lecture Notes')}</h1>
+<div class="sub">Generated by LectureAI · ICAP Framework · ${new Date().toLocaleDateString()}</div>
+${content}
+</body></html>`);
+  win.document.close();
+  setTimeout(() => { win.focus(); win.print(); }, 800);
+}
+
+function exportNotesDocx(notes, topic) {
+  // Send to server for DOCX generation
+  fetch('/generate_docx', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({notes, topic: topic||'Lecture Notes'})
+  }).then(r => {
+    if(!r.ok) throw new Error('DOCX generation failed');
+    return r.blob();
+  }).then(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `LectureAI_Notes_${(topic||'lecture').replace(/\s+/g,'_')}.docx`;
+    a.click();
+  }).catch(() => {
+    // Fallback: export as formatted HTML if server not available
+    const content = renderICAPNotesHTML(notes);
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>${esc(topic)}</title></head><body style="font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;">${content}</body></html>`;
+    const blob = new Blob([html], {type:'application/msword'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `LectureAI_Notes_${(topic||'lecture').replace(/\s+/g,'_')}.doc`;
+    a.click();
+  });
+}
+
+function showExportMenu(notes, topic) {
+  if(!notes){ alert('No notes to export. Generate notes first.'); return; }
+  const html = `
+  <div style="padding:4px;">
+    <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;">Export Lecture Notes</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Topic: <strong style="color:var(--text);">${esc(topic||'Lecture')}</strong></p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button onclick="exportNotesPDF(teacher.notes,teacher.topic);closeModal();" class="btn btn-primary" style="justify-content:flex-start;gap:14px;">
+        <span style="font-size:20px;">📄</span>
+        <div style="text-align:left;"><div style="font-weight:700;">PDF</div><div style="font-size:11px;opacity:0.7;font-weight:400;">Opens print dialog — save as PDF</div></div>
+      </button>
+      <button onclick="exportNotesDocx(teacher.notes,teacher.topic);closeModal();" class="btn btn-ghost" style="justify-content:flex-start;gap:14px;border:1px solid var(--border);">
+        <span style="font-size:20px;">📝</span>
+        <div style="text-align:left;"><div style="font-weight:700;">Word Document (.docx)</div><div style="font-size:11px;opacity:0.7;font-weight:400;">Download as Word file</div></div>
+      </button>
+      <button onclick="exportNotesTxt(teacher.notes,teacher.topic);closeModal();" class="btn btn-ghost" style="justify-content:flex-start;gap:14px;border:1px solid var(--border);">
+        <span style="font-size:20px;">📋</span>
+        <div style="text-align:left;"><div style="font-weight:700;">Plain Text (.txt)</div><div style="font-size:11px;opacity:0.7;font-weight:400;">Simple text file</div></div>
+      </button>
+    </div>
+  </div>`;
+  showModal(html);
 }
 
 async function generateNotes() {
@@ -1170,8 +1375,6 @@ async function generateNotes() {
     const output = document.getElementById('notesOutput');
     if(card) card.style.display = '';
     if(output) output.innerHTML = renderICAPNotesHTML(res.notes);
-    const statusEl = document.getElementById('dash-notes-status');
-    if(statusEl) statusEl.textContent = 'Ready';
   } else { alert('Error: '+(res.error||'Failed to generate notes')); }
 }
 
@@ -1256,14 +1459,14 @@ function renderLive() {
       <label>Student question or concept to address</label>
       <textarea id="liveQ" placeholder="Paste a student question or concept..." style="min-height:70px;"></textarea>
       <button class="btn btn-primary btn-sm" onclick="liveQuestion()">Get AI Response</button>
-      <div id="liveQResult" class="out-box" style="display:none;margin-top:10px;max-height:240px;"></div>
+      <div id="liveQResult" class="out-box scrollable" style="display:none;margin-top:10px;"></div>
     </div>
     <div class="card">
       <h3>Confusion Rescue</h3>
       <label>Describe the confusion or misconception</label>
       <textarea id="confusionDesc" placeholder="e.g. Students are confusing correlation with causation..." style="min-height:65px;"></textarea>
       <button class="btn btn-amber btn-sm" onclick="confusionRescue()">Get Rescue Strategy</button>
-      <div id="confusionResult" class="out-box" style="display:none;margin-top:10px;max-height:240px;"></div>
+      <div id="confusionResult" class="out-box scrollable" style="display:none;margin-top:10px;"></div>
     </div>
     <div class="card">
       <h3>Pacing Check</h3>
@@ -1348,7 +1551,7 @@ function renderReports() {
       <label>Percentage who answered correctly</label>
       <input id="conceptPct" type="number" placeholder="e.g. 45"/>
       <button class="btn btn-primary btn-sm" onclick="conceptCheck()">Interpret Results</button>
-      <div id="conceptResult" class="out-box" style="display:none;margin-top:10px;max-height:240px;"></div>
+      <div id="conceptResult" class="out-box scrollable" style="display:none;margin-top:10px;"></div>
     </div>
   </div>`;
 }
@@ -1395,7 +1598,7 @@ function renderScript() {
         Generate Script
         <span id="scriptLoader" style="display:none;" class="loader"></span>
       </button>
-      <div id="scriptResult" class="out-box" style="display:none;margin-top:14px;max-height:400px;"></div>
+      <div id="scriptResult" class="out-box scrollable" style="display:none;margin-top:14px;"></div>
     </div>
   </div>`;
 }
@@ -1412,7 +1615,7 @@ function renderRubric() {
         Generate Rubric
         <span id="rubricLoader" style="display:none;" class="loader"></span>
       </button>
-      <div id="rubricResult" class="out-box" style="display:none;margin-top:14px;max-height:400px;"></div>
+      <div id="rubricResult" class="out-box scrollable" style="display:none;margin-top:14px;"></div>
     </div>
   </div>`;
 }
@@ -1569,7 +1772,7 @@ function renderPlan() {
         Generate My Study Plan
         <span id="planLoader" style="display:none;" class="loader"></span>
       </button>
-      <div id="studyPlanOutput" class="out-box" style="display:none;margin-top:14px;max-height:400px;"></div>
+      <div id="studyPlanOutput" class="out-box scrollable" style="display:none;margin-top:14px;"></div>
     </div>
   </div>`;
 }
