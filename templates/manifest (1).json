@@ -1,0 +1,25 @@
+{
+  "name": "LectureAI",
+  "short_name": "LectureAI",
+  "description": "Human-AI Co-Orchestration in Education. ICAP Framework for deeper learning.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#071a10",
+  "theme_color": "#071a10",
+  "orientation": "any",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "screenshots": [
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "wide", "label": "LectureAI Dashboard" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "narrow", "label": "LectureAI on Mobile" }
+  ],
+  "shortcuts": [
+    { "name": "Teacher Dashboard", "url": "/", "description": "Enter your teaching dashboard", "icons": [{"src": "/icon-192.png", "sizes": "192x192"}] },
+    { "name": "Join as Student", "url": "/", "description": "Join your class as a student", "icons": [{"src": "/icon-192.png", "sizes": "192x192"}] }
+  ]
+}
