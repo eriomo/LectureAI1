@@ -1131,13 +1131,16 @@ function renderLesson() {
       <p class="msg-info" style="margin-top:8px;">Notes follow the ICAP Framework: Passive → Active → Constructive → Interactive</p>
     </div>
     <div class="card" id="notesCard" style="${teacher.notes?'':'display:none'}">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
-        <h3 style="margin:0;">ICAP-Aligned Lecture Notes</h3>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <span class="icap-badge icap-passive">PASSIVE</span>
-          <span class="icap-badge icap-active">ACTIVE</span>
-          <span class="icap-badge icap-constructive">CONSTRUCTIVE</span>
-          <span class="icap-badge icap-interactive">INTERACTIVE</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <h3 style="margin:0;">Lecture Notes</h3>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:11px;color:var(--muted);">Section colours:</span>
+          <div style="display:flex;gap:8px;">
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);"><span style="width:10px;height:10px;background:#6c757d;border-radius:50%;display:inline-block;"></span>Passive</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);"><span style="width:10px;height:10px;background:#0d6efd;border-radius:50%;display:inline-block;"></span>Active</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);"><span style="width:10px;height:10px;background:#f4a261;border-radius:50%;display:inline-block;"></span>Constructive</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);"><span style="width:10px;height:10px;background:#e63946;border-radius:50%;display:inline-block;"></span>Interactive</span>
+          </div>
         </div>
       </div>
       <div id="notesOutput" class="out-box notes-box">${teacher.notes?renderICAPNotesHTML(teacher.notes):''}</div>
@@ -1153,114 +1156,113 @@ function renderLesson() {
 // ══════════════════════════════════════════════
 function renderICAPNotesHTML(raw) {
   if(!raw) return '';
+
+  // Strip [PASSIVE]/[ACTIVE] etc. tags from raw text — we use color only
+  const ICAP_COLORS = {
+    'PASSIVE':      '#6c757d',
+    'ACTIVE':       '#0d6efd',
+    'CONSTRUCTIVE': '#f4a261',
+    'INTERACTIVE':  '#e63946',
+  };
+
+  // Detect current ICAP color as we scan
+  let currentColor = '#74c69d';
+
   const lines = raw.split('\n');
   let html = '';
   let inList = false;
-  let inExample = false;
 
-  const closeList = () => { if(inList){ html += '</ul>'; inList=false; } };
+  const closeList = () => { if(inList){ html += '</ul>'; inList = false; } };
 
-  const ICAP_CONFIG = {
-    'PASSIVE':      { cls:'icap-passive',      label:'PASSIVE — Receiving',      color:'#6c757d' },
-    'ACTIVE':       { cls:'icap-active',       label:'ACTIVE — Manipulating',    color:'#0d6efd' },
-    'CONSTRUCTIVE': { cls:'icap-constructive', label:'CONSTRUCTIVE — Generating',color:'#f4a261' },
-    'INTERACTIVE':  { cls:'icap-interactive',  label:'INTERACTIVE — Dialoguing', color:'#e63946' },
-  };
+  const fmt = (s) => s
+    .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--text);font-weight:700;">$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code style="background:rgba(116,198,157,0.12);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:0.88em;color:#74c69d;">$1</code>');
 
   for(let i = 0; i < lines.length; i++) {
-    let line = lines[i];
-    const trimmed = line.trim();
-    if(!trimmed) { closeList(); html += '<div style="height:8px;"></div>'; continue; }
+    const raw_line = lines[i];
+    const trimmed = raw_line.trim();
+    if(!trimmed){ closeList(); html += '<div style="height:10px;"></div>'; continue; }
 
-    // Detect ICAP section tag like [PASSIVE] 1. INTRODUCTION...
-    const icapMatch = trimmed.match(/^\[?(PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE)\]?\s*\d*\.?\s*(.+)/i);
-    if(icapMatch && /PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE/.test(trimmed.substring(0,20))) {
+    // ICAP section tag — extract color, render as styled section header, no text label
+    const icapTagMatch = trimmed.match(/^\[?(PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE)\]?\s*(\d+\.\s+)?(.+)/i);
+    if(icapTagMatch && /^\[?(PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE)\]/.test(trimmed)) {
       closeList();
-      const tag = icapMatch[1].toUpperCase();
-      const cfg = ICAP_CONFIG[tag] || ICAP_CONFIG['PASSIVE'];
-      const title = icapMatch[2]
-        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-        .replace(/`(.+?)`/g,'<code style="background:rgba(116,198,157,0.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:0.9em;">$1</code>');
-      html += `
-      <div style="margin:28px 0 16px;border-left:4px solid ${cfg.color};padding-left:14px;">
-        <span class="icap-badge ${cfg.cls}" style="font-size:10px;letter-spacing:1px;margin-bottom:8px;display:inline-block;">${cfg.label}</span>
-        <h2 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);margin:0;line-height:1.3;">${title}</h2>
+      const tag = icapTagMatch[1].toUpperCase();
+      currentColor = ICAP_COLORS[tag] || '#74c69d';
+      const title = fmt(icapTagMatch[3] || '');
+      html += `<div style="display:flex;gap:0;margin:32px 0 14px;">
+        <div style="width:4px;flex-shrink:0;background:${currentColor};border-radius:2px;margin-right:14px;"></div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);line-height:1.3;">${title}</h2>
       </div>`;
       continue;
     }
 
-    // Numbered section header: "1. Introduction" or "2. Core Concepts"
-    const numberedHeader = trimmed.match(/^(\d+)\.\s+([A-Z].+)$/);
-    if(numberedHeader && trimmed.length < 100) {
+    // Numbered section: "1. Introduction" — clean header
+    const numMatch = trimmed.match(/^(\d+)\.\s+(.+)$/);
+    if(numMatch && trimmed.length < 100 && /^[A-Z]/.test(numMatch[2])) {
       closeList();
-      const heading = numberedHeader[2].replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
-      html += `<h3 style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#74c69d;margin:20px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border);">${numberedHeader[1]}. ${heading}</h3>`;
+      html += `<div style="display:flex;gap:0;margin:22px 0 10px;">
+        <div style="width:3px;flex-shrink:0;background:${currentColor};opacity:0.5;border-radius:2px;margin-right:12px;"></div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);">${numMatch[1]}. ${fmt(numMatch[2])}</h3>
+      </div>`;
       continue;
     }
 
-    // ALL CAPS headers (e.g. "LEARNING OBJECTIVES:")
-    if(/^[A-Z][A-Z\s\(\)\-:]{5,}$/.test(trimmed) && trimmed.length < 80) {
+    // ALL CAPS label headers e.g. "LEARNING OBJECTIVES:"
+    if(/^[A-Z][A-Z\s\-:]{4,}$/.test(trimmed) && trimmed.length < 60) {
       closeList();
-      html += `<h4 style="font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;">${trimmed.replace(/:$/,'')}</h4>`;
+      html += `<p style="font-size:10px;font-weight:700;letter-spacing:2px;color:${currentColor};text-transform:uppercase;margin:18px 0 6px;opacity:0.8;">${trimmed.replace(/:$/,'')}</p>`;
       continue;
     }
 
-    // Example blocks — lines starting with "Example:" or "Worked Example"
-    if(/^(example|worked example|case study|illustration)[\s:]/i.test(trimmed)) {
+    // Example / Worked Example block
+    if(/^(example|worked example|case study)[\s:]/i.test(trimmed)) {
       closeList();
-      const exText = trimmed.replace(/^(example|worked example|case study|illustration)[\s:]*/i,'').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
-      html += `<div style="background:rgba(13,110,253,0.06);border:1px solid rgba(13,110,253,0.2);border-left:3px solid #0d6efd;border-radius:8px;padding:12px 16px;margin:12px 0;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:#0d6efd;margin-bottom:6px;text-transform:uppercase;">Example</div>
-        <div style="font-size:13.5px;line-height:1.75;color:var(--text);">${exText||''}</div>`;
-      inExample = true;
-      continue;
-    }
-    if(inExample && trimmed === '') { html += '</div>'; inExample=false; continue; }
-
-    // Bullet points: -, *, •, –
-    if(/^[-\*•–]\s+/.test(trimmed)) {
-      const content = trimmed.replace(/^[-\*•–]\s+/,'').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/`(.+?)`/g,'<code style="background:rgba(116,198,157,0.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:0.9em;">$1</code>');
-      if(!inList) { html += '<ul style="list-style:none;padding:0;margin:8px 0;">'; inList=true; }
-      html += `<li style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;font-size:13.5px;line-height:1.7;color:var(--dim);">
-        <span style="flex-shrink:0;margin-top:7px;width:6px;height:6px;background:#74c69d;border-radius:50%;display:inline-block;"></span>
-        <span>${content}</span></li>`;
+      const exContent = fmt(trimmed.replace(/^(example|worked example|case study)[\s:]*/i,''));
+      html += `<div style="background:rgba(13,110,253,0.05);border-left:3px solid #0d6efd;border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:#0d6efd;margin-bottom:6px;text-transform:uppercase;">Worked Example</div>
+        <div style="font-size:13.5px;line-height:1.75;color:var(--dim);">${exContent}</div>`;
+      // Check if next lines continue the example
+      let j = i+1;
+      while(j < lines.length && lines[j].trim() && !/^(\[?(PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE)\]?|\d+\.|[-•*])/.test(lines[j].trim())){
+        html += `<div style="font-size:13.5px;line-height:1.75;color:var(--dim);margin-top:4px;">${fmt(lines[j].trim())}</div>`;
+        j++;
+      }
+      html += '</div>';
+      i = j - 1;
       continue;
     }
 
-    // Sub-bullets: indented dashes
-    if(/^\s{2,}[-\*•]\s+/.test(line)) {
-      const content = line.trim().replace(/^[-\*•]\s+/,'').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
-      if(!inList) { html += '<ul style="list-style:none;padding:0 0 0 16px;margin:4px 0;">'; inList=true; }
-      html += `<li style="display:flex;gap:8px;align-items:flex-start;padding:3px 0;font-size:13px;line-height:1.65;color:var(--muted);">
-        <span style="flex-shrink:0;margin-top:7px;width:4px;height:4px;background:rgba(116,198,157,0.5);border-radius:50%;display:inline-block;"></span>
-        <span>${content}</span></li>`;
+    // Bullet points
+    if(/^[-•*–]\s+/.test(trimmed) || /^\s{2,}[-•*]\s+/.test(raw_line)) {
+      const isSubBullet = /^\s{2,}/.test(raw_line);
+      const content = fmt(trimmed.replace(/^[-•*–]\s+/,''));
+      if(!inList){ html += '<ul style="list-style:none;padding:0;margin:8px 0 4px;">'; inList=true; }
+      const dotSize = isSubBullet ? '4px' : '6px';
+      const dotColor = isSubBullet ? `${currentColor}66` : currentColor;
+      const indent = isSubBullet ? 'padding-left:16px;' : '';
+      html += `<li style="display:flex;gap:10px;align-items:flex-start;padding:4px 0;${indent}">
+        <span style="flex-shrink:0;margin-top:8px;width:${dotSize};height:${dotSize};background:${dotColor};border-radius:50%;display:block;"></span>
+        <span style="font-size:13.5px;line-height:1.75;color:var(--dim);">${content}</span>
+      </li>`;
       continue;
     }
 
-    // Bold headers mid-paragraph: **Key term**:
-    if(/^\*\*[^*]+\*\*:/.test(trimmed)) {
+    // Bold key term at start: "**Term**: definition"
+    if(/^\*\*[^*]+\*\*/.test(trimmed)) {
       closeList();
-      const formatted = trimmed.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--text);">$1</strong>').replace(/`(.+?)`/g,'<code style="background:rgba(116,198,157,0.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:0.9em;">$1</code>');
-      html += `<p style="font-size:13.5px;line-height:1.8;color:var(--dim);margin:6px 0;">${formatted}</p>`;
+      html += `<p style="font-size:13.5px;line-height:1.8;color:var(--dim);margin:5px 0;">${fmt(trimmed)}</p>`;
       continue;
     }
 
     // Regular paragraph
     closeList();
-    if(inExample) {
-      const formatted = trimmed.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/`(.+?)`/g,'<code style="background:rgba(116,198,157,0.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:0.9em;">$1</code>');
-      html += `<div style="font-size:13.5px;line-height:1.75;color:var(--dim);margin:4px 0;">${formatted}</div>`;
-    } else {
-      const formatted = trimmed.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--text);">$1</strong>').replace(/`(.+?)`/g,'<code style="background:rgba(116,198,157,0.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:0.9em;">$1</code>');
-      html += `<p style="font-size:13.5px;line-height:1.85;color:var(--dim);margin:6px 0;">${formatted}</p>`;
-    }
+    html += `<p style="font-size:13.5px;line-height:1.85;color:var(--dim);margin:5px 0;">${fmt(trimmed)}</p>`;
   }
   closeList();
-  if(inExample) html += '</div>';
   return html;
 }
-
-// ══════════════════════════════════════════════
 // EXPORT FUNCTIONS
 // ══════════════════════════════════════════════
 function exportNotesTxt(notes, topic) {
@@ -1933,27 +1935,25 @@ function renderSlide(idx){
   const slide=slideshowData[idx];
   const viewport=document.querySelector('.slide-viewport');
   if(!viewport) return;
-  let content=document.getElementById('slideContent');
 
-  const clone=content.cloneNode(false);
-  clone.id='slideContent';
-  clone.className='slide-content type-'+(slide.type||'content');
+  // Color indicator for ICAP type (left edge only, no text)
+  const icapColors={passive:'#6c757d',active:'#0d6efd',constructive:'#f4a261',interactive:'#e63946'};
+  const icapColor = icapColors[slide.icap] || 'transparent';
+  const typeClass = 'slide-content type-'+(slide.type||'content');
 
-  const icapMap={passive:'icap-passive',active:'icap-active',constructive:'icap-constructive',interactive:'icap-interactive'};
-  const icapClass=icapMap[slide.icap]||'';
+  const bulletsHtml = (slide.bullets||[]).map(b=>`<li>${esc(b)}</li>`).join('');
 
-  let html='';
-  if(slide.icap&&slide.type!=='title') html+=`<span class="slide-icap ${icapClass}">${(slide.icap||'').toUpperCase()}</span>`;
-  html+=`<h2>${esc(slide.title||'')}</h2><ul>`;
-  (slide.bullets||[]).forEach(b=>{ html+=`<li>${esc(b)}</li>`; });
-  html+=`</ul><div style="position:absolute;bottom:12px;right:18px;font-size:11px;color:rgba(255,255,255,.2);font-family:'JetBrains Mono',monospace;">${idx+1} / ${slideshowData.length}</div>`;
-
-  clone.innerHTML=html;
-  viewport.replaceChild(clone,content);
+  // Replace entire viewport content cleanly — no clone, no bleed
+  viewport.innerHTML = `
+    <div class="${typeClass}" id="slideContent" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:5% 8%;color:#fff;">
+      ${slide.type!=='title'?`<div style="position:absolute;top:0;left:0;width:5px;height:100%;background:${icapColor};opacity:0.7;"></div>`:''}
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.3rem,3vw,2.2rem);margin-bottom:0.9rem;font-weight:700;text-shadow:0 2px 10px rgba(0,0,0,.4);line-height:1.2;">${esc(slide.title||'')}</h2>
+      <ul style="list-style:none;padding:0;max-width:90%;">${bulletsHtml}</ul>
+      <div style="position:absolute;bottom:12px;right:18px;font-size:11px;color:rgba(255,255,255,.2);font-family:'JetBrains Mono',monospace;">${idx+1} / ${slideshowData.length}</div>
+    </div>`;
 
   const narr=document.getElementById('slideNarration');
   if(narr) narr.textContent=slide.narration||'';
-
   const pb=document.getElementById('slideProgressBar');
   const cnt=document.getElementById('slideCounter');
   if(pb) pb.style.width=(((idx+1)/slideshowData.length)*100)+'%';
