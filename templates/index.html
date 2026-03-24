@@ -48,9 +48,9 @@ body.light{
 /* ── App shell ── */
 .app-shell{display:flex;flex-direction:column;height:100%;height:100dvh;overflow:hidden;}
 .app-body{display:flex;flex:1;min-height:0;overflow:hidden;}
-.main-col{display:flex;flex-direction:column;flex:1;min-width:0;overflow:hidden;}
-.topbar{height:56px;flex-shrink:0;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:8px;}
-.content-area{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:24px 20px 80px;min-height:0;}
+.main-col{display:flex;flex-direction:column;flex:1;min-width:0;min-height:0;overflow:hidden;}
+.topbar{height:56px;flex-shrink:0;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:8px;z-index:10;position:relative;}
+.content-area{flex:1;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:24px 20px 80px;min-height:0;position:relative;}
 .sidebar{width:250px;flex-shrink:0;overflow-y:auto;position:fixed;top:0;bottom:0;left:0;z-index:100;background:var(--card);border-right:1px solid var(--border);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);}
 .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;backdrop-filter:blur(2px);}
 .bottom-tabs{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;z-index:100;border-top:1px solid var(--border);background:var(--card);}
@@ -267,6 +267,8 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
       <a href="#icap" style="color:rgba(236,240,236,0.55);font-size:13px;font-weight:500;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#74c69d'" onmouseout="this.style.color='rgba(236,240,236,0.55)'">ICAP Framework</a>
     </div>
     <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+      <button id="landingInstallBtn" onclick="showInstallGuide()" style="display:none;padding:7px 14px;border-radius:8px;background:rgba(116,198,157,0.1);color:#74c69d;font-weight:600;font-size:12px;border:1px solid rgba(116,198,157,0.25);cursor:pointer;font-family:'DM Sans',sans-serif;">+ Install App</button>
+      <button onclick="showInstallGuide()" style="padding:7px 14px;border-radius:8px;background:rgba(255,255,255,0.06);color:rgba(236,240,236,0.6);font-weight:500;font-size:12px;border:1px solid rgba(255,255,255,0.08);cursor:pointer;font-family:'DM Sans',sans-serif;">Install App</button>
       <button onclick="showAuth('teacher')" style="padding:8px 18px;border-radius:8px;background:transparent;color:rgba(236,240,236,0.8);font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.1);cursor:pointer;font-family:'DM Sans',sans-serif;">Teacher</button>
       <button onclick="showAuth('student')" style="padding:8px 18px;border-radius:8px;background:linear-gradient(135deg,#2d6a4f,#40916c);color:#fff;font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">Join as Student</button>
     </div>
@@ -594,6 +596,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
         <button onclick="tGoPage('script')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;transition:all 0.12s;">🎥 Video Script</button>
         <button onclick="tGoPage('rubric')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;transition:all 0.12s;">📐 Rubric Builder</button>
         <button onclick="tGoPage('export')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;transition:all 0.12s;">📤 Export Slides</button>
+        <button onclick="showInstallGuide()" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid rgba(116,198,157,0.2);background:rgba(116,198,157,0.05);color:#74c69d;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:6px;text-align:left;">📲 Install App</button>
       </nav>
       <div style="padding:8px 6px;border-top:1px solid var(--border);">
         <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;">
@@ -688,6 +691,8 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
         <button onclick="sGoPage('work')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">📝 Assignments</button>
         <button onclick="sGoPage('tests')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">📊 Tests</button>
         <button onclick="sGoPage('discuss')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">💬 Discussion</button>
+        <button onclick="sGoPage('history')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">📚 Past Lectures</button>
+        <button onclick="showInstallGuide()" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid rgba(116,198,157,0.2);background:rgba(116,198,157,0.05);color:#74c69d;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:6px;text-align:left;">📲 Install App</button>
       </nav>
       <div style="padding:8px 6px;border-top:1px solid var(--border);">
         <button onclick="doLogout()" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--muted);font-size:13px;cursor:pointer;font-family:inherit;">🚪 Logout</button>
@@ -855,6 +860,7 @@ function show(id,mode='block'){ const e=document.getElementById(id); if(e) e.sty
 
 function doLogout() {
   teacher={}; student={};
+  localStorage.removeItem('lai_session');
   clearInterval(reactionPollInterval);
   stopSlideshow();
   showLanding();
@@ -934,6 +940,7 @@ async function teacherLogin() {
   const verify = await api('/get_class',{code});
   if(!verify.success){ document.getElementById('tAuthMsg').textContent='Save could not be verified. Try again.'; return; }
   teacher = {email,name,code,topic,level,language:'English'};
+  saveSession();
   document.getElementById('tSidebarName').textContent = name;
   document.getElementById('tSidebarCode').textContent = code;
   document.getElementById('tTopbarCode').textContent = code;
@@ -961,6 +968,7 @@ async function studentLogin() {
   }
   const cls = res.class;
   student = {email,name,code,year,background,topic:cls.topic,level:cls.level,language:'English'};
+  saveSession();
   document.getElementById('sSidebarName').textContent = name;
   document.getElementById('sSidebarCode').textContent = code;
   document.getElementById('sTopbarCode').textContent = code;
@@ -1133,6 +1141,8 @@ async function generateNotes() {
   loading('notesLoader',false);
   if(res.success){
     teacher.notes = res.notes; teacher.topic = topic; teacher.level = level;
+    saveLectureToHistory(res.notes, topic, level);
+    cacheNotesOffline(teacher.code+'_latest', res.notes);
     const card = document.getElementById('notesCard');
     const output = document.getElementById('notesOutput');
     if(card) card.style.display = '';
@@ -1403,7 +1413,7 @@ function renderExport() {
 function sGoPage(page) {
   sCurrentPage = page;
   closeSidebar('s');
-  const titles = {dashboard:'Dashboard',ask:'Ask AI',notes:'Lesson Notes',quiz:'Practice Quiz',plan:'Study Plan',work:'Assignments',tests:'Tests',discuss:'Discussion'};
+  const titles = {dashboard:'Dashboard',ask:'Ask AI',notes:'Lesson Notes',quiz:'Practice Quiz',plan:'Study Plan',work:'Assignments',tests:'Tests',discuss:'Discussion',history:'Past Lectures'};
   document.getElementById('sPageTitle').textContent = titles[page]||page;
 
   ['dashboard','ask','notes','work','quiz'].forEach(t => {
@@ -1421,6 +1431,7 @@ function sGoPage(page) {
     work: renderSWork,
     tests: renderSTests,
     discuss: renderSDiscuss,
+    history: renderSHistory,
   };
   if(pages[page]) content.innerHTML = pages[page]();
   content.scrollTop = 0;
@@ -1582,6 +1593,28 @@ function renderSDiscuss() {
   </div>`;
 }
 
+function renderSHistory() {
+  const cached = getCachedNotes(student.code+'_latest');
+  const hasCache = !!cached;
+  return `<div class="fade">
+    <div class="card">
+      <h3>Past Lecture Notes</h3>
+      <p class="msg-info">Access your teacher's most recent notes — available offline once loaded.</p>
+      ${hasCache ? `
+      <div style="background:rgba(45,106,79,0.08);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:700;color:#74c69d;margin-bottom:8px;">CACHED LECTURE NOTES</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Available offline. Last updated when you loaded your notes.</div>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('cachedNotesView').style.display=document.getElementById('cachedNotesView').style.display==='none'?'block':'none'">Show / Hide Notes</button>
+        <div id="cachedNotesView" style="display:none;margin-top:12px;" class="out-box">${renderICAPNotesHTML(cached)}</div>
+      </div>` : `
+      <div style="background:rgba(244,162,97,0.06);border:1px solid rgba(244,162,97,0.2);border-radius:10px;padding:14px;margin-bottom:12px;">
+        <div style="font-size:13px;color:var(--muted);">No cached notes yet. Go to <strong>Lesson Notes</strong> and click Load Notes while online. The notes will then be available here offline.</div>
+      </div>`}
+      <button class="btn btn-primary btn-sm" onclick="loadStuNotes().then(()=>sGoPage('notes'))">Load Latest Notes</button>
+    </div>
+  </div>`;
+}
+
 // ══════════════════════════════════════════════
 // SLIDESHOW ENGINE
 // ══════════════════════════════════════════════
@@ -1729,8 +1762,178 @@ function updateSlideControls(){
 function toggleFullscreen(){ const el=document.getElementById('slideshowContainer'); if(el) el.classList.toggle('fullscreen'); }
 
 // ══════════════════════════════════════════════
-// TIMER
+// SESSION PERSISTENCE (survives refresh)
 // ══════════════════════════════════════════════
+function saveSession() {
+  localStorage.setItem('lai_session', JSON.stringify({
+    teacher: teacher.code ? teacher : null,
+    student: student.code ? student : null,
+    page: teacher.code ? tCurrentPage : sCurrentPage,
+    ts: Date.now()
+  }));
+}
+
+function restoreSession() {
+  try {
+    const raw = localStorage.getItem('lai_session');
+    if(!raw) return false;
+    const s = JSON.parse(raw);
+    // Expire after 8 hours
+    if(Date.now() - s.ts > 8 * 60 * 60 * 1000) { localStorage.removeItem('lai_session'); return false; }
+
+    if(s.teacher && s.teacher.code) {
+      teacher = s.teacher;
+      document.getElementById('tSidebarName').textContent = teacher.name;
+      document.getElementById('tSidebarCode').textContent = teacher.code;
+      document.getElementById('tTopbarCode').textContent = teacher.code;
+      hide(['landingPage','teacherAuth','studentAuth','studentDash']);
+      show('teacherDash');
+      tGoPage(s.page || 'dashboard');
+      startReactionPoll();
+      initVoices();
+      return true;
+    }
+    if(s.student && s.student.code) {
+      student = s.student;
+      document.getElementById('sSidebarName').textContent = student.name;
+      document.getElementById('sSidebarCode').textContent = student.code;
+      document.getElementById('sTopbarCode').textContent = student.code;
+      hide(['landingPage','teacherAuth','studentAuth','teacherDash']);
+      show('studentDash');
+      sGoPage(s.page || 'dashboard');
+      loadPersonalNotes();
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+// Save session on every page navigation — called at end of actual go functions
+function _saveNavSession(page, isTeacher) {
+  if(isTeacher) tCurrentPage = page;
+  else sCurrentPage = page;
+  saveSession();
+}
+
+// ══════════════════════════════════════════════
+// OFFLINE SUPPORT
+// ══════════════════════════════════════════════
+let isOnline = navigator.onLine;
+window.addEventListener('online',  () => { isOnline=true;  hideOfflineBanner(); });
+window.addEventListener('offline', () => { isOnline=false; showOfflineBanner(); });
+
+function showOfflineBanner() {
+  let b = document.getElementById('offlineBanner');
+  if(!b) {
+    b = document.createElement('div');
+    b.id = 'offlineBanner';
+    b.style.cssText = 'position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#E05252;color:#fff;padding:8px 20px;border-radius:100px;font-size:12px;font-weight:600;z-index:9999;font-family:"DM Sans",sans-serif;box-shadow:0 4px 16px rgba(0,0,0,0.3);';
+    b.textContent = 'You are offline — some features unavailable';
+    document.body.appendChild(b);
+  }
+  b.style.display = '';
+}
+function hideOfflineBanner() {
+  const b = document.getElementById('offlineBanner');
+  if(b) b.style.display = 'none';
+}
+
+// Cache notes locally for offline viewing
+function cacheNotesOffline(classCode, notes) {
+  try { localStorage.setItem('lai_notes_'+classCode, notes); } catch(e) {}
+}
+function getCachedNotes(classCode) {
+  return localStorage.getItem('lai_notes_'+classCode) || null;
+}
+
+// Cache quiz questions locally
+function cacheQuizOffline(classCode, questions) {
+  try { localStorage.setItem('lai_quiz_'+classCode, JSON.stringify(questions)); } catch(e) {}
+}
+function getCachedQuiz(classCode) {
+  try { const s=localStorage.getItem('lai_quiz_'+classCode); return s?JSON.parse(s):null; } catch(e){ return null; }
+}
+
+// ══════════════════════════════════════════════
+// LECTURE HISTORY (TEACHER)
+// ══════════════════════════════════════════════
+function getLectureHistory() {
+  return JSON.parse(localStorage.getItem('lai_lectures_'+teacher.code)||'[]');
+}
+function saveLectureToHistory(notes, topic, level) {
+  const h = getLectureHistory();
+  // Don't duplicate same session
+  const existing = h.findIndex(x => x.topic === topic && x.date === new Date().toLocaleDateString());
+  if(existing >= 0) { h[existing].notes = notes; }
+  else {
+    h.unshift({
+      id: Date.now().toString(),
+      topic, level, notes,
+      date: new Date().toLocaleDateString(),
+      timestamp: Date.now()
+    });
+  }
+  if(h.length > 30) h.pop();
+  localStorage.setItem('lai_lectures_'+teacher.code, JSON.stringify(h));
+  cacheNotesOffline(teacher.code+'_latest', notes);
+}
+
+// ══════════════════════════════════════════════
+// INSTALL GUIDE
+// ══════════════════════════════════════════════
+function showInstallGuide() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isAndroid = /Android/.test(navigator.userAgent);
+  const isMac = /Mac/.test(navigator.userAgent) && !isIOS;
+
+  const steps = isIOS ? [
+    { n:'1', text:'Tap the <strong>Share button</strong> at the bottom of Safari (the box with an arrow)' },
+    { n:'2', text:'Scroll down and tap <strong>"Add to Home Screen"</strong>' },
+    { n:'3', text:'Tap <strong>"Add"</strong> in the top right' },
+    { n:'✓', text:'LectureAI appears on your home screen — tap it to open as a full app' },
+  ] : isAndroid ? [
+    { n:'1', text:'Tap the <strong>three-dot menu</strong> (⋮) in the top right of Chrome' },
+    { n:'2', text:'Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>' },
+    { n:'3', text:'Tap <strong>Install</strong> when prompted' },
+    { n:'✓', text:'LectureAI appears in your app drawer and home screen' },
+  ] : [
+    { n:'1', text:'In <strong>Chrome</strong>, click the <strong>install icon</strong> (⊕) in the address bar — far right' },
+    { n:'2', text:'Click <strong>"Install LectureAI"</strong>' },
+    { n:'3', text:'LectureAI opens as a standalone window — no browser bars' },
+    { n:'Tip', text:'In <strong>Safari on Mac</strong>: File → Add to Dock, or share → Add to Dock' },
+  ];
+
+  const html = `
+  <div style="padding:4px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <div style="width:44px;height:44px;background:linear-gradient(135deg,#2d6a4f,#40916c);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:22px;color:#fff;flex-shrink:0;">L</div>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);">Install LectureAI</div>
+        <div style="font-size:12px;color:var(--muted);">${isIOS?'iPhone / iPad':isAndroid?'Android':isMac?'Mac':'Desktop'} · Add to ${isIOS||isAndroid?'Home Screen':'Desktop'}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      ${steps.map(s=>`
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(45,106,79,0.15);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#74c69d;flex-shrink:0;">${s.n}</div>
+        <div style="font-size:13.5px;color:var(--dim);line-height:1.6;padding-top:4px;">${s.text}</div>
+      </div>`).join('')}
+    </div>
+    <div style="background:rgba(45,106,79,0.08);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+      <div style="font-size:12px;color:var(--muted);line-height:1.7;">Once installed, LectureAI works like a native app — full screen, no browser UI, and some features work offline including your personal notes and cached lecture notes.</div>
+    </div>
+  </div>`;
+  showModal(html);
+}
+
+// Auto-prompt install on landing page
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  window._deferredInstall = e;
+  // Show subtle install button on landing
+  const btn = document.getElementById('landingInstallBtn');
+  if(btn) { btn.style.display=''; btn.onclick = () => { e.prompt(); }; }
+});
 function startTimer(){ if(!timerRunning){ timerRunning=true; timerInterval=setInterval(()=>{ timerSecs++; updateTimerDisplay(); },1000); } }
 function pauseTimer(){ timerRunning=false; clearInterval(timerInterval); }
 function resetTimer(){ pauseTimer(); timerSecs=0; updateTimerDisplay(); }
@@ -1815,20 +2018,20 @@ async function loadAttendance(){
 // ══════════════════════════════════════════════
 function saveToHistory(){
   if(!teacher.notes){alert('Generate notes first');return;}
-  const h=JSON.parse(localStorage.getItem('lai_history')||'[]');
-  h.unshift({topic:teacher.topic,level:teacher.level,notes:teacher.notes,date:new Date().toLocaleDateString()});
-  if(h.length>20)h.pop();
-  localStorage.setItem('lai_history',JSON.stringify(h));
-  alert('Lesson plan saved to history.');
+  saveLectureToHistory(teacher.notes, teacher.topic, teacher.level);
+  alert('Lecture saved to history.');
 }
 function openHistory(){
-  const h=JSON.parse(localStorage.getItem('lai_history')||'[]');
+  const h = getLectureHistory();
   const list=document.getElementById('historyList');list.innerHTML='';
-  if(!h.length){list.innerHTML='<p class="msg-info">No saved plans yet.</p>';document.getElementById('historyPanel').style.display='';return;}
-  h.forEach((item,i)=>{
+  if(!h.length){list.innerHTML='<p class="msg-info">No saved lectures yet. Generate notes and they\'ll be saved automatically.</p>';document.getElementById('historyPanel').style.display='';return;}
+  h.forEach(item=>{
     const d=document.createElement('div');d.className='hist-item';
-    d.innerHTML=`<div style="font-weight:600;color:#74c69d;">${esc(item.topic)}</div><div style="font-size:11px;color:var(--muted);">${item.level} · ${item.date}</div>`;
-    d.onclick=()=>{teacher.notes=item.notes;teacher.topic=item.topic;teacher.level=item.level;closeHistory();tGoPage('lesson');};
+    d.innerHTML=`<div style="font-weight:600;color:#74c69d;font-size:13px;">${esc(item.topic)}</div><div style="font-size:11px;color:var(--muted);">${item.level} · ${item.date}</div>`;
+    d.onclick=()=>{
+      teacher.notes=item.notes; teacher.topic=item.topic; teacher.level=item.level;
+      closeHistory(); tGoPage('lesson');
+    };
     list.appendChild(d);
   });
   document.getElementById('historyPanel').style.display='';
@@ -2027,10 +2230,22 @@ async function studentAsk(){
   if(el) el.textContent=res.result||res.error;
 }
 async function loadStuNotes(){
-  const res=await api('/get_notes',{classCode:student.code});
   const el=document.getElementById('stuNotesOutput');if(!el)return;el.style.display='';
-  if(res.success&&res.notes) el.innerHTML=renderICAPNotesHTML(res.notes);
-  else el.textContent='No notes have been generated yet. Ask your teacher.';
+  el.textContent='Loading notes...';
+
+  // Try server first, fall back to cache
+  const res=await api('/get_notes',{classCode:student.code});
+  if(res.success&&res.notes){
+    cacheNotesOffline(student.code+'_latest', res.notes);
+    el.innerHTML=renderICAPNotesHTML(res.notes);
+  } else {
+    const cached = getCachedNotes(student.code+'_latest');
+    if(cached){
+      el.innerHTML='<div style="font-size:11px;color:var(--muted);margin-bottom:10px;padding:6px 10px;background:rgba(244,162,97,0.1);border-radius:7px;border:1px solid rgba(244,162,97,0.2);">Showing cached notes (offline)</div>'+renderICAPNotesHTML(cached);
+    } else {
+      el.textContent='No notes available yet. Ask your teacher to generate notes, or check your connection.';
+    }
+  }
 }
 function savePersonalNotes(){ localStorage.setItem('lai_pnotes_'+student.code,document.getElementById('personalNotes')?.value||''); }
 function loadPersonalNotes(){ const s=localStorage.getItem('lai_pnotes_'+student.code); const el=document.getElementById('personalNotes'); if(s&&el) el.value=s; }
@@ -2042,11 +2257,20 @@ function downloadPersonalNotes(){
 }
 async function loadStuQuiz(){
   loading('stuQuizLoader',true);
-  const res=await api('/generate_quiz',{topic:student.topic,level:student.level,notes:''});
+  const el=document.getElementById('stuQuizContent');if(!el)return;
+  el.innerHTML='<p class="msg-info">Generating quiz...</p>';
+
+  let questions = null;
+  if(isOnline) {
+    const res=await api('/generate_quiz',{topic:student.topic,level:student.level,notes:''});
+    if(res.success&&res.questions){ questions=res.questions; cacheQuizOffline(student.code,questions); }
+  }
+  if(!questions) questions = getCachedQuiz(student.code);
+
   loading('stuQuizLoader',false);
-  const el=document.getElementById('stuQuizContent');if(!el)return;el.innerHTML='';
-  if(!res.success){el.innerHTML='<p class="msg-error">Could not generate quiz. Try again.</p>';return;}
-  stuQuizQuestions=res.questions; stuQuizAnswers={};
+  el.innerHTML='';
+  if(!questions||!questions.length){el.innerHTML='<p class="msg-error">Could not generate quiz. Check your connection.</p>';return;}
+  stuQuizQuestions=questions; stuQuizAnswers={};
   res.questions.forEach((q,i)=>{
     const div=document.createElement('div');div.style.marginBottom='20px';
     div.innerHTML=`<p style="font-weight:600;font-size:13.5px;margin-bottom:8px;">Q${i+1}. ${esc(q.q)}</p>`;
@@ -2215,6 +2439,18 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/sw.js').catch(()=>{});
   });
 }
+
+// Show offline banner if already offline on load
+if(!navigator.onLine) showOfflineBanner();
+
+// Restore session on page load (fixes refresh bug)
+window.addEventListener('DOMContentLoaded', () => {
+  if(!restoreSession()) {
+    // No session — show landing
+    show('landingPage');
+    hide(['teacherDash','studentDash','teacherAuth','studentAuth']);
+  }
+});
 </script>
 </body>
 </html>
