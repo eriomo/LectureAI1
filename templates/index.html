@@ -968,7 +968,7 @@ async function teacherLogin() {
   document.getElementById('tSidebarCode').textContent = code;
   document.getElementById('tTopbarCode').textContent = code;
   hide(['landingPage','teacherAuth','studentAuth']);
-  show('teacherDash');
+  show('teacherDash', 'flex');
   tGoPage('dashboard');
   startReactionPoll();
   initVoices();
@@ -996,7 +996,7 @@ async function studentLogin() {
   document.getElementById('sSidebarCode').textContent = code;
   document.getElementById('sTopbarCode').textContent = code;
   hide(['landingPage','teacherAuth','studentAuth']);
-  show('studentDash');
+  show('studentDash', 'flex');
   sGoPage('dashboard');
   loadPersonalNotes();
 }
@@ -1810,7 +1810,7 @@ function restoreSession() {
       document.getElementById('tSidebarCode').textContent = teacher.code;
       document.getElementById('tTopbarCode').textContent = teacher.code;
       hide(['landingPage','teacherAuth','studentAuth','studentDash']);
-      show('teacherDash');
+      show('teacherDash','flex');
       tGoPage(s.page || 'dashboard');
       startReactionPoll();
       initVoices();
@@ -1822,7 +1822,7 @@ function restoreSession() {
       document.getElementById('sSidebarCode').textContent = student.code;
       document.getElementById('sTopbarCode').textContent = student.code;
       hide(['landingPage','teacherAuth','studentAuth','teacherDash']);
-      show('studentDash');
+      show('studentDash','flex');
       sGoPage(s.page || 'dashboard');
       loadPersonalNotes();
       return true;
