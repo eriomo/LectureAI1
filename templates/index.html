@@ -169,12 +169,20 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
 
 /* ── Slideshow ── */
 .slideshow-wrap{position:relative;background:#000;border-radius:14px;overflow:hidden;}
-.slideshow-wrap.fs-fallback{position:fixed!important;inset:0!important;border-radius:0!important;z-index:9999!important;width:100vw!important;height:100vh!important;height:100dvh!important;}
+.slideshow-wrap.fs-active{
+  position:fixed!important;inset:0!important;
+  border-radius:0!important;z-index:9999!important;
+  width:100vw!important;height:100dvh!important;
+  display:flex;flex-direction:column;
+}
 .slideshow-wrap:-webkit-full-screen{width:100vw;height:100vh;border-radius:0;}
-.slideshow-wrap:-moz-full-screen{width:100vw;height:100vh;border-radius:0;}
 .slideshow-wrap:fullscreen{width:100vw;height:100vh;border-radius:0;}
-.slideshow-wrap:fullscreen .slide-viewport{padding-top:0;height:calc(100vh - 130px);}
-.slideshow-wrap.fs-fallback .slide-viewport{padding-top:0!important;height:calc(100dvh - 130px)!important;}
+/* In fullscreen, viewport fills all available height */
+.slideshow-wrap.fs-active .slide-viewport{flex:1;padding-top:0!important;height:auto!important;}
+.slideshow-wrap.fs-active .slide-content{position:relative!important;height:100%!important;}
+/* Exit button shown only in fullscreen */
+.fs-exit-btn{display:none;position:absolute;top:12px;right:12px;z-index:10000;background:rgba(0,0,0,0.6);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:8px 14px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;backdrop-filter:blur(8px);}
+.slideshow-wrap.fs-active .fs-exit-btn{display:block!important;}
 .slide-viewport{position:relative;width:100%;padding-top:56.25%;overflow:hidden;}
 .slide-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:5% 8%;color:#fff;transition:opacity .4s;}
 .slide-content.type-title{background:linear-gradient(135deg,#1b4332,#2d6a4f,#40916c);}
@@ -797,7 +805,7 @@ let currentSlide = 0;
 let isPlaying = false;
 let isPaused = false;
 let selectedVoice = null;
-let speechRate = 1;
+let speechRate = 0.9;
 
 // Quiz state
 let stuQuizQuestions = [], stuQuizAnswers = {};
@@ -960,6 +968,8 @@ function selectLang(btn, lang, gridId) {
   if(disp) disp.textContent = btn.textContent;
   if(teacher.code) teacher.language = lang;
   if(student.code) student.language = lang;
+  // Re-pick best voice for new language
+  setTimeout(initVoices, 100);
 }
 
 // ══════════════════════════════════════════════
@@ -1408,6 +1418,8 @@ function renderSlideshow() {
     </div>
     <div id="slideshowPlayer" style="display:none;">
       <div class="slideshow-wrap" id="slideshowContainer">
+        <!-- Visible exit button in fullscreen — always on top -->
+        <button class="fs-exit-btn" onclick="exitFullscreen()">✕ Exit</button>
         <div class="slide-viewport">
           <div class="slide-content type-title" id="slideContent">
             <h2 id="slideTitle">Loading...</h2>
@@ -1417,27 +1429,27 @@ function renderSlideshow() {
         <div class="slide-narration" id="slideNarration"></div>
         <div class="voice-selector">
           <label>Voice:</label>
-          <select id="voiceSelect" onchange="updateVoice()"></select>
+          <select id="voiceSelect" onchange="updateVoice()" style="flex:1;max-width:220px;"></select>
           <label>Speed:</label>
-          <input type="range" id="voiceSpeed" min="0.5" max="2" step="0.1" value="1" onchange="updateSpeed()"/>
-          <span id="speedLabel" style="color:#aaa;font-size:11px;min-width:28px;">1x</span>
-          <label style="margin-left:8px;display:flex;align-items:center;gap:4px;font-size:11px;text-transform:none;letter-spacing:0;">
-            <input type="checkbox" id="showNarration" onchange="toggleNarrationDisplay()"/> Show text
+          <input type="range" id="voiceSpeed" min="0.6" max="1.6" step="0.1" value="0.9" onchange="updateSpeed()"/>
+          <span id="speedLabel" style="color:#aaa;font-size:11px;min-width:28px;">0.9x</span>
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;text-transform:none;letter-spacing:0;white-space:nowrap;">
+            <input type="checkbox" id="showNarration" onchange="toggleNarrationDisplay()" style="width:auto;margin:0;"/> Text
           </label>
         </div>
         <div class="slide-controls">
           <div style="display:flex;gap:5px;">
-            <button onclick="prevSlide()">⏮ Prev</button>
+            <button onclick="prevSlide()">⏮</button>
             <button onclick="playSlideshow()" id="playBtn">▶ Play</button>
-            <button onclick="pauseSlideshow()" id="pauseBtn" style="display:none;">⏸ Pause</button>
-            <button onclick="resumeSlideshow()" id="resumeBtn" style="display:none;">▶ Resume</button>
-            <button onclick="nextSlide()">Next ⏭</button>
+            <button onclick="pauseSlideshow()" id="pauseBtn" style="display:none;">⏸</button>
+            <button onclick="resumeSlideshow()" id="resumeBtn" style="display:none;">▶</button>
+            <button onclick="nextSlide()">⏭</button>
           </div>
           <div class="slide-progress"><div class="slide-progress-bar" id="slideProgressBar"></div></div>
           <span class="slide-counter" id="slideCounter">0 / 0</span>
           <div style="display:flex;gap:5px;">
-            <button onclick="stopSlideshow()">⏹ Stop</button>
-            <button onclick="toggleFullscreen()">⛶ Full</button>
+            <button onclick="stopSlideshow()">⏹</button>
+            <button onclick="toggleFullscreen()" style="background:rgba(116,198,157,0.15);border-color:rgba(116,198,157,0.3);color:#74c69d;font-weight:600;">⛶ Fullscreen</button>
           </div>
         </div>
       </div>
@@ -1859,33 +1871,145 @@ function renderSHistory() {
 // ══════════════════════════════════════════════
 // SLIDESHOW ENGINE
 // ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
+// VOICE ENGINE — Quality filtering + language mapping
+// ══════════════════════════════════════════════
+
+// Language code mapping — maps our UI language to BCP-47 prefix
+const LANG_TO_BCP47 = {
+  'English':    ['en'],
+  'French':     ['fr'],
+  'Spanish':    ['es'],
+  'Arabic':     ['ar'],
+  'Chinese':    ['zh'],
+  'Portuguese': ['pt'],
+  'Yoruba':     ['yo'],
+  'Hausa':      ['ha'],
+  'Igbo':       ['ig'],
+  'Swahili':    ['sw'],
+  'Hindi':      ['hi'],
+  'German':     ['de'],
+  'Japanese':   ['ja'],
+  'Korean':     ['ko'],
+  'Russian':    ['ru'],
+  'Italian':    ['it'],
+};
+
+// Known high-quality voice name fragments to prioritise
+const QUALITY_VOICE_SIGNALS = [
+  // iOS / macOS premium voices
+  'enhanced','premium','neural','natural','siri',
+  // Common good names across platforms
+  'samantha','daniel','karen','moira','fiona',
+  'alex','victoria','allison','ava','susan',
+  'thomas','olivier','amelie','anna','luca',
+  'jorge','isabela','yuna','kyoko','zosia',
+  // Android Google voices
+  'google','wavenet','journey',
+];
+
+// Robotic voice fragments to deprioritise (not hide — fallback if nothing better)
+const LOW_QUALITY_SIGNALS = [
+  'espeak','festival','mbrola','speech','tts',' tts','monotone',
+];
+
+function scoreVoice(v) {
+  const n = v.name.toLowerCase();
+  let score = 0;
+  // Premium signals boost score
+  QUALITY_VOICE_SIGNALS.forEach(s => { if(n.includes(s)) score += 20; });
+  // Robotic signals reduce score
+  LOW_QUALITY_SIGNALS.forEach(s => { if(n.includes(s)) score -= 15; });
+  // Default voice gets a small boost
+  if(v.default) score += 5;
+  // Local voices (not remote) tend to be higher quality
+  if(v.localService) score += 8;
+  return score;
+}
+
+function getBestVoiceForLanguage(lang) {
+  const voices = speechSynthesis.getVoices();
+  if(!voices.length) return null;
+  const prefixes = LANG_TO_BCP47[lang] || ['en'];
+  // Find voices matching the language
+  let matches = voices.filter(v => prefixes.some(p => v.lang.toLowerCase().startsWith(p)));
+  if(!matches.length) {
+    // Fallback to English if no match
+    matches = voices.filter(v => v.lang.startsWith('en'));
+  }
+  if(!matches.length) matches = voices;
+  // Sort by quality score
+  matches.sort((a,b) => scoreVoice(b) - scoreVoice(a));
+  return matches[0] || null;
+}
+
 function initVoices(){
   const sel = document.getElementById('voiceSelect');
   if(!sel) return;
+
   function populate(){
     const voices = speechSynthesis.getVoices();
     if(!voices.length) return;
     sel.innerHTML = '';
-    const english = voices.filter(v=>v.lang.startsWith('en'));
-    const others = voices.filter(v=>!v.lang.startsWith('en'));
-    [...english,...others].forEach((v,i)=>{
-      const origIdx = voices.indexOf(v);
+
+    // Determine target language
+    const targetLang = selectedLanguage || 'English';
+    const prefixes = LANG_TO_BCP47[targetLang] || ['en'];
+
+    // Sort all voices: matching language first, then by quality score
+    const sorted = [...voices].map((v, origIdx) => ({v, origIdx, score: scoreVoice(v)}));
+    const matching   = sorted.filter(x => prefixes.some(p => x.v.lang.toLowerCase().startsWith(p))).sort((a,b)=>b.score-a.score);
+    const fallback   = sorted.filter(x => x.v.lang.startsWith('en') && !prefixes.some(p => x.v.lang.toLowerCase().startsWith(p))).sort((a,b)=>b.score-a.score);
+    const rest       = sorted.filter(x => !x.v.lang.startsWith('en') && !prefixes.some(p => x.v.lang.toLowerCase().startsWith(p))).sort((a,b)=>b.score-a.score);
+
+    const ordered = [...matching, ...fallback, ...rest];
+
+    // Group header
+    let lastGroup = '';
+    ordered.forEach(({v, origIdx}) => {
+      const group = prefixes.some(p => v.lang.toLowerCase().startsWith(p)) ? `Best for ${targetLang}` : v.lang.startsWith('en') ? 'English (fallback)' : 'Other languages';
+      if(group !== lastGroup) {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = group;
+        sel.appendChild(optgroup);
+        lastGroup = group;
+      }
       const opt = document.createElement('option');
       opt.value = origIdx;
-      opt.textContent = `${v.name} (${v.lang})${v.default?' ★':''}`;
+      const quality = scoreVoice(v) > 15 ? ' ⭐' : scoreVoice(v) > 0 ? ' ✓' : '';
+      opt.textContent = `${v.name} (${v.lang})${quality}`;
       sel.appendChild(opt);
     });
-    if(english.length) sel.value = voices.indexOf(english[0]);
-    updateVoice();
+
+    // Auto-select best match
+    const best = matching[0] || fallback[0] || ordered[0];
+    if(best) { sel.value = best.origIdx; selectedVoice = best.v; }
+    else updateVoice();
   }
+
   populate();
   if(speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populate;
-  setTimeout(populate, 500);
-  setTimeout(populate, 1500);
+  setTimeout(populate, 400);
+  setTimeout(populate, 1200);
+  setTimeout(populate, 3000);
 }
-function updateVoice(){ const voices=speechSynthesis.getVoices(); const sel=document.getElementById('voiceSelect'); if(sel){ selectedVoice=voices[parseInt(sel.value)]||null; } }
-function updateSpeed(){ const el=document.getElementById('voiceSpeed'); if(el){ speechRate=parseFloat(el.value); const lbl=document.getElementById('speedLabel'); if(lbl) lbl.textContent=speechRate+'x'; } }
-function toggleNarrationDisplay(){ const el=document.getElementById('slideNarration'); const cb=document.getElementById('showNarration'); if(el&&cb) el.style.display=cb.checked?'block':'none'; }
+
+function updateVoice(){
+  const voices = speechSynthesis.getVoices();
+  const sel = document.getElementById('voiceSelect');
+  if(sel && voices.length) selectedVoice = voices[parseInt(sel.value)] || null;
+}
+
+function updateSpeed(){
+  const el = document.getElementById('voiceSpeed');
+  if(el){ speechRate = parseFloat(el.value); const lbl = document.getElementById('speedLabel'); if(lbl) lbl.textContent = speechRate+'x'; }
+}
+
+function toggleNarrationDisplay(){
+  const el = document.getElementById('slideNarration');
+  const cb = document.getElementById('showNarration');
+  if(el&&cb) el.style.display = cb.checked ? 'block' : 'none';
+}
 
 async function generateSlideshow(){
   const topic = teacher.topic||v('tTopicEdit');
@@ -1979,13 +2103,18 @@ function renderSlide(idx){
 function speakSlide(idx){
   if(idx>=slideshowData.length){ stopSlideshow(); return; }
   speechSynthesis.cancel(); renderSlide(idx);
-  const slide=slideshowData[idx];
-  const text=slide.narration||slide.bullets?.join('. ')||slide.title||'';
+  const slide = slideshowData[idx];
+  const text = slide.narration || slide.bullets?.join('. ') || slide.title || '';
   if(!text){ autoAdvance(); return; }
-  const utt=new SpeechSynthesisUtterance(text);
-  if(selectedVoice) utt.voice=selectedVoice;
-  utt.rate=speechRate;
-  utt.onend=()=>{ if(isPlaying&&!isPaused) autoAdvance(); };
+  const utt = new SpeechSynthesisUtterance(text);
+  // Use manually selected voice, or auto-pick best for current language
+  const voice = selectedVoice || getBestVoiceForLanguage(selectedLanguage || 'English');
+  if(voice) utt.voice = voice;
+  utt.rate = speechRate;
+  utt.pitch = 1.0;
+  utt.volume = 1.0;
+  utt.onend = () => { if(isPlaying && !isPaused) autoAdvance(); };
+  utt.onerror = () => { if(isPlaying && !isPaused) autoAdvance(); };
   speechSynthesis.speak(utt);
 }
 function autoAdvance(){ if(currentSlide<slideshowData.length-1){ currentSlide++; speakSlide(currentSlide); } else stopSlideshow(); }
@@ -2001,29 +2130,56 @@ function updateSlideControls(){
   if(pa) pa.style.display=(isPlaying&&!isPaused)?'':'none';
   if(re) re.style.display=(isPlaying&&isPaused)?'':'none';
 }
+function enterFullscreen(){
+  const el = document.getElementById('slideshowContainer');
+  if(!el) return;
+  // Try native Fullscreen API (works on desktop + some Android)
+  const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+  if(req){
+    req.call(el).catch(()=>{});
+  }
+  // Always apply CSS class — reliable on all mobile browsers including iOS Safari
+  el.classList.add('fs-active');
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.width = '100%';
+}
+
+function exitFullscreen(){
+  const el = document.getElementById('slideshowContainer');
+  if(!el) return;
+  if(document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+  else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+  el.classList.remove('fs-active');
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.width = '';
+}
+
 function toggleFullscreen(){
   const el = document.getElementById('slideshowContainer');
   if(!el) return;
-  const isFs = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || el.classList.contains('fs-fallback');
-  if(isFs){
-    // Exit fullscreen
-    if(document.exitFullscreen) document.exitFullscreen();
-    else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
-    else if(document.mozCancelFullScreen) document.mozCancelFullScreen();
-    el.classList.remove('fs-fallback');
-    document.body.style.overflow = '';
-  } else {
-    // Enter fullscreen — try API first, fall back to CSS
-    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-    if(req){
-      req.call(el).catch(()=>{ el.classList.add('fs-fallback'); document.body.style.overflow='hidden'; });
-    } else {
-      el.classList.add('fs-fallback');
-      document.body.style.overflow = 'hidden';
-    }
-  }
+  el.classList.contains('fs-active') ? exitFullscreen() : enterFullscreen();
 }
-document.addEventListener('fullscreenchange', ()=>{ if(!document.fullscreenElement){ const el=document.getElementById('slideshowContainer'); if(el) el.classList.remove('fs-fallback'); document.body.style.overflow=''; }});
+
+document.addEventListener('fullscreenchange', ()=>{
+  if(!document.fullscreenElement && !document.webkitFullscreenElement){
+    const el = document.getElementById('slideshowContainer');
+    if(el) el.classList.remove('fs-active');
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+  }
+});
+document.addEventListener('webkitfullscreenchange', ()=>{
+  if(!document.webkitFullscreenElement){
+    const el = document.getElementById('slideshowContainer');
+    if(el) el.classList.remove('fs-active');
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+  }
+});
 document.addEventListener('webkitfullscreenchange', ()=>{ if(!document.webkitFullscreenElement){ const el=document.getElementById('slideshowContainer'); if(el) el.classList.remove('fs-fallback'); document.body.style.overflow=''; }});
 
 // ══════════════════════════════════════════════
