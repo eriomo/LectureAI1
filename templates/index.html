@@ -985,6 +985,18 @@ async function teacherLogin() {
   const verify = await api('/get_class',{code});
   if(!verify.success){ document.getElementById('tAuthMsg').textContent='Save could not be verified. Try again.'; return; }
   teacher = {email,name,code,topic,level,language:'English'};
+  // Restore previously generated notes if they exist
+  try {
+    const saved = localStorage.getItem('lai_persist_'+email);
+    if(saved){
+      const d = JSON.parse(saved);
+      if(d.notes && d.code === code) {
+        teacher.notes = d.notes;
+        teacher.topic = d.topic || topic;
+        teacher.level = d.level || level;
+      }
+    }
+  } catch(e){}
   saveSession();
   document.getElementById('tSidebarName').textContent = name;
   document.getElementById('tSidebarCode').textContent = code;
@@ -1062,6 +1074,7 @@ function tGoPage(page) {
   if(page==='assignments') loadAssignments();
   if(page==='tests') loadTests();
   if(page==='library') loadLibrary(true);
+  if(page==='slideshow' && slideshowData.length){ setTimeout(()=>{ renderSlide(currentSlide); updateSlideControls(); initVoices(); }, 50); }
   if(page==='live'){ document.getElementById('attTodayDate').textContent = new Date().toLocaleDateString(); }
 }
 
@@ -1394,6 +1407,13 @@ async function generateNotes() {
     teacher.notes = res.notes; teacher.topic = topic; teacher.level = level;
     saveLectureToHistory(res.notes, topic, level);
     cacheNotesOffline(teacher.code+'_latest', res.notes);
+    // Persist everything to localStorage so notes survive refresh and logout
+    try {
+      localStorage.setItem('lai_persist_'+teacher.email, JSON.stringify({
+        code: teacher.code, topic, level, notes: res.notes,
+        ts: Date.now()
+      }));
+    } catch(e){}
     const card = document.getElementById('notesCard');
     const output = document.getElementById('notesOutput');
     if(card) card.style.display = '';
@@ -1402,6 +1422,17 @@ async function generateNotes() {
 }
 
 function renderSlideshow() {
+  // Restore persisted slides
+  if(!slideshowData.length) {
+    try {
+      const saved = localStorage.getItem('lai_slides_'+teacher.code);
+      if(saved) {
+        slideshowData = JSON.parse(saved);
+        currentSlide = 0;
+      }
+    } catch(e){}
+  }
+  const hasSlides = slideshowData.length > 0;
   return `<div class="fade">
     <div class="card">
       <h3>AI Lecture Slideshow with Voice Narration</h3>
@@ -1416,7 +1447,7 @@ function renderSlideshow() {
         <p style="font-size:12px;color:var(--muted);">Keyboard shortcuts: Space = Play/Pause · ← → = Navigate · F = Fullscreen · Esc = Exit</p>
       </div>
     </div>
-    <div id="slideshowPlayer" style="display:none;">
+    <div id="slideshowPlayer" style="${hasSlides?'':'display:none;'}">
       <div class="slideshow-wrap" id="slideshowContainer">
         <!-- Visible exit button in fullscreen — always on top -->
         <button class="fs-exit-btn" onclick="exitFullscreen()">✕ Exit</button>
@@ -2030,6 +2061,8 @@ async function generateSlideshow(){
 
   loading('slideshowLoader',false);
   slideshowData = slides; currentSlide = 0;
+  // Persist slides
+  try { localStorage.setItem('lai_slides_'+teacher.code, JSON.stringify(slides)); } catch(e){}
   const player = document.getElementById('slideshowPlayer');
   if(player) player.style.display='';
   renderSlide(0); updateSlideControls();
@@ -2130,30 +2163,44 @@ function updateSlideControls(){
   if(pa) pa.style.display=(isPlaying&&!isPaused)?'':'none';
   if(re) re.style.display=(isPlaying&&isPaused)?'':'none';
 }
+// Fullscreen teleport — moves element out of overflow:hidden parents
+let _fsOrigParent = null;
+let _fsOrigNextSibling = null;
+
 function enterFullscreen(){
   const el = document.getElementById('slideshowContainer');
-  if(!el) return;
-  // Try native Fullscreen API (works on desktop + some Android)
-  const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-  if(req){
-    req.call(el).catch(()=>{});
-  }
-  // Always apply CSS class — reliable on all mobile browsers including iOS Safari
+  if(!el || el.classList.contains('fs-active')) return;
+
+  // Teleport to body to escape any overflow:hidden ancestor
+  _fsOrigParent = el.parentNode;
+  _fsOrigNextSibling = el.nextSibling;
+  document.body.appendChild(el);
+
   el.classList.add('fs-active');
   document.body.style.overflow = 'hidden';
-  document.body.style.position = 'fixed';
-  document.body.style.width = '100%';
+
+  // Also try native API (works on desktop/Android, not iOS)
+  const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+  if(req) req.call(el).catch(()=>{});
 }
 
 function exitFullscreen(){
   const el = document.getElementById('slideshowContainer');
   if(!el) return;
-  if(document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-  else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+
   el.classList.remove('fs-active');
   document.body.style.overflow = '';
-  document.body.style.position = '';
-  document.body.style.width = '';
+
+  // Restore to original position in DOM
+  if(_fsOrigParent){
+    if(_fsOrigNextSibling) _fsOrigParent.insertBefore(el, _fsOrigNextSibling);
+    else _fsOrigParent.appendChild(el);
+    _fsOrigParent = null;
+    _fsOrigNextSibling = null;
+  }
+
+  if(document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+  else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
 }
 
 function toggleFullscreen(){
@@ -2165,19 +2212,13 @@ function toggleFullscreen(){
 document.addEventListener('fullscreenchange', ()=>{
   if(!document.fullscreenElement && !document.webkitFullscreenElement){
     const el = document.getElementById('slideshowContainer');
-    if(el) el.classList.remove('fs-active');
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.width = '';
+    if(el && el.classList.contains('fs-active')) exitFullscreen();
   }
 });
 document.addEventListener('webkitfullscreenchange', ()=>{
   if(!document.webkitFullscreenElement){
     const el = document.getElementById('slideshowContainer');
-    if(el) el.classList.remove('fs-active');
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.width = '';
+    if(el && el.classList.contains('fs-active')) exitFullscreen();
   }
 });
 document.addEventListener('webkitfullscreenchange', ()=>{ if(!document.webkitFullscreenElement){ const el=document.getElementById('slideshowContainer'); if(el) el.classList.remove('fs-fallback'); document.body.style.overflow=''; }});
