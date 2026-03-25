@@ -52,6 +52,21 @@ def init_db():
         conn.execute("""CREATE TABLE IF NOT EXISTS reactions (
             id TEXT PRIMARY KEY, class_code TEXT, student_email TEXT,
             student_name TEXT, reaction TEXT, created_at TEXT)""")
+        conn.execute("""CREATE TABLE IF NOT EXISTS lecture_library (
+            id TEXT PRIMARY KEY,
+            teacher_email TEXT NOT NULL,
+            teacher_name TEXT,
+            title TEXT NOT NULL,
+            topic TEXT NOT NULL,
+            subject TEXT DEFAULT '',
+            level TEXT DEFAULT 'Intermediate',
+            institution TEXT DEFAULT '',
+            notes TEXT NOT NULL,
+            class_code TEXT DEFAULT '',
+            is_public INTEGER DEFAULT 1,
+            view_count INTEGER DEFAULT 0,
+            saved_at TEXT NOT NULL,
+            year TEXT DEFAULT '')""")
         conn.commit()
         conn.close()
     except Exception as e:
@@ -1008,6 +1023,190 @@ Make every bullet a complete, informative sentence about {topic}."""
         )
     except Exception as e:
         import traceback; traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)})
+
+
+# ══════════════════════════════════════════════════════════════
+#  LECTURE LIBRARY
+# ══════════════════════════════════════════════════════════════
+
+@app.route("/library/save", methods=["POST"])
+def library_save():
+    try:
+        d = request.json
+        if not d.get("notes") or not d.get("topic"):
+            return jsonify({"success": False, "error": "Topic and notes are required"})
+        init_db()
+        conn = get_db()
+
+        # Check if this teacher already saved this topic — update instead of duplicate
+        existing = conn.execute(
+            "SELECT id FROM lecture_library WHERE teacher_email=? AND topic=?",
+            (d.get("teacherEmail",""), d.get("topic",""))
+        ).fetchone()
+
+        lid = existing["id"] if existing else str(uuid.uuid4())
+        year = str(__import__('datetime').datetime.now().year)
+
+        if existing:
+            conn.execute("""UPDATE lecture_library SET
+                title=?, notes=?, subject=?, level=?, institution=?,
+                class_code=?, is_public=?, saved_at=datetime('now'), year=?, teacher_name=?
+                WHERE id=?""",
+                (d.get("title", d.get("topic","")),
+                 d.get("notes",""),
+                 d.get("subject",""),
+                 d.get("level","Intermediate"),
+                 d.get("institution",""),
+                 d.get("classCode",""),
+                 1 if d.get("isPublic", True) else 0,
+                 year,
+                 d.get("teacherName",""),
+                 lid))
+        else:
+            conn.execute("""INSERT INTO lecture_library
+                (id, teacher_email, teacher_name, title, topic, subject, level,
+                 institution, notes, class_code, is_public, view_count, saved_at, year)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,0,datetime('now'),?)""",
+                (lid,
+                 d.get("teacherEmail",""),
+                 d.get("teacherName",""),
+                 d.get("title", d.get("topic","")),
+                 d.get("topic",""),
+                 d.get("subject",""),
+                 d.get("level","Intermediate"),
+                 d.get("institution",""),
+                 d.get("notes",""),
+                 d.get("classCode",""),
+                 1 if d.get("isPublic", True) else 0,
+                 year))
+
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True, "id": lid, "updated": bool(existing)})
+    except Exception as e:
+        print("library_save error:", e)
+        return jsonify({"success": False, "error": str(e)})
+
+
+@app.route("/library/list", methods=["POST"])
+def library_list():
+    try:
+        d = request.json or {}
+        search = d.get("search","").strip()
+        subject = d.get("subject","").strip()
+        level = d.get("level","").strip()
+        year = d.get("year","").strip()
+        teacher_email = d.get("teacherEmail","").strip()  # filter by own notes
+        page = int(d.get("page", 1))
+        per_page = 20
+
+        init_db()
+        conn = get_db()
+
+        query = "SELECT id, teacher_name, teacher_email, title, topic, subject, level, institution, year, view_count, saved_at FROM lecture_library WHERE is_public=1"
+        params = []
+
+        if search:
+            query += " AND (topic LIKE ? OR title LIKE ? OR subject LIKE ? OR teacher_name LIKE ?)"
+            s = f"%{search}%"
+            params += [s, s, s, s]
+        if subject:
+            query += " AND subject LIKE ?"
+            params.append(f"%{subject}%")
+        if level:
+            query += " AND level=?"
+            params.append(level)
+        if year:
+            query += " AND year=?"
+            params.append(year)
+        if teacher_email:
+            query += " AND teacher_email=?"
+            params.append(teacher_email)
+
+        # Total count
+        count_row = conn.execute(f"SELECT COUNT(*) as cnt FROM ({query})", params).fetchone()
+        total = count_row["cnt"] if count_row else 0
+
+        query += " ORDER BY saved_at DESC LIMIT ? OFFSET ?"
+        params += [per_page, (page-1)*per_page]
+
+        rows = conn.execute(query, params).fetchall()
+        conn.close()
+
+        return jsonify({
+            "success": True,
+            "lectures": [dict(r) for r in rows],
+            "total": total,
+            "page": page,
+            "pages": max(1, -(-total // per_page))
+        })
+    except Exception as e:
+        print("library_list error:", e)
+        return jsonify({"success": False, "error": str(e)})
+
+
+@app.route("/library/get", methods=["POST"])
+def library_get():
+    try:
+        d = request.json
+        lid = d.get("id","")
+        if not lid:
+            return jsonify({"success": False, "error": "No ID provided"})
+        init_db()
+        conn = get_db()
+        row = conn.execute("SELECT * FROM lecture_library WHERE id=?", (lid,)).fetchone()
+        if row:
+            # Increment view count
+            conn.execute("UPDATE lecture_library SET view_count=view_count+1 WHERE id=?", (lid,))
+            conn.commit()
+        conn.close()
+        if row:
+            return jsonify({"success": True, "lecture": dict(row)})
+        return jsonify({"success": False, "error": "Lecture not found"})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+@app.route("/library/delete", methods=["POST"])
+def library_delete():
+    try:
+        d = request.json
+        lid = d.get("id","")
+        email = d.get("teacherEmail","")
+        init_db()
+        conn = get_db()
+        conn.execute("DELETE FROM lecture_library WHERE id=? AND teacher_email=?", (lid, email))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+@app.route("/library/subjects", methods=["POST"])
+def library_subjects():
+    """Return all distinct subjects and years in the library for filtering."""
+    try:
+        init_db()
+        conn = get_db()
+        subjects = conn.execute(
+            "SELECT DISTINCT subject FROM lecture_library WHERE is_public=1 AND subject!='' ORDER BY subject"
+        ).fetchall()
+        years = conn.execute(
+            "SELECT DISTINCT year FROM lecture_library WHERE is_public=1 AND year!='' ORDER BY year DESC"
+        ).fetchall()
+        levels = conn.execute(
+            "SELECT DISTINCT level FROM lecture_library WHERE is_public=1 AND level!='' ORDER BY level"
+        ).fetchall()
+        conn.close()
+        return jsonify({
+            "success": True,
+            "subjects": [r["subject"] for r in subjects],
+            "years": [r["year"] for r in years],
+            "levels": [r["level"] for r in levels],
+        })
+    except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
 
