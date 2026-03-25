@@ -612,6 +612,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
         <div style="font-size:11px;color:#74c69d;font-weight:700;margin-top:2px;">TEACHER · <span id="tSidebarCode"></span></div>
       </div>
       <nav style="flex:1;padding:8px 6px;overflow-y:auto;">
+        <button onclick="tGoPage('library')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;transition:all 0.12s;">📚 Lecture Library</button>
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);padding:9px 8px 3px;">Teach</div>
         <button onclick="tGoPage('dashboard')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;transition:all 0.12s;">🏠 Dashboard</button>
         <button onclick="tGoPage('lesson')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;transition:all 0.12s;">📋 Lesson Builder</button>
@@ -657,6 +658,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
           <button onclick="openHistory()" class="btn btn-ghost btn-sm hide-mobile">History</button>
           <button onclick="saveToHistory()" class="btn btn-ghost btn-sm hide-mobile">Save Plan</button>
+          <button onclick="tGoPage('library')" class="btn btn-ghost btn-sm hide-mobile" style="color:#74c69d;border-color:rgba(116,198,157,0.3);">Library</button>
           <div style="display:flex;align-items:center;gap:6px;">
             <div style="font-size:11px;color:var(--muted);">Class:</div>
             <span id="tTopbarCode" class="code-badge" style="font-size:11px;padding:2px 8px;"></span>
@@ -722,7 +724,8 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
         <button onclick="sGoPage('work')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">📝 Assignments</button>
         <button onclick="sGoPage('tests')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">📊 Tests</button>
         <button onclick="sGoPage('discuss')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">💬 Discussion</button>
-        <button onclick="sGoPage('history')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">📚 Past Lectures</button>
+        <button onclick="sGoPage('library')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid rgba(116,198,157,0.2);background:rgba(116,198,157,0.04);color:#74c69d;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">📚 Lecture Library</button>
+        <button onclick="sGoPage('history')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">🗂 Past Lectures</button>
         <button onclick="showInstallGuide()" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid rgba(116,198,157,0.2);background:rgba(116,198,157,0.05);color:#74c69d;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:6px;text-align:left;">📲 Install App</button>
       </nav>
       <div style="padding:8px 6px;border-top:1px solid var(--border);">
@@ -1016,7 +1019,7 @@ async function studentLogin() {
 function tGoPage(page) {
   tCurrentPage = page;
   if(window.innerWidth <= 768) closeSidebar('t');
-  const titles = {dashboard:'Dashboard',lesson:'Lesson Builder',slideshow:'AI Slideshow',live:'Live Teaching',assignments:'Assignments',tests:'Tests & Quizzes',reports:'Reports',support:'Student Support',discuss:'Discussion Board',script:'Video Script',rubric:'Rubric Builder',export:'Export Slides'};
+  const titles = {dashboard:'Dashboard',lesson:'Lesson Builder',slideshow:'AI Slideshow',live:'Live Teaching',assignments:'Assignments',tests:'Tests & Quizzes',reports:'Reports',support:'Student Support',discuss:'Discussion Board',script:'Video Script',rubric:'Rubric Builder',export:'Export Slides',library:'Lecture Library'};
   document.getElementById('tPageTitle').textContent = titles[page]||page;
 
   // Update bottom tabs
@@ -1039,6 +1042,7 @@ function tGoPage(page) {
     script: renderScript,
     rubric: renderRubric,
     export: renderExport,
+    library: renderTLibrary,
   };
   if(pages[page]) content.innerHTML = pages[page]();
   content.scrollTop = 0;
@@ -1047,6 +1051,7 @@ function tGoPage(page) {
   if(page==='discuss') loadTeacherDiscuss();
   if(page==='assignments') loadAssignments();
   if(page==='tests') loadTests();
+  if(page==='library') loadLibrary(true);
   if(page==='live'){ document.getElementById('attTodayDate').textContent = new Date().toLocaleDateString(); }
 }
 
@@ -1151,6 +1156,7 @@ function renderLesson() {
       <div id="notesOutput" class="out-box notes-box">${teacher.notes?renderICAPNotesHTML(teacher.notes):''}</div>
       <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
         <button class="btn btn-ghost btn-sm" onclick="showExportMenu(teacher.notes,teacher.topic)">Export Notes →</button>
+        <button class="btn btn-ghost btn-sm" style="color:#74c69d;border-color:rgba(116,198,157,0.3);" onclick="tGoPage('library')">Save to Library →</button>
       </div>
     </div>
   </div>`;
@@ -1646,7 +1652,7 @@ function renderExport() {
 function sGoPage(page) {
   sCurrentPage = page;
   if(window.innerWidth <= 768) closeSidebar('s');
-  const titles = {dashboard:'Dashboard',ask:'Ask AI',notes:'Lesson Notes',quiz:'Practice Quiz',plan:'Study Plan',work:'Assignments',tests:'Tests',discuss:'Discussion',history:'Past Lectures'};
+  const titles = {dashboard:'Dashboard',ask:'Ask AI',notes:'Lesson Notes',quiz:'Practice Quiz',plan:'Study Plan',work:'Assignments',tests:'Tests',discuss:'Discussion',history:'Past Lectures',library:'Lecture Library'};
   document.getElementById('sPageTitle').textContent = titles[page]||page;
 
   ['dashboard','ask','notes','work','quiz'].forEach(t => {
@@ -1665,6 +1671,7 @@ function sGoPage(page) {
     tests: renderSTests,
     discuss: renderSDiscuss,
     history: renderSHistory,
+    library: renderSLibrary,
   };
   if(pages[page]) content.innerHTML = pages[page]();
   content.scrollTop = 0;
@@ -1672,6 +1679,7 @@ function sGoPage(page) {
   if(page==='work') loadStuAssignments();
   if(page==='tests') loadStuTests();
   if(page==='discuss') loadStudentDiscuss();
+  if(page==='library') loadLibrary(false);
 }
 
 function renderSDashboard() {
@@ -2657,8 +2665,186 @@ function showModal(html){
 function closeModal(){ const m=document.getElementById('lai_modal');if(m)m.style.display='none'; }
 
 // ══════════════════════════════════════════════
-// KEYBOARD SHORTCUTS (SLIDESHOW)
+// LECTURE LIBRARY
 // ══════════════════════════════════════════════
+function renderTLibrary() {
+  return `<div class="fade">
+    <div class="card" style="border:1px solid rgba(116,198,157,0.3);">
+      <h3>Save to Lecture Library</h3>
+      <p class="msg-info">Save your current lecture notes to the shared library. Students and other teachers can browse and read them — searchable by topic, subject, and year.</p>
+      ${teacher.notes
+        ? `<div style="background:rgba(45,106,79,0.08);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;">
+            <div style="font-size:13px;font-weight:600;color:var(--text);">Ready to save: <span style="color:#74c69d;">${esc(teacher.topic||'Current lecture')}</span></div>
+            <div class="msg-info">Level: ${esc(teacher.level||'—')} · Class: ${esc(teacher.code||'—')}</div>
+           </div>
+           <div class="grid-2" style="margin-bottom:10px;">
+             <div><label>Subject / Course Area</label><input id="libSubject" type="text" placeholder="e.g. Statistics, Biology, Law"/></div>
+             <div><label>Institution (optional)</label><input id="libInstitution" type="text" placeholder="e.g. University of Lagos"/></div>
+           </div>
+           <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;">
+             <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--dim);cursor:pointer;">
+               <input type="checkbox" id="libPublic" checked style="width:auto;margin:0;"/> Make publicly visible to all students
+             </label>
+           </div>
+           <button class="btn btn-primary btn-sm" onclick="saveToLibrary()">
+             Save to Library
+             <span id="libSaveLoader" style="display:none;" class="loader"></span>
+           </button>
+           <p id="libSaveMsg" class="msg-success" style="margin-top:8px;"></p>`
+        : `<div style="background:rgba(244,162,97,0.06);border:1px solid rgba(244,162,97,0.2);border-radius:10px;padding:14px;">
+            <p style="font-size:13px;color:var(--muted);">No notes generated yet. Go to <strong style="color:var(--text);">Lesson Builder</strong>, generate notes for your topic, then come back here to save them to the library.</p>
+           </div>`}
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <h3 style="margin:0;">My Saved Lectures</h3>
+        <button class="btn btn-ghost btn-sm" onclick="loadLibrary(true)">Refresh</button>
+      </div>
+      ${renderLibraryFilters()}
+      <div id="libraryList"><p class="msg-info">Loading your saved lectures...</p></div>
+    </div>
+  </div>`;
+}
+
+function renderSLibrary() {
+  return `<div class="fade">
+    <div class="card" style="border:1px solid rgba(116,198,157,0.3);margin-bottom:16px;">
+      <h3>Lecture Library</h3>
+      <p class="msg-info">Browse lecture notes saved by your teachers — past and present. Search by topic, subject, or year. Download or read any notes directly.</p>
+    </div>
+    <div class="card">
+      ${renderLibraryFilters()}
+      <div id="libraryList"><p class="msg-info">Loading library...</p></div>
+    </div>
+  </div>`;
+}
+
+function renderLibraryFilters() {
+  return `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;" id="libFilters">
+    <input id="libSearch" type="text" placeholder="Search topics..." style="margin:0;" oninput="debounceSearch()"/>
+    <select id="libLevelFilter" style="margin:0;" onchange="loadLibrary(false)">
+      <option value="">All levels</option>
+      <option>Introductory</option><option>Intermediate</option><option>Advanced</option>
+    </select>
+    <select id="libYearFilter" style="margin:0;" onchange="loadLibrary(false)">
+      <option value="">All years</option>
+      <option>${new Date().getFullYear()}</option>
+      <option>${new Date().getFullYear()-1}</option>
+      <option>${new Date().getFullYear()-2}</option>
+      <option>${new Date().getFullYear()-3}</option>
+    </select>
+  </div>`;
+}
+
+let _libSearchTimer = null;
+function debounceSearch() {
+  clearTimeout(_libSearchTimer);
+  _libSearchTimer = setTimeout(() => loadLibrary(false), 400);
+}
+
+async function saveToLibrary() {
+  if(!teacher.notes){ alert('Generate notes first.'); return; }
+  loading('libSaveLoader', true);
+  const res = await api('/library/save', {
+    teacherEmail: teacher.email,
+    teacherName:  teacher.name,
+    title:  teacher.topic,
+    topic:  teacher.topic,
+    subject: document.getElementById('libSubject')?.value || '',
+    level:  teacher.level || 'Intermediate',
+    institution: document.getElementById('libInstitution')?.value || '',
+    notes:  teacher.notes,
+    classCode: teacher.code,
+    isPublic: document.getElementById('libPublic')?.checked !== false,
+  });
+  loading('libSaveLoader', false);
+  const msg = document.getElementById('libSaveMsg');
+  if(res.success) {
+    if(msg) msg.textContent = res.updated ? '✓ Library entry updated.' : '✓ Saved to library successfully.';
+    loadLibrary(true);
+  } else {
+    if(msg) msg.textContent = 'Error: ' + (res.error||'Failed to save');
+  }
+}
+
+async function loadLibrary(isTeacher) {
+  const listEl = document.getElementById('libraryList');
+  if(!listEl) return;
+  listEl.innerHTML = '<p class="msg-info">Loading...</p>';
+
+  const search  = document.getElementById('libSearch')?.value || '';
+  const level   = document.getElementById('libLevelFilter')?.value || '';
+  const year    = document.getElementById('libYearFilter')?.value || '';
+
+  const res = await api('/library/list', {
+    search, level, year,
+    teacherEmail: isTeacher ? teacher.email : '',
+  });
+
+  if(!res.success || !res.lectures || !res.lectures.length) {
+    listEl.innerHTML = `<div style="text-align:center;padding:32px;">
+      <div style="font-size:32px;margin-bottom:12px;">📚</div>
+      <div style="font-size:14px;color:var(--muted);">${isTeacher?'You haven\'t saved any lectures yet. Generate notes and save them above.':'No lectures found. Try a different search or check back later.'}</div>
+    </div>`;
+    return;
+  }
+
+  listEl.innerHTML = res.lectures.map(l => `
+    <div style="background:var(--input);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(116,198,157,0.5)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;">${esc(l.topic||l.title)}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px;">
+            ${l.subject?`<span style="font-size:11px;background:rgba(116,198,157,0.1);color:#74c69d;padding:2px 8px;border-radius:100px;font-weight:600;">${esc(l.subject)}</span>`:''}
+            <span style="font-size:11px;background:var(--card);color:var(--muted);padding:2px 8px;border-radius:100px;border:1px solid var(--border);">${esc(l.level||'Intermediate')}</span>
+            <span style="font-size:11px;color:var(--muted);">${esc(l.year||'')}</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);">By ${esc(l.teacher_name||'Unknown')} ${l.institution?'· '+esc(l.institution):''} · ${l.view_count||0} views</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm" onclick="viewLibraryNote('${l.id}')">Read Notes</button>
+          ${isTeacher&&l.teacher_email===teacher.email?`<button class="btn btn-red btn-sm" onclick="deleteLibraryNote('${l.id}')">Delete</button>`:''}
+        </div>
+      </div>
+    </div>`).join('');
+
+  // Show total
+  if(res.total > res.lectures.length) {
+    listEl.innerHTML += `<div style="text-align:center;padding:12px;font-size:12px;color:var(--muted);">Showing ${res.lectures.length} of ${res.total} lectures</div>`;
+  }
+}
+
+async function viewLibraryNote(id) {
+  const res = await api('/library/get', {id});
+  if(!res.success){ alert('Could not load lecture notes.'); return; }
+  const l = res.lecture;
+  const rendered = renderICAPNotesHTML(l.notes);
+
+  const html = `
+  <div style="padding:4px;">
+    <div style="margin-bottom:18px;">
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px;">${esc(l.topic||l.title)}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:4px;">
+        ${l.subject?`<span style="font-size:11px;background:rgba(116,198,157,0.1);color:#74c69d;padding:2px 8px;border-radius:100px;font-weight:600;">${esc(l.subject)}</span>`:''}
+        <span style="font-size:11px;background:var(--card);color:var(--muted);padding:2px 8px;border-radius:100px;border:1px solid var(--border);">${esc(l.level||'')}</span>
+        <span style="font-size:12px;color:var(--muted);">By ${esc(l.teacher_name||'Unknown')} · ${esc(l.year||'')}</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="exportNotesPDF(document.getElementById('libNoteContent').innerText,'${esc(l.topic)}')">Export PDF</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportNotesTxt(document.getElementById('libNoteContent').innerText,'${esc(l.topic)}')">Download TXT</button>
+      </div>
+    </div>
+    <div id="libNoteContent" style="background:var(--input);border:1px solid var(--border);border-radius:10px;padding:20px;">${rendered}</div>
+  </div>`;
+  showModal(html);
+}
+
+async function deleteLibraryNote(id) {
+  if(!confirm('Remove this lecture from the library?')) return;
+  const res = await api('/library/delete', {id, teacherEmail: teacher.email});
+  if(res.success) loadLibrary(true);
+  else alert('Could not delete: '+(res.error||'Unknown error'));
+}
 document.addEventListener('keydown', e => {
   if(!slideshowData.length) return;
   if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT') return;
