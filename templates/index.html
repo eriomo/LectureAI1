@@ -169,7 +169,12 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
 
 /* ── Slideshow ── */
 .slideshow-wrap{position:relative;background:#000;border-radius:14px;overflow:hidden;}
-.slideshow-wrap.fullscreen{position:fixed;inset:0;border-radius:0;z-index:9999;}
+.slideshow-wrap.fs-fallback{position:fixed!important;inset:0!important;border-radius:0!important;z-index:9999!important;width:100vw!important;height:100vh!important;height:100dvh!important;}
+.slideshow-wrap:-webkit-full-screen{width:100vw;height:100vh;border-radius:0;}
+.slideshow-wrap:-moz-full-screen{width:100vw;height:100vh;border-radius:0;}
+.slideshow-wrap:fullscreen{width:100vw;height:100vh;border-radius:0;}
+.slideshow-wrap:fullscreen .slide-viewport{padding-top:0;height:calc(100vh - 130px);}
+.slideshow-wrap.fs-fallback .slide-viewport{padding-top:0!important;height:calc(100dvh - 130px)!important;}
 .slide-viewport{position:relative;width:100%;padding-top:56.25%;overflow:hidden;}
 .slide-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:5% 8%;color:#fff;transition:opacity .4s;}
 .slide-content.type-title{background:linear-gradient(135deg,#1b4332,#2d6a4f,#40916c);}
@@ -1914,18 +1919,21 @@ function buildLocalSlides(topic,level,notes){
     for(const sec of sections){
       let lines=sec.content.split('\n').map(l=>l.replace(/^[\s\-\*•\d\.]+/,'').trim()).filter(l=>l.length>15).slice(0,5);
       if(lines.length<2){ const s=sec.content.split(/[.!?]+/).map(s=>s.trim()).filter(s=>s.length>15).slice(0,4); if(s.length>=2) lines=s; }
-      if(lines.length>=1) slides.push({title:sec.title,bullets:lines,narration:`Let's look at ${sec.title}. ${lines[0]}`,icap:sec.icap,type:sec.icap==='interactive'?'activity':sec.icap==='active'?'content':'content'});
+      if(lines.length>=1) slides.push({title:sec.title,bullets:lines,narration:`Now we turn to ${sec.title}. ${lines[0]} Let me explain why this matters and how it connects to what we have already covered. Pay attention to the detail here — this is where the deeper understanding comes from.`,icap:sec.icap,type:sec.icap==='interactive'?'activity':sec.icap==='active'&&sec.title.toLowerCase().includes('example')?'example':'content'});
     }
   }
   if(slides.length<5){
-    slides.push({title:'Learning Objectives',bullets:[`Understand core principles of ${topic}`,`Apply concepts to real problems`,'Analyse and evaluate approaches','Develop critical thinking'],narration:`Here are our learning objectives for today.`,icap:'passive',type:'content'});
-    slides.push({title:'Core Concepts',bullets:['Fundamental definitions and meaning','Key properties and characteristics','Connections to related ideas','The underlying logic'],narration:`Let's dive into the core concepts.`,icap:'active',type:'content'});
-    slides.push({title:'Worked Example',bullets:['Step 1: Define the problem','Step 2: Choose the approach','Step 3: Apply step by step','Step 4: Interpret the result'],narration:`Let's work through an example together.`,icap:'active',type:'example'});
-    slides.push({title:'Common Misconceptions',bullets:['Confusing similar concepts','Applying methods without checking assumptions','Misinterpreting results','Skipping steps that matter'],narration:`Watch out for these common mistakes.`,icap:'constructive',type:'content'});
-    slides.push({title:'Discussion Activity',bullets:['Discuss with your neighbour: What is the key insight?','Create your own example using today\'s concepts','Identify one thing you find confusing','Prepare to explain to the class'],narration:`Time for a collaborative activity.`,icap:'interactive',type:'activity'});
-    slides.push({title:'Key Takeaways',bullets:['Remember the core definition and why it matters','Practice with multiple examples','Connect this to what you already know','Review your notes and remaining questions'],narration:`Let's wrap up with the key takeaways.`,icap:'passive',type:'summary'});
+    slides.push({title:'Why This Matters',bullets:[`${topic} is fundamental to understanding modern applications in this field`,`Professionals rely on these concepts daily in industry and research`,`Understanding this deeply will unlock many advanced topics that follow`,`Every major development in this area builds on what we cover today`],narration:`Before we dive in, I want to take a moment to talk about why ${topic} matters. This is not just an academic exercise. These ideas show up everywhere — in industry, in research, in the tools you will use professionally. I want you to leave today's session not just knowing the theory, but genuinely understanding why it works and when to apply it. So pay close attention — this is foundational.`,icap:'passive',type:'content'});
+    slides.push({title:'Learning Objectives',bullets:[`By the end of this session, you will understand the core principles of ${topic} and their theoretical basis`,`You will be able to apply key concepts to solve real problems independently`,`You will be able to analyse results critically and identify when assumptions hold`,`You will have the vocabulary to read and discuss advanced material in this area`],narration:`Let me be very explicit about what I expect you to get out of this session. By the time we finish, you should be able to do four things. First, explain the underlying theory in your own words. Second, apply the methods to new problems. Third, critically evaluate when and why approaches work. And fourth, confidently engage with the academic literature. These are our goalposts — keep them in mind as we go.`,icap:'passive',type:'content'});
+    slides.push({title:'Core Concept — Foundations',bullets:[`The fundamental definition establishes the precise meaning and scope of ${topic}`,`The key assumptions that underpin all methods in this area — know these deeply`,`How the components relate to each other and form a coherent framework`,`The mathematical or logical structure that makes everything else work`],narration:`Now let us get into the substance. The foundation of ${topic} rests on a few core ideas that everything else builds on. I want you to really internalize these — not just memorize them. When you understand why these foundations exist, the rest of the topic will make much more sense. Think of these as the axioms from which we derive everything. If you are ever confused later in the course, come back here.`,icap:'active',type:'content'});
+    slides.push({title:'Core Concept — Mechanisms',bullets:[`The step-by-step mechanism explains HOW the process actually works in practice`,`Understanding each step individually allows you to diagnose problems precisely`,`The relationship between inputs and outputs — what changes what, and why`,`Edge cases and boundary conditions that reveal the limits of the approach`],narration:`Good — now that we have the foundations, let us talk about the mechanism. How does this actually work? This is where many students struggle because they memorize the steps without understanding the causality. I want you to ask yourself at each step: WHY does this happen? What is the underlying principle? If you can answer that, you truly understand it. Let me walk you through this carefully.`,icap:'active',type:'content'});
+    slides.push({title:'Worked Example — Step by Step',bullets:[`Problem setup: clearly define what is given and what we need to find`,`Step 1 — Identify which approach is appropriate and justify the choice`,`Step 2 — Apply the method systematically, showing every calculation`,`Step 3 — Interpret the result in context and check it makes sense`],narration:`Theory is one thing — let me show you how this works on an actual problem. I am going to walk through this step by step and I want you to follow along. Do not just watch — try to anticipate each step before I do it. The most important habit you can build is asking yourself: what do I know, what do I need, and which tool gets me from one to the other? Notice how I do that explicitly here. That internal dialogue is the mark of a strong problem solver.`,icap:'active',type:'example'});
+    slides.push({title:'Common Misconception — What Goes Wrong',bullets:[`The most common error students make: confusing similar but distinct concepts that seem equivalent`,`Why this mistake is intuitive — and what the correct understanding actually is`,`How to catch yourself making this error before it leads you in the wrong direction`,`The tell-tale signs in a solution that indicate this misconception is at work`],narration:`I want to pause here because in my experience, most students hit a very specific wall with ${topic} — and it comes from one misconception in particular. Here is the thing: this mistake is completely understandable. The wrong intuition actually looks right on the surface. But when you apply it to a harder problem, everything breaks down. Let me show you exactly where the reasoning goes wrong, and more importantly, how to fix it. Once you see this, you will not unsee it.`,icap:'constructive',type:'content'});
+    slides.push({title:'Think Deeper — Critical Analysis',bullets:[`What would happen if the key assumptions were relaxed or violated?`,`How does this approach compare to alternatives — what are the trade-offs?`,`Can you construct a scenario where this method fails or gives misleading results?`,`What does the research literature say about the limitations of current approaches?`],narration:`Now I want to push you beyond the textbook. Anyone can follow a procedure. Real expertise means knowing the boundaries of your tools. So let me pose some harder questions. What happens when our assumptions do not hold? When would you choose a different approach entirely? These questions do not have simple answers — that is the point. I want you to sit with them, discuss them with your peers, and develop your own position. That is what graduate-level thinking looks like.`,icap:'constructive',type:'content'});
+    slides.push({title:'Peer Discussion Activity',bullets:[`With your partner: explain ${topic} as if the other person has never heard of it — use your own words only`,`Together, construct an original example from a domain you both find interesting`,`Identify one thing from today that you are still unsure about — be specific`,`Prepare a 60-second explanation that you could give to someone walking in late`],narration:`Okay — I want you to stop, turn to the person next to you, and work through these prompts together. You have about five minutes. The first prompt is the hardest — explaining something clearly in your own words is the truest test of understanding. If you cannot do it, that tells you exactly what you still need to work on. Do not rush this. Take it seriously. I will bring the room back together and ask a few pairs to share what they came up with.`,icap:'interactive',type:'activity'});
+    slides.push({title:'Key Takeaways',bullets:[`The core definition and the foundational logic that underlies everything in ${topic}`,`The step-by-step method and how to apply it to problems you have not seen before`,`The most important misconception to avoid — and how to recognise it in your own work`,`The limits of the approach and when to question whether your tools are appropriate`],narration:`Let me bring this all together. Today we covered a lot of ground, so I want to crystallize the four things I most want you to walk away with. These are not just facts to memorize — they are frameworks for thinking. If you deeply understand these four points, you will be well-prepared not just for the exam, but for the advanced material that follows and for using these ideas professionally. Write them down. Review them tonight.`,icap:'passive',type:'summary'});
   }
-  slides.push({title:'Thank You',bullets:['Questions welcome','Review notes before next class','Practice problems available','See you next time'],narration:`Thank you for your attention today.`,icap:'passive',type:'title'});
+  slides.push({title:'Until Next Time',bullets:[`Review today\'s notes within 24 hours — research shows this dramatically improves retention`,`Attempt the practice problems in the reading before the next session`,`Bring one question you cannot answer to the next class — we will start there`,`Office hours are available — do not wait until before the exam to ask for help`],narration:`Before you go — a few practical points. The research on memory is very clear: if you review your notes within 24 hours, retention goes up dramatically. Please do that. And when you do the practice problems, do not just look up the answers. Struggle with them first. That struggle is where the learning actually happens. If you have questions — come to office hours. That is what they are there for. See you next time.`,icap:'passive',type:'title'});
   return slides;
 }
 
@@ -1985,7 +1993,30 @@ function updateSlideControls(){
   if(pa) pa.style.display=(isPlaying&&!isPaused)?'':'none';
   if(re) re.style.display=(isPlaying&&isPaused)?'':'none';
 }
-function toggleFullscreen(){ const el=document.getElementById('slideshowContainer'); if(el) el.classList.toggle('fullscreen'); }
+function toggleFullscreen(){
+  const el = document.getElementById('slideshowContainer');
+  if(!el) return;
+  const isFs = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || el.classList.contains('fs-fallback');
+  if(isFs){
+    // Exit fullscreen
+    if(document.exitFullscreen) document.exitFullscreen();
+    else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+    else if(document.mozCancelFullScreen) document.mozCancelFullScreen();
+    el.classList.remove('fs-fallback');
+    document.body.style.overflow = '';
+  } else {
+    // Enter fullscreen — try API first, fall back to CSS
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if(req){
+      req.call(el).catch(()=>{ el.classList.add('fs-fallback'); document.body.style.overflow='hidden'; });
+    } else {
+      el.classList.add('fs-fallback');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+}
+document.addEventListener('fullscreenchange', ()=>{ if(!document.fullscreenElement){ const el=document.getElementById('slideshowContainer'); if(el) el.classList.remove('fs-fallback'); document.body.style.overflow=''; }});
+document.addEventListener('webkitfullscreenchange', ()=>{ if(!document.webkitFullscreenElement){ const el=document.getElementById('slideshowContainer'); if(el) el.classList.remove('fs-fallback'); document.body.style.overflow=''; }});
 
 // ══════════════════════════════════════════════
 // SESSION PERSISTENCE (survives refresh)
@@ -2634,7 +2665,7 @@ document.addEventListener('keydown', e => {
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){ e.preventDefault(); if(isPlaying&&!isPaused) pauseSlideshow(); else if(isPaused) resumeSlideshow(); else playSlideshow(); }
-  if(e.key==='Escape'){ const el=document.getElementById('slideshowContainer');if(el&&el.classList.contains('fullscreen')) el.classList.remove('fullscreen'); }
+  if(e.key==='Escape'){ const el=document.getElementById('slideshowContainer'); if(el){ el.classList.remove('fs-fallback'); document.body.style.overflow=''; } }
   if(e.key==='f'||e.key==='F') toggleFullscreen();
 });
 document.addEventListener('click', e => {
