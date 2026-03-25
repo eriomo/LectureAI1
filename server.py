@@ -485,33 +485,51 @@ def generate_slideshow_data():
         notes = d.get("notes","")
         language = d.get("language","English")
 
-        context = f"Based on these lecture notes:\n{notes[:2000]}" if notes and len(notes) > 50 else f"Topic: {topic}"
+        # Use full notes if available, truncated to 3500 chars
+        context = f"Based on these detailed lecture notes:\n{notes[:3500]}" if notes and len(notes) > 100 else f"Topic: {topic}"
 
         p = f"""{context}
 
-Create 10 lecture slides for "{topic}" at {level} level in {language}.
+You are a university professor delivering a live {duration}-minute lecture on "{topic}" at {level} level in {language}.
 
-RESPOND WITH ONLY A JSON ARRAY. No text before or after. No markdown.
+Create 18 detailed lecture slides. Each slide should feel like you are ACTUALLY SPEAKING to students — the narration should be a full paragraph of spoken lecture content, not a summary. Think of it as a real transcript of what a brilliant professor would say.
 
-Format:
-[{{"title":"string","bullets":["string","string","string"],"narration":"string","icap":"passive","type":"content"}}]
+RESPOND WITH ONLY A JSON ARRAY. No text before or after. No markdown fences.
 
-Slides:
-1. title slide, type="title", icap="passive"
-2. learning objectives, icap="passive", type="content"
-3. key definitions, icap="passive", type="content"
-4. core concept 1, icap="active", type="content"
-5. core concept 2, icap="active", type="content"
-6. worked example, icap="active", type="example"
-7. misconceptions, icap="constructive", type="content"
-8. discussion activity, icap="interactive", type="activity"
-9. key takeaways, icap="passive", type="summary"
-10. closing, type="title", icap="passive"
+Format per slide:
+{{"title":"Slide title","bullets":["Point 1 — detailed sentence","Point 2 — detailed sentence","Point 3 — detailed sentence","Point 4 — detailed sentence"],"narration":"FULL spoken paragraph 80-150 words — conversational, engaging, like a real professor speaking. Include transitions, emphasis, examples, analogies. Say things like 'Now, what I want you to notice here is...', 'This is really important...', 'Think about it this way...', 'Let me give you a concrete example...'","icap":"passive","type":"content"}}
 
-Each narration: 20-40 words of natural speech. Each bullet: a full sentence.
-Return ONLY the JSON array."""
+The 18 slides must cover:
+1. Title slide — welcome and overview (type="title", icap="passive")
+2. Why this matters — real-world hook, compelling opening story or statistic
+3. Learning objectives — what students will be able to DO by the end
+4. ICAP learning guide — briefly explain how today's session is structured
+5. Core concept 1 — first major idea, deep explanation
+6. Core concept 2 — second major idea
+7. Core concept 3 — third major idea
+8. Key definitions — precise terminology with examples
+9. Worked example 1 — step by step (type="example", icap="active")
+10. Worked example 2 — harder problem (type="example", icap="active")
+11. Visual/Mental model — how to picture or remember the concepts
+12. Common misconception 1 — what students get wrong and why (icap="constructive")
+13. Common misconception 2 — another misconception
+14. Critical thinking challenge — open question, push students to analyse (icap="constructive")
+15. Peer discussion activity — pair/group exercise with prompts (type="activity", icap="interactive")
+16. Real-world application — case study or industry example (icap="interactive")
+17. Key takeaways — the 4-5 things students MUST remember (type="summary")
+18. Closing — next steps, self-study advice, encouragement (type="title")
 
-        result = ask_groq(p, max_tokens=2500)
+Rules:
+- Narrations must be 80-150 words each — real spoken lecture voice
+- Bullets must be complete informative sentences (not fragments)
+- Include specific facts, numbers, examples relevant to {topic}
+- Build logically — each slide should feel like it flows from the previous
+- Level: {level} — calibrate depth accordingly
+- Language: {language}
+
+Return ONLY the JSON array starting with [ and ending with ]."""
+
+        result = ask_groq(p, max_tokens=6000)
         slides = None
 
         for attempt in [
