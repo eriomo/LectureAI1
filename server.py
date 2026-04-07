@@ -7,10 +7,15 @@ from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
 
+# ── Paths ────────────────────────────────────────────────────
+BASE_DIR      = os.path.dirname(os.path.abspath(__file__))   # .../server
+ROOT_DIR      = os.path.dirname(BASE_DIR)                     # .../lectureai
+TEMPLATE_PATH = os.path.join(ROOT_DIR, "client", "templates", "index.html")
+DB_PATH       = "/tmp/lectureai.db"
+
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-DB_PATH = "/tmp/lectureai.db"
 
 # ══════════════════════════════════════════════════════════════
 #  DATABASE
@@ -88,17 +93,16 @@ def ask_groq(prompt, max_tokens=1500):
 # ══════════════════════════════════════════════════════════════
 @app.route("/")
 def index():
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates", "index.html")
-    with open(path, encoding="utf-8") as f:
+    with open(TEMPLATE_PATH, encoding="utf-8") as f:
         return f.read()
 
 @app.route("/ping")
 def ping():
-    return jsonify({"status": "ok", "version": "2.0"})
+    return jsonify({"status": "ok", "version": "2.1"})
 
 @app.route("/health")
 def health():
-    return jsonify({"status": "ok", "db": os.path.exists(DB_PATH)})
+    return jsonify({"status": "ok", "db": os.path.exists(DB_PATH), "template": os.path.exists(TEMPLATE_PATH)})
 
 # ══════════════════════════════════════════════════════════════
 #  CLASS MANAGEMENT
@@ -500,7 +504,6 @@ def generate_slideshow_data():
         notes = d.get("notes","")
         language = d.get("language","English")
 
-        # Use full notes if available, truncated to 3500 chars
         context = f"Based on these detailed lecture notes:\n{notes[:3500]}" if notes and len(notes) > 100 else f"Topic: {topic}"
 
         p = f"""{context}
@@ -895,7 +898,6 @@ def generate_slides():
             run.font.size = Pt(sz); run.font.bold = bold
             run.font.color.rgb = color if color else DARK
 
-        # ── Parse slide content from notes or AI ──
         slide_sections = []
         if notes and len(notes) > 200:
             icap_tags    = re.findall(r'\[(PASSIVE|ACTIVE|CONSTRUCTIVE|INTERACTIVE)\]', notes)
@@ -945,7 +947,6 @@ Make every bullet a complete, informative sentence about {topic}."""
                 {"title":"Key Takeaways",          "bullets":["Core definition and importance","Start with intuition, then formalise","Practice with varied examples","Connect to the bigger picture"],"icap":"PASSIVE"},
             ]
 
-        # ── Title Slide ──
         s1 = prs.slides.add_slide(blank)
         rect(s1, 0, 0, 13.33, 7.5, GREEN)
         rect(s1, 0, 5.5, 13.33, 2.0, DKGREEN)
@@ -954,9 +955,8 @@ Make every bullet a complete, informative sentence about {topic}."""
         txt(s1, topic, 0.5, 1.1, 12, 2.8, sz=42, bold=True, color=WHITE, align=PP_ALIGN.CENTER)
         txt(s1, f"{level}  ·  {duration} min  ·  {style}", 0.5, 3.5, 12, 0.7, sz=18, color=ACCENT, align=PP_ALIGN.CENTER)
         txt(s1, "Human-AI Co-Orchestration in Education", 0.5, 5.9, 12, 0.5, sz=13, color=SOFTW, align=PP_ALIGN.CENTER)
-        txt(s1, "Powered by ICAP Framework  ·  Chi & Wylie (2014)", 0.5, 6.5, 12, 0.5, sz=11, color=ACCENT, align=PP_ALIGN.CENTER)
+        txt(s1, "Powered by ICAP Framework  ·  Chi & Wylie (2014)", 0.5, 6.5, 12, 0.6, sz=11, color=ACCENT, align=PP_ALIGN.CENTER)
 
-        # ── ICAP Overview Slide ──
         s2 = prs.slides.add_slide(blank)
         rect(s2, 0, 0, 13.33, 7.5, LGRAY)
         rect(s2, 0, 0, 13.33, 1.4, GREEN)
@@ -976,27 +976,22 @@ Make every bullet a complete, informative sentence about {topic}."""
         txt(s2, "Higher engagement levels → deeper learning outcomes (Chi & Wylie, 2014)",
             0.5, 5.2, 12.33, 0.5, sz=14, bold=True, color=GREEN)
 
-        # ── Content Slides ──
         for idx, section in enumerate(slide_sections):
             s = prs.slides.add_slide(blank)
             is_dark = idx % 2 == 1
             bg = DKGREEN if is_dark else LGRAY
             text_c = WHITE if is_dark else DARK
-
             rect(s, 0, 0, 13.33, 7.5, bg)
             rect(s, 0, 0, 13.33, 1.4, GREEN)
-
             title_text = section.get("title","")
             icap_tag   = str(section.get("icap","PASSIVE")).upper()
             icap_color = ICAP_COLORS.get(icap_tag, ACCENT)
             icap_label = ICAP_LABELS.get(icap_tag, icap_tag)
-
             txt(s, title_text, 0.4, 0.2, 10.5, 1.0, sz=26, bold=True, color=WHITE)
             txt(s, "LectureAI", 11.5, 0.22, 1.5, 0.5, sz=10, color=ACCENT)
             rect(s, 0.4, 1.5, 3.2, 0.35, icap_color)
             txt(s, icap_label, 0.5, 1.52, 3.0, 0.3, sz=11, bold=True, color=WHITE)
             txt(s, f"Slide {idx+3}", 12.0, 1.52, 1.0, 0.3, sz=10, color=ACCENT if is_dark else GREEN)
-
             bullets = section.get("bullets", [])[:6]
             y = 2.15
             for b in bullets:
@@ -1004,7 +999,6 @@ Make every bullet a complete, informative sentence about {topic}."""
                 txt(s, str(b), 0.75, y, 12.0, 0.5, sz=15, color=text_c)
                 y += 0.62
 
-        # ── Thank You Slide ──
         sc = prs.slides.add_slide(blank)
         rect(sc, 0, 0, 13.33, 7.5, DKGREEN)
         rect(sc, 0.5, 3.0, 12.33, 0.05, ACCENT)
@@ -1025,11 +1019,9 @@ Make every bullet a complete, informative sentence about {topic}."""
         import traceback; traceback.print_exc()
         return jsonify({"success": False, "error": str(e)})
 
-
 # ══════════════════════════════════════════════════════════════
 #  LECTURE LIBRARY
 # ══════════════════════════════════════════════════════════════
-
 @app.route("/library/save", methods=["POST"])
 def library_save():
     try:
@@ -1038,56 +1030,35 @@ def library_save():
             return jsonify({"success": False, "error": "Topic and notes are required"})
         init_db()
         conn = get_db()
-
-        # Check if this teacher already saved this topic — update instead of duplicate
         existing = conn.execute(
             "SELECT id FROM lecture_library WHERE teacher_email=? AND topic=?",
             (d.get("teacherEmail",""), d.get("topic",""))
         ).fetchone()
-
         lid = existing["id"] if existing else str(uuid.uuid4())
         year = str(__import__('datetime').datetime.now().year)
-
         if existing:
             conn.execute("""UPDATE lecture_library SET
                 title=?, notes=?, subject=?, level=?, institution=?,
                 class_code=?, is_public=?, saved_at=datetime('now'), year=?, teacher_name=?
                 WHERE id=?""",
-                (d.get("title", d.get("topic","")),
-                 d.get("notes",""),
-                 d.get("subject",""),
-                 d.get("level","Intermediate"),
-                 d.get("institution",""),
-                 d.get("classCode",""),
-                 1 if d.get("isPublic", True) else 0,
-                 year,
-                 d.get("teacherName",""),
-                 lid))
+                (d.get("title", d.get("topic","")), d.get("notes",""), d.get("subject",""),
+                 d.get("level","Intermediate"), d.get("institution",""), d.get("classCode",""),
+                 1 if d.get("isPublic", True) else 0, year, d.get("teacherName",""), lid))
         else:
             conn.execute("""INSERT INTO lecture_library
                 (id, teacher_email, teacher_name, title, topic, subject, level,
                  institution, notes, class_code, is_public, view_count, saved_at, year)
                 VALUES(?,?,?,?,?,?,?,?,?,?,?,0,datetime('now'),?)""",
-                (lid,
-                 d.get("teacherEmail",""),
-                 d.get("teacherName",""),
-                 d.get("title", d.get("topic","")),
-                 d.get("topic",""),
-                 d.get("subject",""),
-                 d.get("level","Intermediate"),
-                 d.get("institution",""),
-                 d.get("notes",""),
-                 d.get("classCode",""),
-                 1 if d.get("isPublic", True) else 0,
-                 year))
-
+                (lid, d.get("teacherEmail",""), d.get("teacherName",""),
+                 d.get("title", d.get("topic","")), d.get("topic",""), d.get("subject",""),
+                 d.get("level","Intermediate"), d.get("institution",""), d.get("notes",""),
+                 d.get("classCode",""), 1 if d.get("isPublic", True) else 0, year))
         conn.commit()
         conn.close()
         return jsonify({"success": True, "id": lid, "updated": bool(existing)})
     except Exception as e:
         print("library_save error:", e)
         return jsonify({"success": False, "error": str(e)})
-
 
 @app.route("/library/list", methods=["POST"])
 def library_list():
@@ -1097,16 +1068,13 @@ def library_list():
         subject = d.get("subject","").strip()
         level = d.get("level","").strip()
         year = d.get("year","").strip()
-        teacher_email = d.get("teacherEmail","").strip()  # filter by own notes
+        teacher_email = d.get("teacherEmail","").strip()
         page = int(d.get("page", 1))
         per_page = 20
-
         init_db()
         conn = get_db()
-
         query = "SELECT id, teacher_name, teacher_email, title, topic, subject, level, institution, year, view_count, saved_at FROM lecture_library WHERE is_public=1"
         params = []
-
         if search:
             query += " AND (topic LIKE ? OR title LIKE ? OR subject LIKE ? OR teacher_name LIKE ?)"
             s = f"%{search}%"
@@ -1123,17 +1091,12 @@ def library_list():
         if teacher_email:
             query += " AND teacher_email=?"
             params.append(teacher_email)
-
-        # Total count
         count_row = conn.execute(f"SELECT COUNT(*) as cnt FROM ({query})", params).fetchone()
         total = count_row["cnt"] if count_row else 0
-
         query += " ORDER BY saved_at DESC LIMIT ? OFFSET ?"
         params += [per_page, (page-1)*per_page]
-
         rows = conn.execute(query, params).fetchall()
         conn.close()
-
         return jsonify({
             "success": True,
             "lectures": [dict(r) for r in rows],
@@ -1144,7 +1107,6 @@ def library_list():
     except Exception as e:
         print("library_list error:", e)
         return jsonify({"success": False, "error": str(e)})
-
 
 @app.route("/library/get", methods=["POST"])
 def library_get():
@@ -1157,7 +1119,6 @@ def library_get():
         conn = get_db()
         row = conn.execute("SELECT * FROM lecture_library WHERE id=?", (lid,)).fetchone()
         if row:
-            # Increment view count
             conn.execute("UPDATE lecture_library SET view_count=view_count+1 WHERE id=?", (lid,))
             conn.commit()
         conn.close()
@@ -1166,7 +1127,6 @@ def library_get():
         return jsonify({"success": False, "error": "Lecture not found"})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
-
 
 @app.route("/library/delete", methods=["POST"])
 def library_delete():
@@ -1183,10 +1143,8 @@ def library_delete():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
-
 @app.route("/library/subjects", methods=["POST"])
 def library_subjects():
-    """Return all distinct subjects and years in the library for filtering."""
     try:
         init_db()
         conn = get_db()
@@ -1208,7 +1166,6 @@ def library_subjects():
         })
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
