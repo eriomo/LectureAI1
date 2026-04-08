@@ -2693,7 +2693,6 @@ function addQuestion(prefill){
 }
 function rebuildTestQ(){ const all=[...testQuestions]; testQuestions=[]; document.getElementById('testQuestionsBuilder').innerHTML=''; all.forEach(q=>addQuestion(q)); }
 function removeQuestion(i){ testQuestions.splice(i,1); rebuildTestQ(); }
-function rebuildTestQ(){ const all=[...testQuestions]; testQuestions=[]; document.getElementById('testQuestionsBuilder').innerHTML=''; all.forEach(q=>addQuestion(q)); }
 async function createTest(){
   const title=v('testTitle');if(!title||!testQuestions.length){alert('Add a title and at least one question');return;}
   const res=await api('/create_test',{classCode:teacher.code,teacherEmail:teacher.email,title,questions:testQuestions,timeLimit:v('testTimeLimit')||0});
@@ -3010,44 +3009,45 @@ async function renderHeatmapData() {
   const log = document.getElementById('confusionLog');
   if(!el) return;
   if(!res.success || !res.events || !res.events.length) {
-    el.innerHTML = '<div style="text-align:center;padding:32px;"><div style="font-size:32px;margin-bottom:10px;">🎉</div><div style="font-size:14px;color:var(--muted);">No confusion events yet — your students are keeping up!</div></div>';
+    el.innerHTML = '<div style="text-align:center;padding:32px;"><div style="font-size:32px;margin-bottom:10px;">🎉</div><div style="font-size:14px;color:var(--muted);">No confusion events yet.</div></div>';
     if(log) log.innerHTML = '<p class="msg-info">No events recorded yet.</p>';
     return;
   }
-  // Count per slide
   const counts = {};
   let maxC = 0;
-  res.events.forEach(e => {
+  res.events.forEach(function(e) {
     counts[e.slide_index] = (counts[e.slide_index] || 0) + 1;
     if(counts[e.slide_index] > maxC) maxC = counts[e.slide_index];
   });
-  const total = slideshowData.length || (Math.max(...Object.keys(counts).map(Number)) + 1);
-  let gridHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;">';
-  for(let i = 0; i < total; i++) {
-    const cnt = counts[i] || 0;
-    const heat = maxC > 0 ? cnt / maxC : 0;
-    const r = Math.round(224 * heat);
-    const g = Math.round(82 + 134 * (1 - heat));
-    const b = Math.round(82 * heat);
-    const bg = cnt > 0 ? \`rgba(\${r},\${g},\${b},0.15)\` : 'var(--input)';
-    const border = cnt > 0 ? \`rgba(\${r},\${g},\${b},0.5)\` : 'var(--border)';
-    const title = (slideshowData[i] && slideshowData[i].title) || \`Slide \${i+1}\`;
-    gridHtml += \`<div style="background:\${bg};border:1px solid \${border};border-radius:12px;padding:12px 10px;text-align:center;">
-      <div style="font-size:22px;font-weight:700;color:var(--text);">\${cnt}</div>
-      <div style="font-size:10px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="\${esc(title)}">Slide \${i+1}</div>
-      <div style="font-size:9px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">\${esc(title.slice(0,20))}</div>
-      \${cnt > 0 ? \`<div style="font-size:9px;color:rgba(\${r},\${g},\${b},1);font-weight:700;margin-top:3px;">confused</div>\` : ''}
-    </div>\`;
+  var total = slideshowData.length || (Math.max.apply(null, Object.keys(counts).map(Number)) + 1);
+  var gridHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;">';
+  for(var i = 0; i < total; i++) {
+    var cnt = counts[i] || 0;
+    var heat = maxC > 0 ? cnt / maxC : 0;
+    var r = Math.round(224 * heat);
+    var g = Math.round(82 + 134 * (1 - heat));
+    var b2 = Math.round(82 * heat);
+    var bg = cnt > 0 ? 'rgba('+r+','+g+','+b2+',0.15)' : 'var(--input)';
+    var brd = cnt > 0 ? 'rgba('+r+','+g+','+b2+',0.5)' : 'var(--border)';
+    var stitle = (slideshowData[i] && slideshowData[i].title) || ('Slide '+(i+1));
+    gridHtml += '<div style="background:'+bg+';border:1px solid '+brd+';border-radius:12px;padding:12px 10px;text-align:center;">';
+    gridHtml += '<div style="font-size:22px;font-weight:700;color:var(--text);">'+cnt+'</div>';
+    gridHtml += '<div style="font-size:10px;color:var(--muted);margin-top:3px;">Slide '+(i+1)+'</div>';
+    gridHtml += '<div style="font-size:9px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(stitle.slice(0,22))+'</div>';
+    if(cnt > 0) gridHtml += '<div style="font-size:9px;color:rgba('+r+','+g+','+b2+',1);font-weight:700;margin-top:3px;">confused</div>';
+    gridHtml += '</div>';
   }
   gridHtml += '</div>';
   el.innerHTML = gridHtml;
   if(log) {
-    log.innerHTML = res.events.slice(0,30).map(e =>
-      \`<div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
-        <span style="color:var(--text);"><strong>\${esc(e.student_name)}</strong> got confused at Slide \${(e.slide_index||0)+1}: <em style="color:var(--muted);">\${esc(e.slide_title||'')}</em></span>
-        <span style="color:var(--muted);font-size:11px;flex-shrink:0;">\${e.created_at||''}</span>
-      </div>\`
-    ).join('');
+    var logHtml = '';
+    res.events.slice(0,30).forEach(function(e) {
+      logHtml += '<div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;">';
+      logHtml += '<span style="color:var(--text);"><strong>'+esc(e.student_name)+'</strong> confused at Slide '+((e.slide_index||0)+1)+': <em style="color:var(--muted);">'+esc(e.slide_title||'')+'</em></span>';
+      logHtml += '<span style="color:var(--muted);font-size:11px;flex-shrink:0;">'+(e.created_at||'')+'</span>';
+      logHtml += '</div>';
+    });
+    log.innerHTML = logHtml;
   }
 }
 
