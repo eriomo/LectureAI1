@@ -3,3 +3,4 @@ flask-cors
 groq
 gunicorn
 python-pptx
+supabase
