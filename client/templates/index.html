@@ -10,7 +10,6 @@
 <meta name="theme-color" content="#071a10"/>
 <meta name="description" content="Human-AI Co-Orchestration in Education. Built on the ICAP Framework for deeper learning."/>
 <title>LectureAI — Human-AI Co-Orchestration</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -37,6 +36,12 @@ body{font-family:'DM Sans',sans-serif;background:#071a10;color:#ecf0ec;-webkit-f
   --red:#e05252;
   --blue:#4A9EE8;
 }
+body.light{
+  --bg:#f0f5f0;--card:#fff;--border:rgba(45,106,79,0.22);
+  --text:#0a1f0f;--dim:rgba(10,31,15,0.7);--muted:rgba(10,31,15,0.4);
+  --input:#ffffff;background:#f0f5f0;
+}
+body.light select option{background:#fff;color:#0a1f0f;}
 
 
 /* ── App shell ── */
@@ -86,7 +91,10 @@ body{font-family:'DM Sans',sans-serif;background:#071a10;color:#ecf0ec;-webkit-f
     width:260px;
     box-shadow:4px 0 20px rgba(0,0,0,0.3);
   }
-  .book-scene-wrap{display:none!important;}
+  .book-scene-wrap{right:8px!important;top:120px!important;transform:none!important;opacity:0.22!important;}
+  .book-scene{width:130px!important;height:168px!important;}
+  .book-3d{width:90px!important;height:126px!important;}
+  .ifl,.sparkle,.bp,.book-glow{display:none!important;}
   .sidebar.open{transform:translateX(0);}
   .hamburger-btn{display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;}
   .bottom-tabs{display:flex!important;}
@@ -1193,12 +1201,16 @@ setInterval(() => { fetch(API+'/ping').catch(()=>{}); }, 5*60*1000);
 // ══════════════════════════════════════════════
 function selectLang(btn, lang, gridId) {
   selectedLanguage = lang;
-  document.querySelectorAll(`#${gridId} .lang-btn`).forEach(b=>b.classList.remove('active'));
+  // Update ALL lang grids on the page
+  document.querySelectorAll('.lang-btn').forEach(b=>{
+    if(b.closest('#'+gridId)) { b.classList.remove('active'); }
+  });
   btn.classList.add('active');
-  const disp = document.getElementById('currentLangDisplay');
-  if(disp) disp.textContent = btn.textContent;
+  // Update all language displays
+  document.querySelectorAll('#currentLangDisplay').forEach(d=>d.textContent=btn.textContent);
   if(teacher.code) teacher.language = lang;
   if(student.code) student.language = lang;
+  showToast('Language set to ' + lang, 'success');
   // Re-pick best voice for new language
   setTimeout(initVoices, 100);
 }
@@ -3483,7 +3495,7 @@ function renderNotesWithDiagrams(raw) {
 function renderDiagramsInNotes() {
   // Called after notes are injected into DOM
   if(typeof mermaid !== 'undefined') {
-    try { mermaid.initialize({startOnLoad:false,theme:'dark',themeVariables:{primaryColor:'#2d6a4f',primaryTextColor:'#ecf0ec',primaryBorderColor:'#40916c',lineColor:'#74c69d',background:'#0c2318'}}); mermaid.run(); } catch(e) {}
+    
   }
 }
 
@@ -3656,11 +3668,6 @@ async function runDeepExplain() {
 // Done by extending the pages/titles maps at call sites above.
 
 // Mermaid init on load
-window.addEventListener('load', function() {
-  if(typeof mermaid !== 'undefined') {
-    mermaid.initialize({startOnLoad:true, theme:'dark', themeVariables:{primaryColor:'#2d6a4f',primaryTextColor:'#ecf0ec',lineColor:'#74c69d',background:'#0c2318'}});
-  }
-});
 
 window.addEventListener('DOMContentLoaded', () => {
   if(!restoreSession()) {
