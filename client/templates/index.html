@@ -1832,29 +1832,50 @@ function renderAssignments() {
 function renderTests() {
   return `<div class="fade">
     <div class="card">
-      <h3>AI Quiz Generator</h3>
-      <p class="msg-info">Generate 5 questions automatically from your lesson notes.</p>
+      <h3>AI Assessment Generator</h3>
+      <p class="msg-info">Generate a full assessment from your notes. Choose type, number of questions, and difficulty.</p>
+      <div class="grid-2" style="margin-bottom:10px;">
+        <div>
+          <label>Question Type</label>
+          <select id="quizGenType">
+            <option value="mcq">Multiple Choice (MCQ)</option>
+            <option value="shortanswer">Short Answer</option>
+            <option value="truefalse">True / False</option>
+            <option value="essay">Essay Questions</option>
+            <option value="mixed">Mixed Format</option>
+          </select>
+        </div>
+        <div>
+          <label>Number of Questions</label>
+          <select id="quizGenCount">
+            <option value="3">3 questions</option>
+            <option value="5" selected>5 questions</option>
+            <option value="8">8 questions</option>
+            <option value="10">10 questions</option>
+            <option value="15">15 questions</option>
+          </select>
+        </div>
+      </div>
       <button class="btn btn-amber btn-sm" onclick="generateAIQuiz()">
-        Generate Quiz from Notes
+        Generate Assessment from Notes
         <span id="quizGenLoader" style="display:none;" class="loader"></span>
       </button>
       <p id="quizGenMsg" class="msg-info" style="margin-top:8px;"></p>
     </div>
     <div class="card">
-      <h3>Create Test</h3>
+      <h3>Build Test Manually</h3>
       <label>Test Title</label>
       <input id="testTitle" type="text" placeholder="Test title"/>
       <label>Time Limit (minutes, 0 = no limit)</label>
-      <input id="testTimeLimit" type="number" placeholder="0" value="0"/>
+      <input id="testTimeLimit" type="number" value="0"/>
       <div id="testQuestionsBuilder"></div>
       <button class="btn btn-ghost btn-sm" onclick="addQuestion()" style="margin-bottom:10px;">+ Add Question</button>
-      <button class="btn btn-primary btn-full" onclick="createTest()">Save & Publish Test</button>
+      <button class="btn btn-primary btn-full" onclick="createTest()">Save &amp; Publish Test</button>
       <p id="testMsg" class="msg-success"></p>
     </div>
     <div id="testsList"></div>
   </div>`;
 }
-
 function renderReports() {
   return `<div class="fade">
     <div class="card">
