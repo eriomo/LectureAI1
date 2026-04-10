@@ -293,6 +293,16 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
 .msg-success{color:#74c69d;font-size:13px;margin-top:4px;}
 .msg-error{color:#E05252;font-size:13px;margin-top:4px;}
 .msg-info{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.6;}
+/* ── Settings ── */
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);gap:16px;}
+.setting-row:last-child{border-bottom:none;}
+.setting-label{font-size:13px;font-weight:600;color:var(--text);}
+.setting-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+.toggle-switch{width:44px;height:24px;background:rgba(45,106,79,0.2);border:1px solid var(--border);border-radius:100px;position:relative;cursor:pointer;flex-shrink:0;transition:background 0.2s;}
+.toggle-switch.on{background:var(--green);}
+.toggle-switch .knob{position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left 0.2s;}
+.toggle-switch.on .knob{left:23px;}
+
 /* ── 3D BOOK ANIMATION ─────────────────────────────────── */
 /* Desktop only — hidden on mobile so it doesn't block content */
 .book-scene-wrap{
@@ -860,6 +870,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
         <button onclick="tGoPage('rubric')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;transition:all 0.12s;">📐 Rubric Builder</button>
         <button onclick="tGoPage('generator')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;transition:all 0.12s;">🧩 AI Generator</button>
         <button onclick="tGoPage('export')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;transition:all 0.12s;">📤 Export Slides</button>
+        <button onclick="tGoPage('settings')" class="snb" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">⚙️ Settings</button>
         <button onclick="showInstallGuide()" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid rgba(116,198,157,0.2);background:rgba(116,198,157,0.05);color:#74c69d;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:6px;text-align:left;">📲 Install App</button>
       </nav>
       <div style="padding:8px 6px;border-top:1px solid var(--border);">
@@ -958,6 +969,7 @@ label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3
         <button onclick="sGoPage('discuss')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">💬 Discussion</button>
         <button onclick="sGoPage('library')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid rgba(116,198,157,0.2);background:rgba(116,198,157,0.04);color:#74c69d;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">📚 Lecture Library</button>
         <button onclick="sGoPage('history')" class="sidebar-nav-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">🗂 Past Lectures</button>
+        <button onclick="sGoPage('settings')" class="snb" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid transparent;background:none;color:var(--dim);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1px;text-align:left;">⚙️ Settings</button>
         <button onclick="showInstallGuide()" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:7px;border:1px solid rgba(116,198,157,0.2);background:rgba(116,198,157,0.05);color:#74c69d;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:6px;text-align:left;">📲 Install App</button>
       </nav>
       <div style="padding:8px 6px;border-top:1px solid var(--border);">
@@ -1377,8 +1389,8 @@ function renderLesson() {
       <h3>Language</h3>
       <p class="msg-info">All generated content — notes, slides, quizzes — will be in your selected language.</p>
       <div class="lang-grid" id="tLangGrid">
-        ${['🇬🇧 English','🇫🇷 Français','🇪🇸 Español','🇸🇦 العربية','🇨🇳 中文','🇵🇹 Português','🇳🇬 Yorùbá','🇳🇬 Hausa','🇳🇬 Igbo','🇰🇪 Kiswahili','🇮🇳 हिन्दी','🇩🇪 Deutsch','🇯🇵 日本語','🇰🇷 한국어','🇷🇺 Русский','🇮🇹 Italiano'].map((l,i)=>{
-          const lang = ['English','French','Spanish','Arabic','Chinese','Portuguese','Yoruba','Hausa','Igbo','Swahili','Hindi','German','Japanese','Korean','Russian','Italian'][i];
+        ${['🇬🇧 English','🇫🇷 Français','🇪🇸 Español','🇸🇦 العربية','🇨🇳 中文','🇵🇹 Português','🇳🇬 Yorùbá','🇳🇬 Hausa','🇳🇬 Igbo','🇰🇪 Kiswahili','🇮🇳 हिन्दी','🇩🇪 Deutsch','🇯🇵 日本語','🇰🇷 한국어','🇷🇺 Русский','🇮🇹 Italiano','🇳🇱 Nederlands','🇸🇪 Svenska','🇹🇷 Türkçe','🇮🇩 Bahasa','🇵🇭 Filipino','🇺🇦 Українська','🇬🇷 Ελληνικά','🇨🇿 Čeština'].map((l,i)=>{
+          const lang = ['English','French','Spanish','Arabic','Chinese','Portuguese','Yoruba','Hausa','Igbo','Swahili','Hindi','German','Japanese','Korean','Russian','Italian','Dutch','Swedish','Turkish','Indonesian','Filipino','Ukrainian','Greek','Czech'][i];
           return `<button class="lang-btn${lang==='English'?' active':''}" onclick="selectLang(this,'${lang}','tLangGrid')">${l}</button>`;
         }).join('')}
       </div>
@@ -1453,7 +1465,12 @@ function renderICAPNotesHTML(raw) {
 
   const closeList = () => { if(inList){ html += '</ul>'; inList = false; } };
 
-  const fmt = (s) => s
+  // escRaw: escape HTML entities FIRST so AI-generated HTML tags are displayed as text, not rendered
+  const escRaw = (s) => String(s||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+  // fmt: apply markdown AFTER escaping
+  const fmt = (s) => escRaw(s)
     .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--text);font-weight:700;">$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
     .replace(/`(.+?)`/g, '<code style="background:rgba(116,198,157,0.12);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:0.88em;color:#74c69d;">$1</code>');
@@ -1982,8 +1999,8 @@ function renderSDashboard() {
       <h3>Choose Your Language</h3>
       <p class="msg-info">AI responses, quizzes, and study plans will be in your chosen language.</p>
       <div class="lang-grid" id="stuLangGrid">
-        ${['🇬🇧 English','🇫🇷 Français','🇪🇸 Español','🇸🇦 العربية','🇨🇳 中文','🇵🇹 Português','🇳🇬 Yorùbá','🇳🇬 Hausa','🇳🇬 Igbo','🇰🇪 Kiswahili','🇮🇳 हिन्दी','🇩🇪 Deutsch','🇯🇵 日本語','🇰🇷 한국어','🇷🇺 Русский','🇮🇹 Italiano'].map((l,i)=>{
-          const lang = ['English','French','Spanish','Arabic','Chinese','Portuguese','Yoruba','Hausa','Igbo','Swahili','Hindi','German','Japanese','Korean','Russian','Italian'][i];
+        ${['🇬🇧 English','🇫🇷 Français','🇪🇸 Español','🇸🇦 العربية','🇨🇳 中文','🇵🇹 Português','🇳🇬 Yorùbá','🇳🇬 Hausa','🇳🇬 Igbo','🇰🇪 Kiswahili','🇮🇳 हिन्दी','🇩🇪 Deutsch','🇯🇵 日本語','🇰🇷 한국어','🇷🇺 Русский','🇮🇹 Italiano','🇳🇱 Nederlands','🇸🇪 Svenska','🇹🇷 Türkçe','🇮🇩 Bahasa','🇵🇭 Filipino','🇺🇦 Українська','🇬🇷 Ελληνικά','🇨🇿 Čeština'].map((l,i)=>{
+          const lang = ['English','French','Spanish','Arabic','Chinese','Portuguese','Yoruba','Hausa','Igbo','Swahili','Hindi','German','Japanese','Korean','Russian','Italian','Dutch','Swedish','Turkish','Indonesian','Filipino','Ukrainian','Greek','Czech'][i];
           return `<button class="lang-btn${lang==='English'?' active':''}" onclick="selectLang(this,'${lang}','stuLangGrid')">${l}</button>`;
         }).join('')}
       </div>
@@ -3668,6 +3685,183 @@ async function runDeepExplain() {
 // Done by extending the pages/titles maps at call sites above.
 
 // Mermaid init on load
+
+// ══════════════════════════════════════════════════════════
+// SETTINGS PAGE
+// ══════════════════════════════════════════════════════════
+var APP_LANG_FLAGS = ['🇬🇧','🇫🇷','🇪🇸','🇸🇦','🇨🇳','🇵🇹','🇳🇬','🇳🇬','🇳🇬','🇰🇪','🇮🇳','🇩🇪','🇯🇵','🇰🇷','🇷🇺','🇮🇹','🇳🇱','🇸🇪','🇹🇷','🇮🇩','🇵🇭','🇺🇦','🇬🇷','🇨🇿'];
+var APP_LANG_NAMES = ['English','French','Spanish','Arabic','Chinese','Portuguese','Yoruba','Hausa','Igbo','Swahili','Hindi','German','Japanese','Korean','Russian','Italian','Dutch','Swedish','Turkish','Indonesian','Filipino','Ukrainian','Greek','Czech'];
+var APP_LANG_LABELS = ['🇬🇧 English','🇫🇷 Français','🇪🇸 Español','🇸🇦 العربية','🇨🇳 中文','🇵🇹 Português','🇳🇬 Yorùbá','🇳🇬 Hausa','🇳🇬 Igbo','🇰🇪 Kiswahili','🇮🇳 हिन्दी','🇩🇪 Deutsch','🇯🇵 日本語','🇰🇷 한국어','🇷🇺 Русский','🇮🇹 Italiano','🇳🇱 Nederlands','🇸🇪 Svenska','🇹🇷 Türkçe','🇮🇩 Bahasa','🇵🇭 Filipino','🇺🇦 Українська','🇬🇷 Ελληνικά','🇨🇿 Čeština'];
+
+function renderSettings() {
+  var role = teacher.code ? 'teacher' : 'student';
+  var userName = teacher.name || student.name || 'User';
+  var userCode = teacher.code || student.code || '—';
+  var userRole = teacher.code ? 'Teacher' : 'Student';
+
+  return '<div class="fade">' +
+    '<div style="margin-bottom:20px;">' +
+    '<h1 style="font-family:\'Playfair Display\',serif;font-size:clamp(20px,5vw,24px);font-weight:700;color:var(--text);margin-bottom:4px;">Settings</h1>' +
+    '<p style="color:var(--muted);font-size:13px;">Customize your LectureAI experience</p>' +
+    '</div>' +
+
+    // Profile card
+    '<div class="card">' +
+    '<h3>Profile</h3>' +
+    '<div style="display:flex;align-items:center;gap:14px;">' +
+    '<div style="width:50px;height:50px;background:linear-gradient(135deg,var(--green),var(--green3));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-weight:700;font-size:20px;color:#fff;flex-shrink:0;">' + userName.charAt(0).toUpperCase() + '</div>' +
+    '<div><div style="font-size:15px;font-weight:700;color:var(--text);">' + esc(userName) + '</div>' +
+    '<div style="font-size:12px;color:#74c69d;font-weight:700;margin-top:2px;">' + userRole + ' · Class ' + esc(userCode) + '</div></div>' +
+    '</div>' +
+    '</div>' +
+
+    // Appearance
+    '<div class="card">' +
+    '<h3>Appearance</h3>' +
+    '<div class="setting-row">' +
+    '<div><div class="setting-label">Dark Mode</div><div class="setting-desc">Dark green interface (recommended)</div></div>' +
+    '<div class="toggle-switch' + (isDark?' on':'') + '" id="darkModeToggle" onclick="toggleTheme();updateSettingsToggle()">' +
+    '<div class="knob"></div></div>' +
+    '</div>' +
+    '<div class="setting-row">' +
+    '<div><div class="setting-label">Interface Language</div><div class="setting-desc">Changes the language of AI-generated content (notes, quizzes, study plans)</div></div>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:6px;" id="settingsLangGrid">' +
+    APP_LANG_LABELS.map(function(label, i) {
+      var lang = APP_LANG_NAMES[i];
+      return '<button class="lang-btn' + (lang===selectedLanguage?' active':'') + '" onclick="setAppLang(\'' + lang + '\',\'' + label + '\',this)">' + label + '</button>';
+    }).join('') +
+    '</div>' +
+    '</div>' +
+
+    // AI Behavior
+    '<div class="card">' +
+    '<h3>AI Preferences</h3>' +
+    '<div class="setting-row">' +
+    '<div><div class="setting-label">Notes Length</div><div class="setting-desc">How detailed should generated notes be?</div></div>' +
+    '<select id="notesLengthPref" onchange="savePref(\'notesLength\',this.value)" style="width:auto;margin:0;">' +
+    '<option value="concise"' + (getPref('notesLength')==='concise'?' selected':'') + '>Concise (~1500 words)</option>' +
+    '<option value="standard"' + (getPref('notesLength')==='standard'||!getPref('notesLength')?' selected':'') + '>Standard (~2500 words)</option>' +
+    '<option value="detailed"' + (getPref('notesLength')==='detailed'?' selected':'') + '>Detailed (~4000 words)</option>' +
+    '</select>' +
+    '</div>' +
+    '<div class="setting-row">' +
+    '<div><div class="setting-label">Default Teaching Style</div><div class="setting-desc">Applied when generating notes</div></div>' +
+    '<select id="teachStylePref" onchange="savePref(\'teachStyle\',this.value)" style="width:auto;margin:0;">' +
+    ['Lecture-based','Socratic','Problem-based','Flipped','Project-based'].map(function(s) {
+      return '<option' + (getPref('teachStyle')===s?' selected':'') + '>' + s + '</option>';
+    }).join('') +
+    '</select>' +
+    '</div>' +
+    '<div class="setting-row">' +
+    '<div><div class="setting-label">Slideshow Auto-play</div><div class="setting-desc">Auto-advance slides with narration</div></div>' +
+    '<div class="toggle-switch' + (getPref('autoplay')!=='off'?' on':'') + '" id="autoplayToggle" onclick="togglePref(\'autoplay\',\'on\',\'off\');document.getElementById(\'autoplayToggle\').classList.toggle(\'on\');document.querySelector(\'#autoplayToggle .knob\').style.left=getPref(\'autoplay\')!==\'off\'?\'23px\':\'3px\'">' +
+    '<div class="knob" style="left:' + (getPref('autoplay')!=='off'?'23':'3') + 'px"></div></div>' +
+    '</div>' +
+    '<div class="setting-row">' +
+    '<div><div class="setting-label">Narration Speed</div><div class="setting-desc">Default speech rate for TTS</div></div>' +
+    '<div style="display:flex;align-items:center;gap:10px;">' +
+    '<input type="range" min="0.6" max="1.8" step="0.1" value="' + (getPref('ttsSpeed')||'0.9') + '" oninput="speechRate=parseFloat(this.value);savePref(\'ttsSpeed\',this.value);this.nextElementSibling.textContent=this.value+\'x\'" style="width:100px;margin:0;accent-color:var(--light);">' +
+    '<span style="font-size:12px;color:var(--muted);min-width:30px;">' + (getPref('ttsSpeed')||'0.9') + 'x</span>' +
+    '</div>' +
+    '</div>' +
+    '</div>' +
+
+    // Notifications  
+    '<div class="card">' +
+    '<h3>Notifications</h3>' +
+    '<div class="setting-row">' +
+    '<div><div class="setting-label">Toast Notifications</div><div class="setting-desc">Show confirmation messages for actions</div></div>' +
+    '<div class="toggle-switch' + (getPref('toasts')!=='off'?' on':'') + '" id="toastToggle" onclick="togglePref(\'toasts\',\'on\',\'off\');this.classList.toggle(\'on\')">' +
+    '<div class="knob" style="left:' + (getPref('toasts')!=='off'?'23':'3') + 'px"></div></div>' +
+    '</div>' +
+    '</div>' +
+
+    // Danger zone
+    '<div class="card" style="border-color:rgba(224,82,82,0.3);">' +
+    '<h3 style="color:#E05252;">Session</h3>' +
+    '<div class="setting-row">' +
+    '<div><div class="setting-label">Clear Cached Data</div><div class="setting-desc">Remove locally stored notes, slides, and quiz data</div></div>' +
+    '<button class="btn btn-red btn-sm" onclick="clearCache()">Clear Cache</button>' +
+    '</div>' +
+    '<div class="setting-row">' +
+    '<div><div class="setting-label">Logout</div><div class="setting-desc">End your session</div></div>' +
+    '<button class="btn btn-red btn-sm" onclick="doLogout()">Logout</button>' +
+    '</div>' +
+    '</div>' +
+    '</div>';
+}
+
+// ── Preferences helpers ──────────────────────────────────────
+function getPref(key) { try { return localStorage.getItem('lai_pref_'+key)||''; } catch(e){return '';} }
+function savePref(key,val) { try { localStorage.setItem('lai_pref_'+key,val); } catch(e){} }
+function togglePref(key,on,off) { savePref(key, getPref(key)===on?off:on); }
+
+function updateSettingsToggle() {
+  var t = document.getElementById('darkModeToggle');
+  if(!t) return;
+  if(isDark) t.classList.add('on'); else t.classList.remove('on');
+}
+
+function setAppLang(lang, label, btn) {
+  selectedLanguage = lang;
+  // Update all lang grids everywhere
+  document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active');});
+  // Mark all buttons with this language active
+  document.querySelectorAll('.lang-btn').forEach(function(b){
+    if(b.textContent.trim()===label.trim()) b.classList.add('active');
+  });
+  if(teacher.code) teacher.language = lang;
+  if(student.code) student.language = lang;
+  // Update speechRate from pref
+  var spd = getPref('ttsSpeed');
+  if(spd) speechRate = parseFloat(spd);
+  showToast('Language: ' + lang, 'success');
+  setTimeout(initVoices, 200);
+}
+
+function clearCache() {
+  var keys = [];
+  for(var i=0;i<localStorage.length;i++){
+    var k=localStorage.key(i);
+    if(k&&(k.startsWith('lai_notes_')||k.startsWith('lai_quiz_')||k.startsWith('lai_slides_'))) keys.push(k);
+  }
+  keys.forEach(function(k){localStorage.removeItem(k);});
+  showToast('Cache cleared ('+keys.length+' items)', 'success');
+}
+
+// ── Wire settings into both page routers ────────────────────
+// Patch sGoPage to handle 'settings'
+var _sGoOrig2 = sGoPage;
+sGoPage = function(page) {
+  if(page==='settings'){
+    sCurrentPage='settings';
+    if(window.innerWidth<=768)closeSidebar('s');
+    document.getElementById('sPageTitle').textContent='Settings';
+    ['dashboard','ask','notes','work','quiz'].forEach(function(t){var b=document.getElementById('sbt-'+t);if(b)b.style.color='var(--muted)';});
+    document.getElementById('sContent').innerHTML=renderSettings();
+    document.getElementById('sContent').scrollTop=0;
+    saveSession();
+    return;
+  }
+  _sGoOrig2(page);
+}
+
+// Patch tGoPage to handle 'settings'
+var _tGoOrig2 = tGoPage;
+tGoPage = function(page) {
+  if(page==='settings'){
+    tCurrentPage='settings';
+    if(window.innerWidth<=768)closeSidebar('t');
+    document.getElementById('tPageTitle').textContent='Settings';
+    ['dashboard','lesson','live','assignments','reports'].forEach(function(t){var b=document.getElementById('tbt-'+t);if(b)b.style.color='var(--muted)';});
+    document.getElementById('tContent').innerHTML=renderSettings();
+    document.getElementById('tContent').scrollTop=0;
+    saveSession();
+    return;
+  }
+  _tGoOrig2(page);
+}
 
 window.addEventListener('DOMContentLoaded', () => {
   if(!restoreSession()) {
